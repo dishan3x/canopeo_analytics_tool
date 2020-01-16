@@ -39,7 +39,7 @@ var zip = new JSZip();
 var originals = zip.folder("originals");
 var classified = zip.folder("classified");
 
-initApp = function() {
+/* initApp = function() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         //console.log(user)
@@ -63,12 +63,12 @@ initApp = function() {
 
   window.addEventListener('close', function(){
       firebase.auth().signOut();
-  })
+  }) */
 
 function setup() {
     // Print software version
     console.log('Running v0.7');
-
+   
     // Dropzone
     dropzone = select('body');
     dropzone.drop(gotFile);
@@ -93,7 +93,7 @@ function setup() {
     
     document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
 
-
+ 
     //btnUploadLabel = document.getElementById('btnUploadLabel');
     // btnUploadLabel.addEventListener('mouseover', function(){
     //     if (vegetationType === 'empty'){
