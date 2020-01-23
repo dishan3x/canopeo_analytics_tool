@@ -1,5 +1,6 @@
 class weather {
-    constructor(temp) {
+    constructor(temp,humid) {
       this.temp = temp;
+      this.humid = humid;
     }
   }

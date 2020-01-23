@@ -1,3 +1,4 @@
+var we = new weather();
 let imgOriginal;
 let imgCounter = 0;
 var canvasDiv;
