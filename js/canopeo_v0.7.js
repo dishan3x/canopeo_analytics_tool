@@ -84,6 +84,7 @@ function setup() {
     table.addColumn('longitude');
     table.addColumn('altitude');
     table.addColumn('canopyCover');
+    table.addColumn('eto');
 
     // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
@@ -164,12 +165,13 @@ function gotFile(file) {
                 let vegetationTypeCellId = 'vegetation-type-cell' + imgCounter;
                 let filenameCellId = 'filename-cell' + imgCounter;
                 let canopyCoverCellId = 'canopy-cover-cell' + imgCounter;
+                let etoCellId ='eto-cell'+ imgCounter;
                 let latitudeCellId = 'latitude-cell' + imgCounter;
                 let longitudeCellId = 'longitude-cell' + imgCounter;
                 let altitudeCellId = 'altitude-cell' + imgCounter;
     
                 // Create table row
-                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>').parent('resultsTable');    
+                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +  '<td '+ 'id="' + etoCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>').parent('resultsTable');    
 
                 // Get upload timestamp
                 uploadDate = new Date();
@@ -288,11 +290,16 @@ function gotFile(file) {
                     altitude = realtimeAltitude;
                 }
 
+                 // Get weather data
+                 wt = getWeatherData();
+                 lt = new locationCustom(37.77071,-457.23999,-9999);
+                 etoVal = getETOValue(lt,wt)
                 // Update HTML table
                 resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
                 resultsTable.rows[imgCounter].cells[vegetationTypeCellId].innerHTML = vegetationType;
                 resultsTable.rows[imgCounter].cells[filenameCellId].innerHTML = file.name;
                 resultsTable.rows[imgCounter].cells[canopyCoverCellId].innerHTML = percentCanopyCover;
+                resultsTable.rows[imgCounter].cells[etoCellId].innerHTML = etoVal;
 
                 if(latitude === null){
                     resultsTable.rows[imgCounter].cells[latitudeCellId].innerHTML = 'Unknown';
@@ -312,10 +319,7 @@ function gotFile(file) {
                     resultsTable.rows[imgCounter].cells[altitudeCellId].innerHTML = altitude;
                 }
 
-                // Get weather data
-                wt = getWeatherData();
-                lt = new locationCustom(37.77071,-457.23999,-9999);
-                val = getETOValue(lt,wt)
+               
 
                 // Append to output table
                 var newRow = table.addRow();
@@ -327,6 +331,7 @@ function gotFile(file) {
                 newRow.set('longitude', longitude);
                 newRow.set('altitude', altitude);
                 newRow.set('canopyCover', percentCanopyCover);
+                newRow.set('eto', etoVal);
 
                 var imgName = 'img_' + uploadDate.getTime();
                 var data = {
