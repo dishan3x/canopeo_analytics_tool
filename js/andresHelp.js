@@ -1,4 +1,12 @@
-function (location,weather) {
+/* windspeed
+tempMax
+tempMin
+tempAvg 
+humidityMax
+humidityMin
+doy
+solarRad */
+function somefunction(location,weather) {
     const missingData = -9999;
     const atmPressure = 101.3 * ((293 - 0.0065 * location.elevation) / 293)**5.26;
     const Cp = 0.001013; // Approx. 0.001013 for average atmospheric conditions
