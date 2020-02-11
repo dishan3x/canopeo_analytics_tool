@@ -85,6 +85,7 @@ function setup() {
     table.addColumn('altitude');
     table.addColumn('canopyCover');
     table.addColumn('eto');
+    table.addColumn('eto-crop');
 
     // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
@@ -130,10 +131,10 @@ function setup() {
 
 
 // Event listener for Logout button
-btnLogout.addEventListener('click', function(e){
+/* btnLogout.addEventListener('click', function(e){
     firebase.auth().signOut();
     window.location.href = 'index.html';
-})
+}) */
 
 
 function gotFile(file) {
@@ -165,13 +166,16 @@ function gotFile(file) {
                 let vegetationTypeCellId = 'vegetation-type-cell' + imgCounter;
                 let filenameCellId = 'filename-cell' + imgCounter;
                 let canopyCoverCellId = 'canopy-cover-cell' + imgCounter;
-                let etoCellId ='eto-cell'+ imgCounter;
                 let latitudeCellId = 'latitude-cell' + imgCounter;
                 let longitudeCellId = 'longitude-cell' + imgCounter;
                 let altitudeCellId = 'altitude-cell' + imgCounter;
+                let etoCellId ='eto-cell'+ imgCounter;
+                let etoCropId ='eto-crop'+ imgCounter;
+     
+
     
                 // Create table row
-                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +  '<td '+ 'id="' + etoCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>').parent('resultsTable');    
+                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
 
                 // Get upload timestamp
                 uploadDate = new Date();
@@ -293,13 +297,15 @@ function gotFile(file) {
                  // Get weather data
                  wt = getWeatherData();
                  lt = new locationCustom(37.77071,-457.23999,-9999);
-                 etoVal = getETOValue(lt,wt)
+                 etoVal = getETOValue(lt,wt);
+                 etCrop = getETCrop(percentCanopyCover,etoVal);
                 // Update HTML table
                 resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
                 resultsTable.rows[imgCounter].cells[vegetationTypeCellId].innerHTML = vegetationType;
                 resultsTable.rows[imgCounter].cells[filenameCellId].innerHTML = file.name;
                 resultsTable.rows[imgCounter].cells[canopyCoverCellId].innerHTML = percentCanopyCover;
                 resultsTable.rows[imgCounter].cells[etoCellId].innerHTML = etoVal;
+                resultsTable.rows[imgCounter].cells[etoCropId].innerHTML = etCrop;
 
                 if(latitude === null){
                     resultsTable.rows[imgCounter].cells[latitudeCellId].innerHTML = 'Unknown';
@@ -332,6 +338,7 @@ function gotFile(file) {
                 newRow.set('altitude', altitude);
                 newRow.set('canopyCover', percentCanopyCover);
                 newRow.set('eto', etoVal);
+                newRow.set('eto-crop', etoVal);
 
                 var imgName = 'img_' + uploadDate.getTime();
                 var data = {
@@ -424,6 +431,7 @@ function getVegetationType(){
 //getVegetationType(); 
 
 function getLocation() {
+    console.log("wating on location");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
@@ -435,6 +443,7 @@ function getLocation() {
         region = null;
         console.log('Navigator not available')
     }
+    console.log("Passed the location test");
 }
 
 function realtimePosition(position) {
@@ -505,23 +514,86 @@ function getWeatherData(){
     solarRad = SR
     */
     console.log("esd");
+    // Date today
+    // 
     
-   
-   url = "http://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20190101000000&t_end=20190201000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR";
+   date = new Date();
+    console.log("todaysDate",date);
+    dateCustomize = "" ; 
+    
+    dateStr = getDate();
+   url = "http://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+   console.log(url);
    daata = fetch(url)
    .then(res => {
+       
        return res.text();
    })
    .then(data => {
-       console.log(data);
-       //$('#container').html(data);
+       // The returned data set has columns names and values devidede  by /n 
+       // Seperated by /n 
+       var lineSeperation = data.split(/\r?\n/);
+       console.log("someDate",lineSeperation[0]);
+       var apiData = lineSeperation[1].split(",");
+       //PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR
+       console.log("thevalue",apiData[0]);
+       //var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+       /* apiData[0] // PRECIP
+       apiData[1] // WSPD2MVEC
+       apiData[2] // TEMP2MAVG
+       apiData[3] // TEMP2MMIN 
+       apiData[4] // TEMP2MMAX
+       apiData[5] // RELHUM2MMAX
+       apiData[6] // RELHUM10MMIN
+       apiData[7] // SR
+    */
+       wt.timestamp     = apiData[0];
+       wt.station       = apiData[1];
+       wt.tempAvg       = apiData[2];
+       wt.tempMin       = apiData[3];
+       wt.tempMax       = apiData[4];
+       wt.humidityMax   = apiData[5];
+       wt.humidityMin   = apiData[6];
+       wt.precp         = apiData[7];
+       wt.solarRad      = apiData[8];
+       wt.windSpeed     = apiData[9];
+       wt.doy           = dayOftheYear();
+       wt.storedDate    = dateStr;
+       console.log("printing new creted date",wt);
+       console.log("newDataSetCrated",data);
+       
    });
 
    /* var data=JSONArray([TIMESTAMP,STATION,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,PRECIP,SR],
    [2019-01-01 00:00:00,Ashland Bottoms,-1.73,-9.77,2.76,90.74,67.15,0.0,2.14],
    [2019-01-02 00:00:00,Ashland Bottoms,-9.75,-11.67,-7.85,77.15,62.65,0.0,3.74); */
+   // 2019-02-04 00:00:00,Ashland Bottoms,14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73 // for today
     console.log(daata);
-    var wt  = new weather("2019-01-01 00:00:00","Ashland Bottoms",-1.73,-9.77,2.76,90.74,67.15,0.0,2.14,4.56,133);
+    day = dayOftheYear();
+    //timestamp: "2020-02-10 00:00:00",station: "Ashland Bottoms",tempAvg: "2.79",tempMin: "-1.76",tempMax: "6.28",humidityMax: "77.43",humidityMin: "55.88",precp: "0.0",solarRad: "10.26",windSpeed: undefined,doy: 41,storedDate: "20200210000000"
+    var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+    var testObject = { 'one': 1, 'two': 2, 'three': 3 };
+
+
+    if (localStorage.getItem("retrievedObject") === null) {
+        // Run the file getweather function 
+        console.log("Run the file getweather function ");
+    }else{
+        // The object is created 
+        // Check the date
+        console.log("The object is created/ Check the date ");
+        //if()
+
+    }
+// Put the object into storage
+    localStorage.setItem('testObject', JSON.stringify(wt));
+
+// Retrieve the object from storage
+    var retrievedObject = localStorage.getItem('testObject');
+    //local storage 
+    //console.log(retrievedObject.)
+
+    console.log('retrievedObject: ', JSON.parse(retrievedObject));
     console.log(wt);
     console.log("temperatuure avg"+wt.tempAvg);
     return wt;
@@ -608,6 +680,41 @@ function getETOValue(location,weather) {
     // ETo calculation*
     
     const ETo = (0.408 * delta * (weather.solarRad - soilHeatFlux) + gamma * (900 / (weather.tempAvg + 273)) * windSpeed2m * (es - ea)) / (delta + gamma * (1 + 0.34 * windSpeed2m));
-
+    console.log("ETO value from the ",ETo);
     return Math.round(ETo*10)/10;
   }
+
+  function dayOftheYear(){
+    var today = new Date();
+    var start = new Date(today.getFullYear(), 0, 0);
+    console.log("start",start);
+    var diff = today - start;
+    var oneDay = 1000 * 60 * 60 * 24;
+    var days = Math.floor(diff / oneDay);
+    console.log("day",days);
+    return days;
+  }
+
+
+  function getETCrop(cc,eto){
+    let etCrop;
+    etCrop = eto * (1.1 * (cc/100) + 0.17);
+    console.log("eto",eto);
+    console.log("cc",cc);
+    console.log("etcrop",etCrop);
+    return etCrop;
+  }
+
+  function getDate(){
+    
+    var day = date.getDate();
+
+    var dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
+    
+    var MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+    
+    var yyyy = date.getFullYear();
+ 
+    // create the yeart
+    return (yyyy + MM +dd +"000000" );
+ }

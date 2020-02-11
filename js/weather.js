@@ -1,5 +1,5 @@
 class weather {
-    constructor(TIMESTAMP,STATION,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,PRECIP,SR,WSPD10MAVG,DOY) {
+    constructor(TIMESTAMP,STATION,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,PRECIP,SR,WSPD10MAVG,DOY,storedDate) {
       this.timestamp = TIMESTAMP;
       this.station = STATION;
       this.tempAvg = TEMP2MAVG;
@@ -11,6 +11,7 @@ class weather {
       this.solarRad = SR;
       this.windSpeed = WSPD10MAVG;
       this.doy = DOY;
+      this.storedDate = storedDate;
     }
   }
 
