@@ -295,7 +295,7 @@ function gotFile(file) {
                 }
 
                  // Get weather data
-                 wt = getWeatherData();
+                 wt =  getWeatherData();
                  lt = new locationCustom(37.77071,-457.23999,-9999);
                  etoVal = getETOValue(lt,wt);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
@@ -501,7 +501,10 @@ function getAddress(lat,lon) {
         });
 }
 
-function getWeatherData(){
+
+
+
+ function getWeatherData(){
     // module for weather
     
     /*windspeed = WSPD2MVEC	
@@ -522,9 +525,10 @@ function getWeatherData(){
     dateCustomize = "" ; 
     
     dateStr = getDate();
+    wt = ""; 
    url = "http://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
-   console.log(url);
-   daata = fetch(url)
+   console.log("asdasdsadaddadadd ", url);
+   dataa =  fetch(url)
    .then(res => {
        
        return res.text();
@@ -532,12 +536,32 @@ function getWeatherData(){
    .then(data => {
        // The returned data set has columns names and values devidede  by /n 
        // Seperated by /n 
+       console.log("************************ Date Recieved *******************************************");
        var lineSeperation = data.split(/\r?\n/);
        console.log("someDate",lineSeperation[0]);
        var apiData = lineSeperation[1].split(",");
        //PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR
        console.log("thevalue",apiData[0]);
        //var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+
+       localStorage.setItem('testObject', JSON.stringify(lineSeperation[1]));
+
+    
+      
+       /*  timestamp = 2019-02-04 00:00:00
+       station = Ashland Bottoms
+       tempAvg = 14.98
+       tempMin = 12.29
+       tempMax = 20.69
+       humidityMax = 90.38
+       humidityMin =  49.51
+       precp =  0.0
+       solarRad =  10.32
+       windSpeed = 4.73
+       doy = daay
+       storedDate =  dateStr */
+
+
        /* apiData[0] // PRECIP
        apiData[1] // WSPD2MVEC
        apiData[2] // TEMP2MAVG
@@ -559,6 +583,8 @@ function getWeatherData(){
        wt.windSpeed     = apiData[9];
        wt.doy           = dayOftheYear();
        wt.storedDate    = dateStr;
+       wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
+       wt = wr;
        console.log("printing new creted date",wt);
        console.log("newDataSetCrated",data);
        
@@ -568,10 +594,12 @@ function getWeatherData(){
    [2019-01-01 00:00:00,Ashland Bottoms,-1.73,-9.77,2.76,90.74,67.15,0.0,2.14],
    [2019-01-02 00:00:00,Ashland Bottoms,-9.75,-11.67,-7.85,77.15,62.65,0.0,3.74); */
    // 2019-02-04 00:00:00,Ashland Bottoms,14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73 // for today
-    console.log(daata);
+    console.log("testing the wt", wt);
+    console.log("testing the wt", dataa);
+
     day = dayOftheYear();
     //timestamp: "2020-02-10 00:00:00",station: "Ashland Bottoms",tempAvg: "2.79",tempMin: "-1.76",tempMax: "6.28",humidityMax: "77.43",humidityMin: "55.88",precp: "0.0",solarRad: "10.26",windSpeed: undefined,doy: 41,storedDate: "20200210000000"
-    var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+    //var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
     var testObject = { 'one': 1, 'two': 2, 'three': 3 };
 
 
@@ -586,17 +614,23 @@ function getWeatherData(){
 
     }
 // Put the object into storage
-    localStorage.setItem('testObject', JSON.stringify(wt));
+   // localStorage.setItem('testObject', JSON.stringify(wt));
 
+    
 // Retrieve the object from storage
     var retrievedObject = localStorage.getItem('testObject');
+    var apiData = retrievedObject.split(",").map(function(item) {
+        return parseInt(item, 10);
+    });
+    wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
     //local storage 
-    //console.log(retrievedObject.)
+    console.log("retrievedObject",retrievedObject);
+    console.log("wr",wr);
 
-    console.log('retrievedObject: ', JSON.parse(retrievedObject));
+   // console.log('retrievedObject: ', JSON.parse(retrievedObject));
     console.log(wt);
     console.log("temperatuure avg"+wt.tempAvg);
-    return wt;
+    return wr;
     
 }
 
@@ -634,7 +668,7 @@ function getETOValue(location,weather) {
     } else {
       windSpeed2m = weather.windSpeed * (4.87 / Math.log((67.8 * windHeight) - 5.42));  // Eq. 47, FAO-56 windHeight in [m]
     }
-
+    
     //// Air humidity
     const eTmax = 0.6108 * Math.exp(17.27 * weather.tempMax / (weather.tempMax + 237.3)); // Eq. 11, //FAO-56
     const eTmin = 0.6108 * Math.exp(17.27 * weather.tempMin / (weather.tempMin + 237.3));
@@ -718,3 +752,5 @@ function getETOValue(location,weather) {
     // create the yeart
     return (yyyy + MM +dd +"000000" );
  }
+
+
