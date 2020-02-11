@@ -141,9 +141,11 @@ function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
-
+                console.log("in geo location");
                 // Get geographic coordinates
                 getLocation()
+               
+               console.log("pass location");
 
                 // Start counting images
                 imgCounter += 1;
@@ -175,7 +177,7 @@ function gotFile(file) {
 
     
                 // Create table row
-                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
+                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
 
                 // Get upload timestamp
                 uploadDate = new Date();
@@ -239,8 +241,8 @@ function gotFile(file) {
                 thumbnailClassified.style.border = "5px solid black;"
 
                 EXIF.getData(document.getElementById(imgOriginalId), function() {
-                    // var allMetaData = EXIF.getAllTags(this);
-                    // console.log(JSON.stringify(allMetaData, null, "\t"));
+                     //var allMetaData = EXIF.getAllTags(this);
+                     //console.log(JSON.stringify(allMetaData, null, "\t"));
                     snapDate = EXIF.getTag(this, "DateTime");
                     latArray = EXIF.getTag(this, "GPSLatitude");
                     latRef = EXIF.getTag(this, "GPSLatitudeRef")
@@ -276,6 +278,9 @@ function gotFile(file) {
                 } else {
                     altitude = altitudeToMeters(altitude, altitudeRef) ;
                 }
+                console.log("EXif latitude",latitude);
+                console.log("EXif long",longitude);
+                console.log("EXif alti",altitude);
 
                 // Replace any null values with realtime GPS data. Only replace if null to avoid overwriting
                 // EXIF data.
@@ -310,18 +315,21 @@ function gotFile(file) {
                 if(latitude === null){
                     resultsTable.rows[imgCounter].cells[latitudeCellId].innerHTML = 'Unknown';
                 } else {
+                    console.log("lattitude",latitude);
                     resultsTable.rows[imgCounter].cells[latitudeCellId].innerHTML = latitude;
                 }
 
                 if(longitude === null){
                     resultsTable.rows[imgCounter].cells[longitudeCellId].innerHTML = 'Unknown';
                 } else {
+                    console.log("lattitude",longitude);
                     resultsTable.rows[imgCounter].cells[longitudeCellId].innerHTML = longitude;
                 }
 
                 if(altitude === null){
                     resultsTable.rows[imgCounter].cells[altitudeCellId].innerHTML = 'Unknown';
                 } else {
+                    console.log("lattitude",altitude);
                     resultsTable.rows[imgCounter].cells[altitudeCellId].innerHTML = altitude;
                 }
 
@@ -431,7 +439,7 @@ function getVegetationType(){
 //getVegetationType(); 
 
 function getLocation() {
-    console.log("wating on location");
+    console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
