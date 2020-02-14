@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<h1>Canpoe covers</h1>
+<h2></h2>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Canopeo</title>
+    <!--<link rel="stylesheet" href="public/css/bulma.min.css">
+    <link rel="stylesheet" href="public/css/custom.css"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/CustomCss.css" />
+    <link rel="stylesheet" href="css/materialize.min.css" />
+    <!--  <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script> -->
+   
+
+
+</head>
+
+<body>
+   
+    <nav class="navbar">
+        <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-start">
+                <label class="button is-primary" id="btnUploadLabel" style="margin:5px;">
+                <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
+                    <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Upload</strong></span>
+                </label>
+            </div>
+            <div class="navbar-end">
+                <a class="button navbar-item is-hidden-mobile" href="about.html" style="margin:5px;">
+                    <i class="fa fa-info fa-fw" aria-hidden="true"></i>&nbsp; About
+                </a>
+                <a class="button navbar-item is-hidden-mobile" href="research.html" style="margin:5px;">
+                    <i class="fa fa-flask fa-fw" aria-hidden="true"></i>&nbsp; Research
+                </a>
+                <a class="button navbar-item is-hidden-mobile" href="howtouseit.html" style="margin:5px;">
+                    <i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; How to use it
+                </a>
+                <a class="button navbar-item is-hidden-mobile" href="forum.html" style="margin:5px;">
+                    <i class="fa fa-users fa-fw" aria-hidden="true"></i>&nbsp; Users forum
+                </a>
+                <a class="button navbar-item" href="globalmap.html" style="margin:5px;">
+                    <i class="fa fa-globe fa-fw" aria-hidden="true"></i>&nbsp; Global map
+                </a>
+                <a class="button is-danger" id="btnLogout" style="margin:5px;">
+                        <i class="fa fa-sign-out-alt fa-2x" aria-hidden="true"></i>
+                    <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Leave</strong></span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="columns is-centered" id="dragDropBanner">
+        <div class="column is-half has-text-centered" style="padding-top: 35vh; padding-bottom: 40vh;">
+            <p style="font-size: 1.5rem; font-style: italic;">
+                <span class="is-hidden-mobile"> Drag and drop or select files from your local directory </span>
+                <span class="is-hidden-desktop"> Snap or load a picture from your camera roll </span>
+            </p>
+            
+            <div class="select">
+                <select id="vegetationTypeList" onchange="getVegetationType();">
+                    <option value="empty">Select vegetation type </option>
+                    <option value="alfalfa" selected>Alfalfa</option>
+                    <option value="barley">Barley</option>
+                    <option value="cover crop">Cover crop</option>
+                    <option value="grassland">Grassland</option>
+                    <option value="soybean">Soybean</option>
+                    <option value="sorghum">Sorghum</option>
+                    <option value="pasture">Pasture</option>
+                    <option value="other">Other</option>
+                    <option value="potatoes">Potatoes</option>
+                    <option value="rice">Rice</option>
+                    <option value="strawberry">Strawberry</option>
+                    <option value="turf">Turf</option>
+                    <option value="wheat">Wheat</option>
+                </select>
+            </div>
+            <span id="vegetationTypeRequireMsg" class="has-text-danger"><sup>*</sup></span>
+        </div>
+    </div>
+
+   
+    <div class="container">
+        <table class="table is-full-width" style="margin-top: 50px;" id="resultsTable" style="visibility:hidden;">
+            <tr>
+                <th>#</th>
+                <th>Original</th>
+                <th>Classified</th>
+                <th class="is-hidden-mobile">Vegetation</th> 
+                <th class="is-hidden-mobile">Filename</th> 
+                <th class="is-hidden-mobile">Latitude</th>
+                <th class="is-hidden-mobile">Longitude</th>
+                <th class="is-hidden-mobile">Altitude</th>
+                <th class="is-hidden-mobile">Canopycover</th>
+                <th class="is-hidden-mobile">Eto</th>
+                <th class="is-hidden-mobile"> EtoCropValue</th>
+
+            </tr>
+        </table>
+
+        <button type="button" id="btnDownloadCSV" class="button is-link">Download CSV</button>
+        <button type="button" id="btnDownloadImg" class="button is-successfull">Download images</button>
+    </div>
+
+
+</body>
+
+<script src="js/FileSaver.js"></script>
+<script src="js/jszip.min.js"></script>
+<script src="libraries/p5/p5.min.js"></script>
+<script src="libraries/p5/addons/p5.dom.js"></script>
+<script type="text/javascript" src="js/exif.js"></script>
+<script src="js/weather.js"></script> 
+<script src="js/canopeo_v0.7.js"></script>
+
+
+
+
+
+</html>

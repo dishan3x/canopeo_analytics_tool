@@ -39,6 +39,12 @@ var zip = new JSZip();
 var originals = zip.folder("originals");
 var classified = zip.folder("classified");
 
+
+/* 
+    - Getting the weather data stored in the system
+    - Just to get rid of any delay
+    - I think its works , But when tested this in local system its pretty slow. 
+*/
 /* initApp = function() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -75,6 +81,10 @@ function setup() {
 
     
     // Create table for storing images
+    // Handle a  opnly a one picture 
+    // Dishan Changes
+    // no need
+
     table = new p5.Table();
     table.addColumn('name');
     table.addColumn('vegetationType');
@@ -143,7 +153,9 @@ function gotFile(file) {
             loadImage(file.data,function(imgOriginal){
                 console.log("in geo location");
                 // Get geographic coordinates
-                getLocation()
+                getLocation();
+                //console.log(geoCordinates);
+                console.log(getLocation());
                
                console.log("pass location");
 
@@ -442,6 +454,7 @@ function getLocation() {
     console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(realtimePosition);
+        return navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -536,7 +549,7 @@ function getAddress(lat,lon) {
     wt = ""; 
    url = "https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
    console.log("asdasdsadaddadadd ", url);
-   dataa =  fetch(url)
+    fetch(url)
    .then(res => {
        
        return res.text();
@@ -586,7 +599,7 @@ function getAddress(lat,lon) {
        wt.tempMax       = apiData[4];
        wt.humidityMax   = apiData[5];
        wt.humidityMin   = apiData[6];
-       wt.precp         = apiData[7];
+       wt.precp         = apiData[7]; // raim fall
        wt.solarRad      = apiData[8];
        wt.windSpeed     = apiData[9];
        wt.doy           = dayOftheYear();
@@ -744,7 +757,7 @@ function getETOValue(location,weather) {
     console.log("eto",eto);
     console.log("cc",cc);
     console.log("etcrop",etCrop);
-    return etCrop;
+    return Math.round(etCrop * 100) / 100;
   }
 
   function getDate(){
