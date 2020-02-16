@@ -71,13 +71,25 @@ var classified = zip.folder("classified");
       firebase.auth().signOut();
   }) */
 
+
+  window.onload = sayHello;
+
+  function sayHello(){
+    console.log("hello world to say hello");
+}
+
+
+
+
 function setup() {
     // Print software version
     console.log('Running v0.7');
    
     // Dropzone
-    dropzone = select('body');
-    dropzone.drop(gotFile);
+    // commented by dishan
+    // sinse we are not using the drop picture methods
+   /*  dropzone = select('body');
+    dropzone.drop(gotFile); // Handing the dropzon js library */
 
     
     // Create table for storing images
