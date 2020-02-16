@@ -93,7 +93,7 @@ function setup() {
 
     
     // Create table for storing images
-    // Handle a  opnly a one picture 
+    // Handle a  only  one picture 
     // Dishan Changes
     // no need
 
@@ -110,7 +110,8 @@ function setup() {
     table.addColumn('eto-crop');
 
     // Upload button
-    btnUpload = createFileInput(gotFile,'multiple');
+    //btnUpload = createFileInput(gotFile,'multiple');
+    btnUpload = createCapture(gotFile);
     btnUpload.parent('btnUploadLabel');
     btnUpload.style('display','none');
     btnUpload.elt.disabled = true;
@@ -264,7 +265,7 @@ function gotFile(file) {
                 thumbnailClassified.parent(imgClassifiedCellId);
                 thumbnailClassified.style.border = "5px solid black;"
 
-                EXIF.getData(document.getElementById(imgOriginalId), function() {
+                /* EXIF.getData(document.getElementById(imgOriginalId), function() {
                      //var allMetaData = EXIF.getAllTags(this);
                      //console.log(JSON.stringify(allMetaData, null, "\t"));
                     snapDate = EXIF.getTag(this, "DateTime");
@@ -275,7 +276,7 @@ function gotFile(file) {
                     altitude = EXIF.getTag(this, "GPSAltitude");
                     altitudeRef = EXIF.getTag(this, "GPSAltitudeRef");
                 });
-
+ */
                 
                 // Check EXIF dateTime
                 if (typeof snapDate === 'undefined'){
@@ -302,9 +303,7 @@ function gotFile(file) {
                 } else {
                     altitude = altitudeToMeters(altitude, altitudeRef) ;
                 }
-                console.log("EXif latitude",latitude);
-                console.log("EXif long",longitude);
-                console.log("EXif alti",altitude);
+           
 
                 // Replace any null values with realtime GPS data. Only replace if null to avoid overwriting
                 // EXIF data.
