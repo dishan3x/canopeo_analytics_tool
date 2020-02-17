@@ -39,6 +39,9 @@ var zip = new JSZip();
 var originals = zip.folder("originals");
 var classified = zip.folder("classified");
 
+var w = 0;
+var h = 0;
+
 //Creating 
 
 
@@ -113,9 +116,25 @@ function setup() {
 
 
     c =createCanvas(window.innerWidth, window.innerHeight);
-  
+    w = window.innerWidth;
+    h = window.innerHeight;
     //create a video capture object
-    cam = createCapture(VIDEO);
+    capture = createCapture({
+        audio: false,
+        video: {
+            width: w,
+            height: h
+        }
+    }, function() {
+        console.log('capture ready.')
+    });
+    capture.elt.setAttribute('playsinline', '');
+    capture.hide();
+    capture.size(w, h);
+    canvas = createCanvas(w, h);
+
+    //https://github.com/processing/p5.js/issues/2847
+
     background(0);
     button = createButton('Take snap');
     let col = color(25, 23, 200, 50);
@@ -125,7 +144,7 @@ function setup() {
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
     //hide() function hides the HTML video element
-    cam.hide();
+    capture.hide();
 
   
 
@@ -180,7 +199,7 @@ function setup() {
     background(220);
     
     //draw video capture feed as image inside p5 canvas
-   image(cam, 0, 0);
+   image(capture, 0, 0);
   }
  */
 // Event listener for Logout button
@@ -192,7 +211,7 @@ function setup() {
     savedFrame = saveFrames('out', 'png', 1, 1, data => {
         console.log(data);
         gotFile(data.data);
-        cam.remove();
+        capture.remove();
     });
 } */
 
@@ -211,7 +230,7 @@ function draw() {
     height =  window.innerHeight;  
    // console.log("worked");
   if(modo == 0){ 
-    image(cam, width/2 + 25, 0);   
+    image(capture, width/2 + 25, 0);   
   }else if(modo == 1){
     background(255);
     image(fotoTirada, 0, 0, width, height);
@@ -223,12 +242,12 @@ function draw() {
 
 function takeSnap(){
  tint(255);
- image(cam, 0, 0);
- fotoTirada = cam.get();
+ image(capture, 0, 0);
+ fotoTirada = capture.get();
   console.log(fotoTirada);
   gotFile(fotoTirada);
  image(fotoTirada, 20, 0);
-cam.hide();
+capture.hide();
  
  //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
 // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
