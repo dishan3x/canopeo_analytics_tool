@@ -39,6 +39,8 @@ var zip = new JSZip();
 var originals = zip.folder("originals");
 var classified = zip.folder("classified");
 
+//Creating 
+
 
 /* 
     - Getting the weather data stored in the system
@@ -109,14 +111,35 @@ function setup() {
     table.addColumn('eto');
     table.addColumn('eto-crop');
 
+
+    c =createCanvas(window.innerWidth, window.innerHeight);
+  
+    //create a video capture object
+    cam = createCapture(VIDEO);
+    background(0);
+    button = createButton('Take snap');
+    let col = color(25, 23, 200, 50);
+    button.style('background-color', col);
+    button.position(window.innerWidth/2,window.innerWidth-50);
+    button.mousePressed(takeSnap);
+    //the createCapture() function creates an HTML video tag
+    //as well as pulls up image to be used in p5 canvas
+    //hide() function hides the HTML video element
+    cam.hide();
+
+  
+
     // Upload button
     //btnUpload = createFileInput(gotFile,'multiple');
-    btnUpload = createCapture(gotFile);
+    /* btnUpload = createCapture(gotFile);
     btnUpload.parent('btnUploadLabel');
     btnUpload.style('display','none');
-    btnUpload.elt.disabled = true;
+    btnUpload.elt.disabled = true; */
     
-    document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
+
+
+    // Dishan Somethin important
+   // document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
 
  
     //btnUploadLabel = document.getElementById('btnUploadLabel');
@@ -153,17 +176,84 @@ function setup() {
 }
 
 
+/* function draw() {
+    background(220);
+    
+    //draw video capture feed as image inside p5 canvas
+   image(cam, 0, 0);
+  }
+ */
 // Event listener for Logout button
 /* btnLogout.addEventListener('click', function(e){
     firebase.auth().signOut();
     window.location.href = 'index.html';
 }) */
+/* function takeSnap() {
+    savedFrame = saveFrames('out', 'png', 1, 1, data => {
+        console.log(data);
+        gotFile(data.data);
+        cam.remove();
+    });
+} */
+
+var capture;
+var buttonTirarFoto;
+var buttonSalvarFoto;
+var fotoTirada;
+var modo = 0;
+var confirmarTakeSnap = false;
 
 
-function gotFile(file) {
-    if(imgCounter <= 50){
-        if (file.type === 'image'){
-            loadImage(file.data,function(imgOriginal){
+
+
+function draw() {  
+    width  = window.innerWidth;
+    height =  window.innerHeight;  
+   // console.log("worked");
+  if(modo == 0){ 
+    image(cam, width/2 + 25, 0);   
+  }else if(modo == 1){
+    background(255);
+    image(fotoTirada, 0, 0, width, height);
+    saveCanvas("minhaFoto", "jpg");
+    background(255);
+    modo = 0;
+  }
+} 
+
+function takeSnap(){
+ tint(255);
+ image(cam, 0, 0);
+ fotoTirada = cam.get();
+  console.log(fotoTirada);
+  gotFile(fotoTirada);
+ image(fotoTirada, 20, 0);
+cam.hide();
+ 
+ //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
+// capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
+ //capture.hide(); colocando o tint ali em cima.
+ 
+ confirmarTakeSnap = true;
+}
+
+
+function gotFile(imgOriginal) {
+    console.log("logged");
+    //createImage(image(cam, 0, 0, 320, 240),'somefiel');
+    //saveCanvas(cc, 'myCanvas', 'jpg');
+   // loadImage(image(cam, 0, 0, 320, 240));
+    console.log("arrive here also");
+    
+    console.log("arrive here also 2");
+    
+    console.log("arrive here also 3");
+   //image(savedFrame,10, 10, 50, 50);
+        console.log("almost there");
+/*     if(imgCounter <= 50){
+        if (savedFrame.type === 'image'){ */
+            console.log("almost there");
+          //  loadImage(file,function(imgOriginal){
                 console.log("in geo location");
                 // Get geographic coordinates
                 getLocation();
@@ -177,7 +267,7 @@ function gotFile(file) {
 
                 // Make results table visible
                 if (imgCounter === 1){
-                    dragDropBanner.remove()
+                   // dragDropBanner.remove()
                     resultsTable.style.visibility = 'visible';
                     btnDownloadCSV.style.visibility = 'visible';
                     btnDownloadImg.style.visibility = 'visible';
@@ -200,7 +290,8 @@ function gotFile(file) {
                 let etoCropId ='eto-crop'+ imgCounter;
      
 
-    
+                console.log("passed creating elements");
+                console.log(imgOriginal);
                 // Create table row
                 let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
 
@@ -215,10 +306,12 @@ function gotFile(file) {
                 }
                 imgOriginal.loadPixels();
 
+                console.log("passed resizing");
+                
                 // Initiatve classified image
                 imgClassified = createImage(imgOriginal.width,imgOriginal.height);
                 imgClassified.loadPixels();
-            
+                console.log("passed classify images");
                 // Classify image following manuscript settings
                 let RGratio = 0.95;
                 let RBratio = 0.95;
@@ -253,7 +346,7 @@ function gotFile(file) {
                 var aspectRatio = imgClassified.width/imgClassified.height;
                 
                 // Thumbnail original image
-                thumbnailOriginal = createImg(file.data);
+                thumbnailOriginal = createImg(imgOriginal);
                 thumbnailOriginal.size(128*aspectRatio,128)
                 thumbnailOriginal.id(imgOriginalId)
                 thumbnailOriginal.parent(imgOriginalCellId)
@@ -323,14 +416,15 @@ function gotFile(file) {
                 }
 
                  // Get weather data
-                 wt =  getWeatherData();
+                 weather =  getWeatherData();
                  lt = new locationCustom(37.77071,-457.23999,-9999);
-                 etoVal = getETOValue(lt,wt);
+                 etoVal = getETOValue(lt,weather);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
+                 console.log("passed eto crop value",etCrop);
                 // Update HTML table
                 resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
                 resultsTable.rows[imgCounter].cells[vegetationTypeCellId].innerHTML = vegetationType;
-                resultsTable.rows[imgCounter].cells[filenameCellId].innerHTML = file.name;
+                resultsTable.rows[imgCounter].cells[filenameCellId].innerHTML = "some file";
                 resultsTable.rows[imgCounter].cells[canopyCoverCellId].innerHTML = percentCanopyCover;
                 resultsTable.rows[imgCounter].cells[etoCellId].innerHTML = etoVal;
                 resultsTable.rows[imgCounter].cells[etoCropId].innerHTML = etCrop;
@@ -402,11 +496,11 @@ function gotFile(file) {
                 // Add original and classified images to ZIP file
                 originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
                 classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true});
-            });
-        }
+           // });
+    /*     }
         // getting the weather data
        
-    }
+    } */
 }
 
 
@@ -557,7 +651,7 @@ function getAddress(lat,lon) {
     dateCustomize = "" ; 
     
     dateStr = getDate();
-    wt = ""; 
+    weatherT = ""; 
    url = "https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
    console.log("asdasdsadaddadadd ", url);
     fetch(url)
@@ -574,7 +668,7 @@ function getAddress(lat,lon) {
        var apiData = lineSeperation[1].split(",");
        //PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR
        console.log("thevalue",apiData[0]);
-       //var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+       //var weather  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
 
        localStorage.setItem('testObject', JSON.stringify(lineSeperation[1]));
 
@@ -603,22 +697,22 @@ function getAddress(lat,lon) {
        apiData[6] // RELHUM10MMIN
        apiData[7] // SR
     */
-       wt.timestamp     = apiData[0];
-       wt.station       = apiData[1];
-       wt.tempAvg       = apiData[2];
-       wt.tempMin       = apiData[3];
-       wt.tempMax       = apiData[4];
-       wt.humidityMax   = apiData[5];
-       wt.humidityMin   = apiData[6];
-       wt.precp         = apiData[7]; // raim fall
-       wt.solarRad      = apiData[8];
-       wt.windSpeed     = apiData[9];
-       wt.doy           = dayOftheYear();
-       wt.storedDate    = dateStr;
+       weatherT.timestamp     = apiData[0];
+       weatherT.station       = apiData[1];
+       weatherT.tempAvg       = apiData[2];
+       weatherT.tempMin       = apiData[3];
+       weatherT.tempMax       = apiData[4];
+       weatherT.humidityMax   = apiData[5];
+       weatherT.humidityMin   = apiData[6];
+       weatherT.precp         = apiData[7]; // raim fall
+       weatherT.solarRad      = apiData[8];
+       weatherT.windSpeed     = apiData[9];
+       weatherT.doy           = dayOftheYear();
+       weatherT.storedDate    = dateStr;
        wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
-       wt = wr;
-       console.log("printing new creted date",wt);
-       console.log("newDataSetCrated",data);
+       weatherT = wr;
+       console.log("printing new creted date", weatherT);
+      // console.log("newDataSetCrated",data);
        
    });
 
@@ -626,12 +720,12 @@ function getAddress(lat,lon) {
    [2019-01-01 00:00:00,Ashland Bottoms,-1.73,-9.77,2.76,90.74,67.15,0.0,2.14],
    [2019-01-02 00:00:00,Ashland Bottoms,-9.75,-11.67,-7.85,77.15,62.65,0.0,3.74); */
    // 2019-02-04 00:00:00,Ashland Bottoms,14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73 // for today
-    console.log("testing the wt", wt);
-    console.log("testing the wt", dataa);
+    console.log("testing the weather",  weatherT);
+    //console.log("testing the weather", dataa);
 
     day = dayOftheYear();
     //timestamp: "2020-02-10 00:00:00",station: "Ashland Bottoms",tempAvg: "2.79",tempMin: "-1.76",tempMax: "6.28",humidityMax: "77.43",humidityMin: "55.88",precp: "0.0",solarRad: "10.26",windSpeed: undefined,doy: 41,storedDate: "20200210000000"
-    //var wt  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
+    //var weather  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
     var testObject = { 'one': 1, 'two': 2, 'three': 3 };
 
 
@@ -646,7 +740,7 @@ function getAddress(lat,lon) {
 
     }
 // Put the object into storage
-   // localStorage.setItem('testObject', JSON.stringify(wt));
+   // localStorage.setItem('testObject', JSON.stringify(weather));
 
     
 // Retrieve the object from storage
@@ -660,8 +754,8 @@ function getAddress(lat,lon) {
     console.log("wr",wr);
 
    // console.log('retrievedObject: ', JSON.parse(retrievedObject));
-    console.log(wt);
-    console.log("temperatuure avg"+wt.tempAvg);
+    console.log(weather);
+    console.log("temperatuure avg"+weather.tempAvg);
     return wr;
     
 }
