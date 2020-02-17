@@ -115,7 +115,7 @@ function setup() {
     table.addColumn('eto-crop');
 
 
-    c =createCanvas(window.innerWidth, window.innerHeight);
+    //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.innerWidth;
     h = window.innerHeight;
     //create a video capture object
