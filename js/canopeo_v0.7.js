@@ -115,9 +115,9 @@ function setup() {
     table.addColumn('eto-crop');
 
 
-    c =createCanvas(window.innerWidth, window.innerHeight);
+    //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.innerWidth;
-    h = window.innerHeight;
+    h = window.outerHeight;
     //create a video capture object
     capture = createCapture({
         audio: false,
@@ -129,17 +129,18 @@ function setup() {
         console.log('capture ready.')
     });
     capture.elt.setAttribute('playsinline', '');
-    capture.hide();
+    //capture.hide();
     capture.size(w, h);
     canvas = createCanvas(w, h);
 
     //https://github.com/processing/p5.js/issues/2847
 
+    //Crreating the Snap button
     background(0);
     button = createButton('Take snap');
     let col = color(25, 23, 200, 50);
     button.style('background-color', col);
-    button.position(window.innerWidth/2,window.innerWidth-50);
+    button.position(w,h);
     button.mousePressed(takeSnap);
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
@@ -226,34 +227,41 @@ var confirmarTakeSnap = false;
 
 
 function draw() {  
-    width  = window.innerWidth;
-    height =  window.innerHeight;  
+    width  = window.outerWidth;
+    height =  window.outerHeight;  
    // console.log("worked");
   if(modo == 0){ 
-    image(capture, width/2 + 25, 0);   
+    //image(capture, width+ 25, 0); 
+     
+    image(capture, 0,0);   
+    console.log("lol");
   }else if(modo == 1){
     background(255);
-    image(fotoTirada, 0, 0, width, height);
+    console.log("here mode 1");
+    image(fotoTirada, 0, 0, 0, 0);
     saveCanvas("minhaFoto", "jpg");
+    capture.remove();
     background(255);
     modo = 0;
   }
 } 
 
 function takeSnap(){
- tint(255);
- image(capture, 0, 0);
- fotoTirada = capture.get();
-  console.log(fotoTirada);
-  gotFile(fotoTirada);
- image(fotoTirada, 20, 0);
-capture.hide();
- 
- //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
-// capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
- //capture.hide(); colocando o tint ali em cima.
- 
- confirmarTakeSnap = true;
+    //tint(255);
+    image(capture, 0, 0);
+    fotoTirada = capture.get();
+    console.log(fotoTirada);
+    gotFile(fotoTirada);
+    image(fotoTirada, 20, 0);
+    noLoop();
+    //capture.remove();
+    //capture.hide();
+    
+    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
+    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
+    //capture.hide(); colocando o tint ali em cima.
+    
+    confirmarTakeSnap = true;
 }
 
 
@@ -313,7 +321,9 @@ function gotFile(imgOriginal) {
                 console.log(imgOriginal);
                 // Create table row
                 let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
-
+               // let createGrid =     <div class="row">
+    
+          
                 // Get upload timestamp
                 uploadDate = new Date();
                 
@@ -473,7 +483,7 @@ function gotFile(imgOriginal) {
 
                 // Append to output table
                 var newRow = table.addRow();
-                newRow.set('name', file.name);
+                newRow.set('name', "somefile");
                 newRow.set('vegetationType', vegetationType);
                 newRow.set('snapDate', snapDate);
                 newRow.set('uploadDate', uploadDate.toString()); // For downloadable file write date on a human readable format

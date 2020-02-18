@@ -26,7 +26,11 @@
 
 
    
-    <div class="container">
+   <div class="container"> 
+            <div class = "teal">
+                    <h2>Mobile First Design Demo</h2>
+                    <p>Resize the window to see the effect!</p>
+             </div>
         <table class="table is-full-width" style="margin-top: 50px;" id="resultsTable" style="visibility:hidden;">
             <tr>
                 <th>#</th>
@@ -44,9 +48,27 @@
             </tr>
         </table>
 
+        <div id="resultGrid">
+            <div class="row">
+                <div class = "col m6 l6 yellow">
+                    <h4>Canopy Cover</h4>
+                </div>
+                <div class = "right  col m6 l6 yellow">
+                    <h4>Kc</h4>
+                </div>
+                <div class = "col m6 l6 yellow">
+                    <h4>ETC (mm)</h4>
+                </div>
+                <div class = "right col m6 l6 yellow">
+                    <h4>ETc(mm)</h4>
+                </div>
+            </div>
+         </div>           
+        
+
         <button type="button" id="btnDownloadCSV" class="button is-link">Download CSV</button>
         <button type="button" id="btnDownloadImg" class="button is-successfull">Download images</button>
-    </div>
+   </div> 
 
 
 </body>
