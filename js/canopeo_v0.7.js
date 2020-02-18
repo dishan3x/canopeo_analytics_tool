@@ -119,16 +119,15 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
-   /*  capture = createCapture({
+    capture = createCapture({
         audio: false,
         video: {
             width: w,
             height: h
         }
     }, function() {
-        console.log('capture ready.')
-    }); */
-    capture = createCapture();
+        console.log('capture ready.');
+    });
     capture.elt.setAttribute('playsinline', '');
     //capture.hide();
     capture.size(w, h);
@@ -146,6 +145,14 @@ function setup() {
     button = createButton('Take snap');
     button.parent('cameraCanvas');
     let col = color(25, 23, 200, 50);
+    button.style('background-color', blue);
+    button.style('height', '60px');
+    button.style('width', '100px');
+    button.position(w/2,2*h-100);
+
+    button = createButton('Take snap');
+    button.parent('cameraCanvas');
+    let colv = color(25, 23, 200, 50);
     button.style('background-color', blue);
     button.style('height', '60px');
     button.style('width', '100px');
