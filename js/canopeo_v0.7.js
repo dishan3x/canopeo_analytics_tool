@@ -76,14 +76,14 @@ var h = 0;
       firebase.auth().signOut();
   }) */
 
-
+/* 
   window.onload = sayHello;
 
   function sayHello(){
     console.log("hello world to say hello");
 }
 
-
+ */
 
 
 function setup() {
@@ -128,6 +128,7 @@ function setup() {
     }, function() {
         console.log('capture ready.');
     });
+
     capture.elt.setAttribute('playsinline', '');
     //capture.hide();
     capture.size(w, h);
@@ -136,32 +137,34 @@ function setup() {
     //canvas.resize(w,h);
 
     var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2;
-  canvas.position(x, y);
+    var y = (windowHeight - height) / 2;
+    canvas.position(x, y);
     //https://github.com/processing/p5.js/issues/2847
 
     //Crreating the Snap button
     //background(0);
-    button = createButton('Take snap');
-    button.parent('cameraCanvas');
+    buttonSnap = createButton('Take snap');
+    buttonSnap.parent('cameraCanvas');
     let col = color(25, 23, 200, 50);
-    button.style('background-color', blue);
-    button.style('height', '60px');
-    button.style('width', '100px');
-    button.position(w/2,2*h-100);
+    buttonSnap.style('background-color', blue);
+    buttonSnap.style('height', '60px');
+    buttonSnap.style('width', '100px');
+    buttonSnap.position((w/2)-20,h-100);
+    buttonSnap.mousePressed(takeSnap);
 
-    button = createButton('Take snap');
-    button.parent('cameraCanvas');
+    buttonRetake = createButton('Retake');
+    buttonRetake.parent('resultGrid');
     let colv = color(25, 23, 200, 50);
-    button.style('background-color', blue);
-    button.style('height', '60px');
-    button.style('width', '100px');
-    button.position(w/2,2*h-100);
-    button.mousePressed(takeSnap);
+    buttonRetake.style('background-color', blue);
+    buttonRetake.style('height', '60px');
+    buttonRetake.style('width', '100px');
+    buttonRetake.position((w/2)-120,(2*h)-100);
+    buttonRetake.mousePressed(retake);
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
     //hide() function hides the HTML video element
     capture.hide();
+    buttonRetake.hide();
 
   
 
@@ -209,8 +212,35 @@ function setup() {
     // Hide results table
     resultsTable = document.getElementById('resultsTable');
     resultsTable.style.visibility = 'hidden';
+    
+    resultsGrid = document.getElementById('resultGrid');
+    resultsGrid.style.visibility = 'hidden';
+
+
+     document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems, options);
+  });
+
+  // Initialize collapsible (uncomment the lines below if you use the dropdown variation)
+  // var collapsibleElem = document.querySelector('.collapsible');
+  // var collapsibleInstance = M.Collapsible.init(collapsibleElem, options);
+
+  // Or with jQuery
+
+ 
+
+
 }
 
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+  }
+  
+  /* Set the width of the side navigation to 0 */
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+  }
 
 /* function draw() {
     background(220);
@@ -248,8 +278,6 @@ function draw() {
     height =  window.outerHeight;  
     //background(0,128,0);
     background(40,128,0);
-    
-
    // console.log("worked");
   if(modo == 0){ 
     //image(capture, width+ 25, 0); 
@@ -269,12 +297,15 @@ function draw() {
 
 function takeSnap(){
     //tint(255);
-    image(capture, 0, 0);
+    console.log("take snap");
+    buttonRetake.show();
+    //image(capture, 0, 0);
     fotoTirada = capture.get();
     console.log(fotoTirada);
     gotFile(fotoTirada);
-    image(fotoTirada, 20, 0);
-    noLoop();
+    //image(fotoTirada, 20, 0);
+    //canvas.noLoop();
+   
     //capture.remove();
     //capture.hide();
     
@@ -285,8 +316,28 @@ function takeSnap(){
     confirmarTakeSnap = true;
 }
 
+function retake(){
+    //tint(255);
+    console.log("take snap");
+    image(capture, 0,0);
+    //image(capture, 0, 0);
+    loop();
+    resultsGrid.style.visibility = 'hidden';
+    cameraCanvas = document.getElementById('cameraCanvas');
+    cameraCanvas.style.visibility = 'visible';
+    //capture.remove();
+    //capture.hide();
+    
+    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
+    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
+    //capture.hide(); colocando o tint ali em cima.
+    
+    confirmarTakeSnap = true;
+}
 
 function gotFile(imgOriginal) {
+    cameraCanvas = document.getElementById('cameraCanvas');
+    cameraCanvas.style.visibility = 'hidden';
     console.log("logged");
     //createImage(image(cam, 0, 0, 320, 240),'somefiel');
     //saveCanvas(cc, 'myCanvas', 'jpg');
@@ -316,7 +367,8 @@ function gotFile(imgOriginal) {
                 // Make results table visible
                 if (imgCounter === 1){
                    // dragDropBanner.remove()
-                    resultsTable.style.visibility = 'visible';
+                    //resultsTable.style.visibility = 'visible';
+                    resultsGrid.style.visibility = 'visible';
                     btnDownloadCSV.style.visibility = 'visible';
                     btnDownloadImg.style.visibility = 'visible';
                 }
@@ -516,7 +568,8 @@ function gotFile(imgOriginal) {
                 newRow.set('eto-crop', etoVal);
 
                 document.getElementById("canopeoCover_val").innerHTML =percentCanopyCover;
-                document.getElementById("cropCoefficient_val").innerHTML = getCropCoeffcient(percentCanopyCover);
+                cropCoffection = float(getCropCoeffcient(percentCanopyCover));
+                document.getElementById("cropCoefficient_val").innerHTML = cropCoffection.toFixed(2);
                 document.getElementById("evapotranspiration_val").innerHTML = etoVal;
                 document.getElementById("cropEvapotranspiration_val").innerHTML =etCrop;
 
