@@ -116,7 +116,7 @@ function setup() {
 
 
     //c =createCanvas(window.innerWidth, window.innerHeight);
-    w = window.innerWidth;
+    w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
     capture = createCapture({
@@ -132,14 +132,22 @@ function setup() {
     //capture.hide();
     capture.size(w, h);
     canvas = createCanvas(w, h);
+    canvas.parent('cameraCanvas');
+    //canvas.resize(w,h);
 
+    var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  canvas.position(x, y);
     //https://github.com/processing/p5.js/issues/2847
 
     //Crreating the Snap button
-    background(0);
+    //background(0);
     button = createButton('Take snap');
+    button.parent('cameraCanvas');
     let col = color(25, 23, 200, 50);
     button.style('background-color', blue);
+    button.style('height', '60px');
+    button.style('width', '100px');
     button.position(w/2,2*h-100);
     button.mousePressed(takeSnap);
     //the createCapture() function creates an HTML video tag
@@ -227,8 +235,13 @@ var confirmarTakeSnap = false;
 
 
 function draw() {  
+    
     width  = window.outerWidth;
     height =  window.outerHeight;  
+    //background(0,128,0);
+    background(40,128,0);
+    
+
    // console.log("worked");
   if(modo == 0){ 
     //image(capture, width+ 25, 0); 
@@ -241,7 +254,7 @@ function draw() {
     image(fotoTirada, 0, 0, 0, 0);
     saveCanvas("minhaFoto", "jpg");
     capture.remove();
-    background(255);
+    //background(255);
     modo = 0;
   }
 } 
@@ -493,6 +506,11 @@ function gotFile(imgOriginal) {
                 newRow.set('canopyCover', percentCanopyCover);
                 newRow.set('eto', etoVal);
                 newRow.set('eto-crop', etoVal);
+
+                document.getElementById("canopeoCover_val").innerHTML =percentCanopyCover;
+                document.getElementById("cropCoefficient_val").innerHTML = getCropCoeffcient(percentCanopyCover);
+                document.getElementById("evapotranspiration_val").innerHTML = etoVal;
+                document.getElementById("cropEvapotranspiration_val").innerHTML =etCrop;
 
                 var imgName = 'img_' + uploadDate.getTime();
                 var data = {
@@ -887,11 +905,15 @@ function getETOValue(location,weather) {
 
   function getETCrop(cc,eto){
     let etCrop;
-    etCrop = eto * (1.1 * (cc/100) + 0.17);
+    etCrop = eto * getCropCoeffcient(cc);
     console.log("eto",eto);
     console.log("cc",cc);
     console.log("etcrop",etCrop);
     return Math.round(etCrop * 100) / 100;
+  }
+
+  function getCropCoeffcient(cropCoffection){
+     return  (1.1 * (cropCoffection/100) + 0.17);
   }
 
   function getDate(){
