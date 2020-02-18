@@ -119,7 +119,7 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
-    capture = createCapture({
+   /*  capture = createCapture({
         audio: false,
         video: {
             width: w,
@@ -127,7 +127,8 @@ function setup() {
         }
     }, function() {
         console.log('capture ready.')
-    });
+    }); */
+    capture = createCapture();
     capture.elt.setAttribute('playsinline', '');
     //capture.hide();
     capture.size(w, h);
