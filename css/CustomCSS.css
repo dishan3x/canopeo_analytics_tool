@@ -1,3 +1,14 @@
 body {
     background-color: green;
   }
+
+  @media #{$medium-and-up} {
+    .container {
+      width: 95%;
+    }
+ 
+    @media only screen and (max-width: 600px) {
+      .container {
+        width: 95% !important;
+      }
+    }
