@@ -139,8 +139,8 @@ function setup() {
     background(0);
     button = createButton('Take snap');
     let col = color(25, 23, 200, 50);
-    button.style('background-color', col);
-    button.position(w,h);
+    button.style('background-color', blue);
+    button.position(w/2,2*h-100);
     button.mousePressed(takeSnap);
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
