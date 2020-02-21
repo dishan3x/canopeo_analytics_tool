@@ -122,15 +122,18 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
-   /*  video = createCapture({
+     video = createCapture({
         audio: false,
         video: {
             width: w,
-            height: h
+            height: h,
+            facingMode: {
+                exact: "environment"
+              }
         }
     }, function() {
         console.log('capture ready.');
-    }); */
+    }); 
     
     video = createCapture();
     screenWidth = 300;
