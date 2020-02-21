@@ -85,6 +85,9 @@ var h = 0;
 
  */
 
+var video;
+var sanpButton;
+var retakeButton;
 
 function setup() {
     // Print software version
@@ -119,7 +122,7 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
-    capture = createCapture({
+    video = createCapture({
         audio: false,
         video: {
             width: w,
@@ -128,44 +131,48 @@ function setup() {
     }, function() {
         console.log('capture ready.');
     });
+    
+    screenWidth = 300;
+    sreenHeight = 300;
+    video.elt.setAttribute('playsinline', '');
+    video.size(screenWidth, sreenHeight);
 
-    capture.elt.setAttribute('playsinline', '');
-    //capture.hide();
-    capture.size(w, h);
-    canvas = createCanvas(w, h);
+    canvas = createCanvas(sreenHeight, sreenHeight);
     canvas.parent('cameraCanvas');
     //canvas.resize(w,h);
 
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
     canvas.position(x, y);
+    canvas.style('background-color',color(25, 23, 200, 50));
+    
     //https://github.com/processing/p5.js/issues/2847
 
     //Crreating the Snap button
     //background(0);
-    buttonSnap = createButton('Take snap');
-    buttonSnap.parent('cameraCanvas');
+    sanpButton = createButton('Take snap');
+    sanpButton.parent('cameraCanvas');
     let col = color(25, 23, 200, 50);
-    buttonSnap.style('background-color', blue);
-    buttonSnap.style('height', '60px');
-    buttonSnap.style('width', '100px');
-    buttonSnap.position((w/2)-20,h-100);
-    buttonSnap.mousePressed(takeSnap);
+    sanpButton.style('background-color', blue);
+    sanpButton.style('height', '60px');
+    sanpButton.style('width', '100px');
+    sanpButton.position((w/2)-20,h-100);
+    sanpButton.mousePressed(takeSnap);
 
-    buttonRetake = createButton('Retake');
-    buttonRetake.parent('resultGrid');
+    retakeButton = createButton('Retake');
+    retakeButton.parent('resultGrid');
     let colv = color(25, 23, 200, 50);
-    buttonRetake.style('background-color', blue);
-    buttonRetake.style('height', '60px');
-    buttonRetake.style('width', '100px');
-    buttonRetake.position((w/2)-120,(2*h)-100);
-    buttonRetake.mousePressed(retake);
+    retakeButton.style('background-color', blue);
+    retakeButton.style('height', '60px');
+    retakeButton.style('width', '100px');
+    retakeButton.position((w/3)-20,(h)-150);
+    retakeButton.mousePressed(retakeSnap);
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
     //hide() function hides the HTML video element
-    capture.hide();
-    buttonRetake.hide();
-
+    //video.hide();
+    //retakeButton.hide();
+   // console.log("coming here");
   
 
     // Upload button
@@ -274,68 +281,53 @@ var confirmarTakeSnap = false;
 
 function draw() {  
     
-    width  = window.outerWidth;
-    height =  window.outerHeight;  
-    //background(0,128,0);
-    background(40,128,0);
+    image(video, 0,0);   
+ /*    //background(0,128,0);
+   // background(40,128,0);
    // console.log("worked");
+   console.log("lol",modo);
   if(modo == 0){ 
     //image(capture, width+ 25, 0); 
      
-    image(capture, 0,0);   
-    console.log("lol");
+    image(video, 0,0);   
+    
   }else if(modo == 1){
-    background(255);
+    
+    canvas.clear();
+    image(video, 0,0);  
     console.log("here mode 1");
-    image(fotoTirada, 0, 0, 0, 0);
-    saveCanvas("minhaFoto", "jpg");
-    capture.remove();
+    //image(fotoTirada, 0, 0, 0, 0);
+    //saveCanvas("minhaFoto", "jpg");
+    capture.hide();
     //background(255);
     modo = 0;
-  }
+  } */
 } 
 
 function takeSnap(){
-    //tint(255);
+
     console.log("take snap");
-    buttonRetake.show();
-    //image(capture, 0, 0);
-    fotoTirada = capture.get();
-    console.log(fotoTirada);
-    gotFile(fotoTirada);
-    //image(fotoTirada, 20, 0);
-    //canvas.noLoop();
-   
-    //capture.remove();
-    //capture.hide();
-    
-    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
-    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
-    //capture.hide(); colocando o tint ali em cima.
-    
+    retakeButton.show();
+    var c = get();
+    gotFile(c);
+    canvas.clear();
     confirmarTakeSnap = true;
 }
 
-function retake(){
-    //tint(255);
-    console.log("take snap");
-    image(capture, 0,0);
-    //image(capture, 0, 0);
-    loop();
+function retakeSnap(){
+
+  
+    console.log("retakeSanp");
+    modo = 1;
     resultsGrid.style.visibility = 'hidden';
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.visibility = 'visible';
-    //capture.remove();
-    //capture.hide();
-    
-    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
-    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
-    //capture.hide(); colocando o tint ali em cima.
-    
+  
     confirmarTakeSnap = true;
 }
 
 function gotFile(imgOriginal) {
+
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.visibility = 'hidden';
     console.log("logged");
@@ -365,13 +357,15 @@ function gotFile(imgOriginal) {
                 imgCounter += 1;
 
                 // Make results table visible
-                if (imgCounter === 1){
+              /*   if (imgCounter === 1){
                    // dragDropBanner.remove()
                     //resultsTable.style.visibility = 'visible';
                     resultsGrid.style.visibility = 'visible';
                     btnDownloadCSV.style.visibility = 'visible';
                     btnDownloadImg.style.visibility = 'visible';
-                }
+                } */
+                
+                    resultsGrid.style.visibility = 'visible';
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
                 let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
@@ -448,17 +442,19 @@ function gotFile(imgOriginal) {
                 var aspectRatio = imgClassified.width/imgClassified.height;
                 
                 // Thumbnail original image
-                thumbnailOriginal = createImg(imgOriginal);
+                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(128*aspectRatio,128)
                 thumbnailOriginal.id(imgOriginalId)
-                thumbnailOriginal.parent(imgOriginalCellId)
+                thumbnailOriginal.parent(orientedID)
+                //originalID
                 
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
                 thumbnailClassified.size(128*aspectRatio,128);
                 thumbnailClassified.id(imgClassifiedId);
-                thumbnailClassified.parent(imgClassifiedCellId);
+                thumbnailClassified.parent(originalID);
                 thumbnailClassified.style.border = "5px solid black;"
+                
 
                 /* EXIF.getData(document.getElementById(imgOriginalId), function() {
                      //var allMetaData = EXIF.getAllTags(this);
