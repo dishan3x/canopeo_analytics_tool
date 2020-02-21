@@ -122,23 +122,19 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     //create a video capture object
-     video = createCapture({
+    video = createCapture({
         audio: false,
         video: {
             width: w,
-            height: h,
-            facingMode: {
-                exact: "environment"
-              }
+            height: h
         }
     }, function() {
         console.log('capture ready.');
-    }); 
+    });
     
-    video = createCapture();
     screenWidth = 300;
     sreenHeight = 300;
-    //video.elt.setAttribute('playsinline', '');
+    video.elt.setAttribute('playsinline', '');
     video.size(screenWidth, sreenHeight);
 
     canvas = createCanvas(sreenHeight, sreenHeight);
