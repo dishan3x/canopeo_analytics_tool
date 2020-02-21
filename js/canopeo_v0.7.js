@@ -330,42 +330,17 @@ function gotFile(imgOriginal) {
 
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.visibility = 'hidden';
-    console.log("logged");
-    //createImage(image(cam, 0, 0, 320, 240),'somefiel');
-    //saveCanvas(cc, 'myCanvas', 'jpg');
-   // loadImage(image(cam, 0, 0, 320, 240));
-    console.log("arrive here also");
-    
-    console.log("arrive here also 2");
-    
-    console.log("arrive here also 3");
-   //image(savedFrame,10, 10, 50, 50);
-        console.log("almost there");
-/*     if(imgCounter <= 50){
-        if (savedFrame.type === 'image'){ */
-            console.log("almost there");
-          //  loadImage(file,function(imgOriginal){
+
                 console.log("in geo location");
                 // Get geographic coordinates
                 getLocation();
-                //console.log(geoCordinates);
-                console.log(getLocation());
                
-               console.log("pass location");
 
                 // Start counting images
                 imgCounter += 1;
 
-                // Make results table visible
-              /*   if (imgCounter === 1){
-                   // dragDropBanner.remove()
-                    //resultsTable.style.visibility = 'visible';
-                    resultsGrid.style.visibility = 'visible';
-                    btnDownloadCSV.style.visibility = 'visible';
-                    btnDownloadImg.style.visibility = 'visible';
-                } */
-                
-                    resultsGrid.style.visibility = 'visible';
+                // Displaying the result grid 
+                resultsGrid.style.visibility = 'visible';
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
                 let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
@@ -383,9 +358,6 @@ function gotFile(imgOriginal) {
                 let etoCellId ='eto-cell'+ imgCounter;
                 let etoCropId ='eto-crop'+ imgCounter;
      
-
-                console.log("passed creating elements");
-                console.log(imgOriginal);
                 // Create table row
                 let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
                // let createGrid =     <div class="row">
@@ -454,20 +426,6 @@ function gotFile(imgOriginal) {
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent(originalID);
                 thumbnailClassified.style.border = "5px solid black;"
-                
-
-                /* EXIF.getData(document.getElementById(imgOriginalId), function() {
-                     //var allMetaData = EXIF.getAllTags(this);
-                     //console.log(JSON.stringify(allMetaData, null, "\t"));
-                    snapDate = EXIF.getTag(this, "DateTime");
-                    latArray = EXIF.getTag(this, "GPSLatitude");
-                    latRef = EXIF.getTag(this, "GPSLatitudeRef")
-                    lonArray = EXIF.getTag(this, "GPSLongitude");
-                    lonRef = EXIF.getTag(this, "GPSLongitudeRef");
-                    altitude = EXIF.getTag(this, "GPSAltitude");
-                    altitudeRef = EXIF.getTag(this, "GPSAltitudeRef");
-                });
- */
                 
                 // Check EXIF dateTime
                 if (typeof snapDate === 'undefined'){
