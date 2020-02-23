@@ -24,23 +24,23 @@
 
 
    
-   <div class="container"> 
-      <div id="mySidenav" class="sidenav">
+   <div id="containerDiv" class="container"> 
+     <!--  <div id="mySidenav" class="sidenav">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
           <a href="#">About</a>
           <a href="#">share</a>
           <a href="#">store it</a>
           <a href="#">Contact</a>
-        </div>
+        </div> -->
         
         <!-- Use any element to open the sidenav -->
-        <span onclick="openNav()">open</span>
+      <!--   <span onclick="openNav()">open</span>
         
             <div class = "teal">
                     <h2>Green Finder</h2>
                     <p>Please take a picture of the canopy!</p>
-             </div>
-        <table class="table is-full-width" style="margin-top: 50px;" id="resultsTable" style="visibility:hidden;">
+             </div> -->
+ <!--        <table class="table is-full-width" style="margin-top: 50px;" id="resultsTable" style="visibility:hidden;">
             <tr>
                 <th>#</th>
                 <th>Original</th>
@@ -55,7 +55,7 @@
                 <th class="is-hidden-mobile"> EtoCropValue</th>
 
             </tr>
-        </table>
+        </table> -->
 
         <div id="resultGrid">
             <div class="row">
@@ -95,7 +95,7 @@
                             </div>
                           </div>
                           <div class="col s12 m6">
-                                <div class="card blue-grey darken-1">
+                              <div class="card blue-grey darken-1">
                                   <div class="card-content white-text">
                                     <span class="card-title">ETO(mm)</span>
                                     <p class="titleView" id="evapotranspiration_val"></p>
@@ -105,8 +105,8 @@
                                    
                                   </div>
                                 </div>
-                              </div>
-                              <div class="col s12 m6">
+                            </div>
+                          <div class="col s12 m6">
                                     <div class="card blue-grey darken-1">
                                       <div class="card-content white-text">
                                         <span class="card-title">ETc(mm)</span>
@@ -117,13 +117,15 @@
                                     
                                       </div>
                                     </div>
-                                  </div>
-                                  <div id="originalID"></div>
-                                  <div id="orientedID"></div>
+                                </div>
+                              <div class="row">
+                                  <div id="orignalImage"></div>
+                                  <div id="classifiedImage"></div>
+                                </div>
             </div>
          </div>           
         
-         <div id="cameraCanvas">
+         <div id="cameraCanvas" style="width: 100%; height: 100%;" >
 
          </div>
 
@@ -131,7 +133,7 @@
         <button type="button" id="btnDownloadImg" class="button is-successfull">Download images</button>
    </div> 
 
-   <nav> <!-- navbar content here  --> </nav>
+  <!--  <nav> <!-- navbar content here  --> </nav> -->
 
   
         

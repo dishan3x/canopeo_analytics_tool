@@ -121,30 +121,41 @@ function setup() {
     //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.outerWidth;
     h = window.outerHeight;
+    var clientHeight = document.getElementById('containerDiv').offsetHeight ;
+    var clientWidth = document.getElementById('containerDiv').offsetWidth ;
+    console.log("clientHeight",clientHeight);
+    console.log("clientWidth",clientWidth);
+
+    screenWidth = 300;
+    sreenHeight = 300;
+
+    
+    screenWidth = clientHeight;
+      sreenHeight = clientWidth;
     //create a video capture object
+    console.log("before createing the create capture");
     video = createCapture({
         audio: false,
         video: {
-            width: w,
-            height: h
+            width: screenWidth,
+            height: sreenHeight
         }
     }, function() {
         console.log('capture ready.');
     });
-    
-    screenWidth = 300;
-    sreenHeight = 300;
+    console.log("after createing the create capture");
+
     video.elt.setAttribute('playsinline', '');
     video.size(screenWidth, sreenHeight);
-
-    canvas = createCanvas(sreenHeight, sreenHeight);
+    // createCanvas(width,height)
+    canvas = createCanvas(screenWidth, sreenHeight);
     canvas.parent('cameraCanvas');
-    //canvas.resize(w,h);
 
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
     canvas.position(x, y);
-    canvas.style('background-color',color(25, 23, 200, 50));
+    //canvas.style('background-color',color(25, 23, 200, 50));
+    canvas.center();
     
     //https://github.com/processing/p5.js/issues/2847
 
@@ -170,7 +181,7 @@ function setup() {
     //the createCapture() function creates an HTML video tag
     //as well as pulls up image to be used in p5 canvas
     //hide() function hides the HTML video element
-    //video.hide();
+    video.hide();
     //retakeButton.hide();
    // console.log("coming here");
   
@@ -216,9 +227,9 @@ function setup() {
         });
     });
 
-    // Hide results table
+ /*    // Hide results table
     resultsTable = document.getElementById('resultsTable');
-    resultsTable.style.visibility = 'hidden';
+    resultsTable.style.visibility = 'hidden'; */
     
     resultsGrid = document.getElementById('resultGrid');
     resultsGrid.style.visibility = 'hidden';
@@ -309,8 +320,13 @@ function takeSnap(){
     console.log("take snap");
     retakeButton.show();
     var c = get();
+    const orignalImageDiv = document.getElementById("orignalImage");
+    orignalImageDiv.innerHTML = '';
+    const classifiedImageDiv = document.getElementById("classifiedImage");
+    classifiedImageDiv.innerHTML = '';
     gotFile(c);
     canvas.clear();
+
     confirmarTakeSnap = true;
 }
 
@@ -359,7 +375,8 @@ function gotFile(imgOriginal) {
                 let etoCropId ='eto-crop'+ imgCounter;
      
                 // Create table row
-                let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
+               /*  let tableRow = createElement('tr','<td '+ 'id="' + imgCounterCellId + '"' + '></td>' + '<td '+ 'id="' + imgOriginalCellId + '"' +'></td>'+'<td '+ 'id="' + imgClassifiedCellId + '"' +'></td>' + '<td class="is-hidden-mobile" '+ 'id="' + vegetationTypeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + filenameCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + latitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" ' + 'id="' + longitudeCellId + '"' + '></td>' + '<td class="is-hidden-mobile" '+ 'id="' + altitudeCellId + '"' + '></td>'+'<td '+ 'id="' + canopyCoverCellId + '"' + '></td>' +'<td '+ 'id="' + etoCellId + '"' + '></td>'+'<td '+ 'id="' + etoCropId + '"' + '></td>'  ).parent('resultsTable');    
+                */
                // let createGrid =     <div class="row">
     
           
@@ -417,14 +434,14 @@ function gotFile(imgOriginal) {
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(128*aspectRatio,128)
                 thumbnailOriginal.id(imgOriginalId)
-                thumbnailOriginal.parent(orientedID)
+                thumbnailOriginal.parent(orignalImage)
                 //originalID
                 
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
                 thumbnailClassified.size(128*aspectRatio,128);
                 thumbnailClassified.id(imgClassifiedId);
-                thumbnailClassified.parent(originalID);
+                thumbnailClassified.parent(classifiedImage);
                 thumbnailClassified.style.border = "5px solid black;"
                 
                 // Check EXIF dateTime
@@ -478,14 +495,14 @@ function gotFile(imgOriginal) {
                  etCrop = getETCrop(percentCanopyCover,etoVal);
                  console.log("passed eto crop value",etCrop);
                 // Update HTML table
-                resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
+/*                 resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
                 resultsTable.rows[imgCounter].cells[vegetationTypeCellId].innerHTML = vegetationType;
                 resultsTable.rows[imgCounter].cells[filenameCellId].innerHTML = "some file";
                 resultsTable.rows[imgCounter].cells[canopyCoverCellId].innerHTML = percentCanopyCover;
                 resultsTable.rows[imgCounter].cells[etoCellId].innerHTML = etoVal;
-                resultsTable.rows[imgCounter].cells[etoCropId].innerHTML = etCrop;
+                resultsTable.rows[imgCounter].cells[etoCropId].innerHTML = etCrop; */
 
-                if(latitude === null){
+               /*  if(latitude === null){
                     resultsTable.rows[imgCounter].cells[latitudeCellId].innerHTML = 'Unknown';
                 } else {
                     console.log("lattitude",latitude);
@@ -505,7 +522,7 @@ function gotFile(imgOriginal) {
                     console.log("lattitude",altitude);
                     resultsTable.rows[imgCounter].cells[altitudeCellId].innerHTML = altitude;
                 }
-
+ */
                
 
                 // Append to output table
@@ -694,19 +711,6 @@ function getAddress(lat,lon) {
 
  function getWeatherData(){
     // module for weather
-    
-    /*windspeed = WSPD2MVEC	
-    tempAvg =  TEMP2MAVG
-    tempMin = TEMP2MMIN
-    tempMax =TEMP2MMAX
-    humidityMax =RELHUM2MMAX
-    humidityMin = RELHUM10MMIN
-    doy = 1
-    solarRad = SR
-    */
-    console.log("esd");
-    // Date today
-    // 
     
    date = new Date();
     console.log("todaysDate",date);
