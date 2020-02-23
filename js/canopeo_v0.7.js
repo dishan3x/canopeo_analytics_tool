@@ -121,8 +121,16 @@ function setup() {
     //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.outerWidth;
     h = window.outerHeight;
-    var clientHeight = document.getElementById('containerDiv').offsetHeight ;
-    var clientWidth = document.getElementById('containerDiv').offsetWidth ;
+    var clientWindow = document.getElementById('containerDiv') ;
+    console.log(clientWindow);
+
+    var body = document.body, html = document.documentElement;
+
+    var clientHeight = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+    //var clientWidth = document.getElementById('containerDiv').width ;
+    var clientWidth  =  Math.max( body.scrollWidth, body.offsetWidth, 
+        html.clientWidth, html.scrollWidth, html.offsetWidth );
     console.log("clientHeight",clientHeight);
     console.log("clientWidth",clientWidth);
 
@@ -130,8 +138,8 @@ function setup() {
     sreenHeight = 300;
 
     
-    screenWidth = clientHeight;
-      sreenHeight = clientWidth;
+    screenWidth = clientWidth;
+      sreenHeight = clientHeight;
     //create a video capture object
     console.log("before createing the create capture");
     video = createCapture({
@@ -143,14 +151,16 @@ function setup() {
     }, function() {
         console.log('capture ready.');
     });
+    
     console.log("after createing the create capture");
 
     video.elt.setAttribute('playsinline', '');
-    video.size(screenWidth, sreenHeight);
+    //video.size(screenWidth, sreenHeight);
     // createCanvas(width,height)
     canvas = createCanvas(screenWidth, sreenHeight);
     canvas.parent('cameraCanvas');
-
+    resizeCanvas(screenWidth, sreenHeight);
+    
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
     canvas.position(x, y);
@@ -250,6 +260,11 @@ function setup() {
 
 
 }
+
+var setCanvasSize = function() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    }
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";

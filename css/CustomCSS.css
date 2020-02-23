@@ -1,22 +1,16 @@
 
  html, body {
   height: 100%;
+  width: 100%;
   margin: 0;
 }
 
-#containerDiv {
-  min-height: 100%; 
-}
 /* body {
     background-color: green;
   }
  */
 
-    @media only screen and (max-width: 600px) {
-      .container {
-        width: 95% !important;
-      }
-    }
+
 
     .titleView{ 
       font-size:5vw;
