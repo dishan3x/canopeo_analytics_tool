@@ -121,22 +121,41 @@ function setup() {
     //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.outerWidth;
     h = window.outerHeight;
-    var clientWindow = document.getElementById('containerDiv') ;
-    console.log(clientWindow);
+    var containerDiv = document.getElementById('containerDiv') ;
+    //console.log(clientWindow);
 
     var body = document.body, html = document.documentElement;
 
+    /* var clientHeight = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight ); */
     var clientHeight = Math.max( body.scrollHeight, body.offsetHeight, 
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+                        html.clientHeight, html.scrollHeight, html.offsetHeight );      
+    console.log("body scroll",body.scrollHeight) ;
+    console.log("body offset", body.offsetHeight) ;
+    console.log("html height",html.clientHeight) ;
+    console.log("html scroll", html.scrollHeight) ;
+    console.log("html offset",html.offsetHeight ) ;
+            
     //var clientWidth = document.getElementById('containerDiv').width ;
     var clientWidth  =  Math.max( body.scrollWidth, body.offsetWidth, 
         html.clientWidth, html.scrollWidth, html.offsetWidth );
+    
+    console.log("body scroll",body.scrollWidth) ;
+    console.log("body offset", body.offsetWidth) ;
+    console.log("html height",html.clientWidth) ;
+    console.log("html scroll", html.scrollWidth) ;
+    console.log("html offset",html.offsetWidth ) ;
+
     console.log("clientHeight",clientHeight);
     console.log("clientWidth",clientWidth);
+
+
 
     screenWidth = 300;
     sreenHeight = 300;
 
+    clientHeight =((body.offsetHeight)*90)/100;
+    clientWidth =  ((body.offsetWidth)*90)/100;
     
     screenWidth = clientWidth;
       sreenHeight = clientHeight;
@@ -156,8 +175,9 @@ function setup() {
 
     video.elt.setAttribute('playsinline', '');
     canvas = createCanvas(screenWidth, sreenHeight);
+    canvas.style('position','inherit');
     canvas.parent('cameraCanvas');
-    //canvas.style('position','relative');
+  
     resizeCanvas(screenWidth, sreenHeight);
 
     
@@ -181,8 +201,8 @@ function setup() {
     sanpButton.style('background-color', blue);
     sanpButton.style('height', '60px');
     sanpButton.style('width', '100px');
-    sanpButton.position(0, 0);
-    //sanpButton.position(w/2,h+1);
+    //sanpButton.position(0, 0);
+    sanpButton.position(clientWidth/3,(3*clientHeight)/4);
     sanpButton.mousePressed(takeSnap);
 
     retakeButton = createButton('Retake');
@@ -357,7 +377,7 @@ function retakeSnap(){
     //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
     cameraCanvas = document.getElementById('cameraCanvas');
-    cameraCanvas.style.visibility = 'visible';
+    cameraCanvas.style.display = 'block';
   
     confirmarTakeSnap = true;
 }
@@ -365,7 +385,7 @@ function retakeSnap(){
 function gotFile(imgOriginal) {
 
     cameraCanvas = document.getElementById('cameraCanvas');
-    cameraCanvas.style.visibility = 'hidden';
+    cameraCanvas.style.display = 'none';
 
                 console.log("in geo location");
                 // Get geographic coordinates
