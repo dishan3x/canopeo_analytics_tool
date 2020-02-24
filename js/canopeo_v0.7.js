@@ -417,6 +417,9 @@ function gotFile(imgOriginal) {
     cameraCanvas.style.display = 'none';
 
                 console.log("in geo location");
+                console.log("imgOriginal");
+                
+                console.log("imgOriginal",imgOriginal);
                 // Get geographic coordinates
                 getLocation();
                
