@@ -296,7 +296,7 @@ function setup() {
       items.forEach( (item,i)=>{
           items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
-      alert(items);
+      //alert(items);
       output.innerHTML += items.join(' ') + '<br />';
   
   };
