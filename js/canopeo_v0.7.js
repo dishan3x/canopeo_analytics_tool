@@ -91,7 +91,7 @@ var retakeButton;
 
 function setup() {
     // Print software version
-    console.log('Running v0.7');
+   // console.log('Running v0.7');
    
     // Dropzone
     // commented by dishan
@@ -130,27 +130,12 @@ function setup() {
                        html.clientHeight, html.scrollHeight, html.offsetHeight ); */
     var clientHeight = Math.max( body.scrollHeight, body.offsetHeight, 
                         html.clientHeight, html.scrollHeight, html.offsetHeight );      
-    console.log("body scroll",body.scrollHeight) ;
-    console.log("body offset", body.offsetHeight) ;
-    console.log("html height",html.clientHeight) ;
-    console.log("html scroll", html.scrollHeight) ;
-    console.log("html offset",html.offsetHeight ) ;
+
             
     //var clientWidth = document.getElementById('containerDiv').width ;
     var clientWidth  =  Math.max( body.scrollWidth, body.offsetWidth, 
         html.clientWidth, html.scrollWidth, html.offsetWidth );
     
-    console.log("body scroll",body.scrollWidth) ;
-    console.log("body offset", body.offsetWidth) ;
-    console.log("html height",html.clientWidth) ;
-    console.log("html scroll", html.scrollWidth) ;
-    console.log("html offset",html.offsetWidth ) ;
-
-    console.log("clientHeight",clientHeight);
-    console.log("clientWidth",clientWidth);
-
-
-
     screenWidth = 300;
     sreenHeight = 300;
 
@@ -160,7 +145,6 @@ function setup() {
     screenWidth = clientWidth;
       sreenHeight = clientHeight;
     //create a video capture object
-    console.log("before createing the create capture");
     video = createCapture({
         audio: false,
         video: {
@@ -169,10 +153,10 @@ function setup() {
             facingMode: "environment"
         }
     }, function() {
-        console.log('capture ready.');
+        //console.log('capture ready.');
     });
     
-    console.log("after createing the create capture");
+    
 
     video.elt.setAttribute('playsinline', '');
     canvas = createCanvas(screenWidth, sreenHeight);
@@ -214,33 +198,9 @@ function setup() {
     retakeButton.style('width', '100px');
     retakeButton.position((w/3)-20,(h)-150);
     retakeButton.mousePressed(retakeSnap);
-    //the createCapture() function creates an HTML video tag
-    //as well as pulls up image to be used in p5 canvas
-    //hide() function hides the HTML video element
+
     video.hide();
-    //retakeButton.hide();
-   // console.log("coming here");
-  
 
-    // Upload button
-    //btnUpload = createFileInput(gotFile,'multiple');
-    /* btnUpload = createCapture(gotFile);
-    btnUpload.parent('btnUploadLabel');
-    btnUpload.style('display','none');
-    btnUpload.elt.disabled = true; */
-    
-
-
-    // Dishan Somethin important
-   // document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
-
- 
-    //btnUploadLabel = document.getElementById('btnUploadLabel');
-    // btnUploadLabel.addEventListener('mouseover', function(){
-    //     if (vegetationType === 'empty'){
-    //         alert('We would appreciate you contribute with a valid vegetation type.')
-    //     }
-    // })
 
     let downloadTimestamp = new Date();
 
@@ -294,7 +254,7 @@ function setup() {
   
       // Use JSON to transform objects, all others display normally
       items.forEach( (item,i)=>{
-          //alert(item);
+          alert(item);
          // items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
       output.innerHTML += items.join(' ') + '<br />';
@@ -317,16 +277,7 @@ function consoleInput( data ) {
     }
 }
 
-// Alert javascript object in alert box
-function alertObject(obj){    
-    // adding the  alert obj 
-    for(var key in obj) {
-    alert('key: ' + key + '\n' + 'value: ' + obj[key]);
-    if( typeof obj[key] === 'object' ) {
-        alertObject(obj[key]);
-    }
-    }
-}
+
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -337,25 +288,7 @@ function openNav() {
     document.getElementById("mySidenav").style.width = "0";
   }
 
-/* function draw() {
-    background(220);
-    
-    //draw video capture feed as image inside p5 canvas
-   image(capture, 0, 0);
-  }
- */
-// Event listener for Logout button
-/* btnLogout.addEventListener('click', function(e){
-    firebase.auth().signOut();
-    window.location.href = 'index.html';
-}) */
-/* function takeSnap() {
-    savedFrame = saveFrames('out', 'png', 1, 1, data => {
-        console.log(data);
-        gotFile(data.data);
-        capture.remove();
-    });
-} */
+
 
 var capture;
 var buttonTirarFoto;
@@ -397,20 +330,12 @@ function takeSnap(){
     console.log("take snap");
     retakeButton.show();
     var c = get();
-               // Thumbnail original image
-              /*  thumbnailOriginal2 = createImg(c.canvas.toDataURL());
-               thumbnailOriginal2.size(128*aspectRatio,128);
-               thumbnailOriginal2.id(imgOriginalId);
-               thumbnailOriginal2.parent(orignalImage); */
+
     const orignalImageDiv = document.getElementById("orignalImage");
     orignalImageDiv.innerHTML = '';
     const classifiedImageDiv = document.getElementById("classifiedImage");
     classifiedImageDiv.innerHTML = '';
-    console.log("printer the c in Got file");
-    console.log(c);
-    console.log("pixel");
-    console.log(c.pixels);
-    alertObject(c);
+
     gotFile(c);
     
     canvas.clear();
@@ -436,7 +361,6 @@ function gotFile(imgOriginal) {
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.display = 'none';
 
-                console.log("in geo location");
                 // Get geographic coordinates
                 getLocation();
                
@@ -449,6 +373,7 @@ function gotFile(imgOriginal) {
                 resultsGrid.style.display = "block";
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
+                console.log("imgOriginalId",imgOriginalId);
                 let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
     
                 // Generate Id for table cells
@@ -480,14 +405,16 @@ function gotFile(imgOriginal) {
                     imgOriginal.resize(0,1440);
                 }
                 imgOriginal.loadPixels();
+                console.log("loaded the pixel for image original");
+                console.log(imgOriginal);
 
                 console.log("passed resizing");
                 
                 // Initiatve classified image
                 imgClassified = createImage(imgOriginal.width,imgOriginal.height);
                 imgClassified.loadPixels();
-                console.log("imgOriginalWidth",imgOriginal.width);
-                console.log("imgOriginalheight",imgOriginal.height);
+                console.log("loaded the pixel for image classified");
+                console.log(imgClassified);
                 console.log("passed classify images");
                 // Classify image following manuscript settings
                 let RGratio = 0.95;
@@ -507,6 +434,7 @@ function gotFile(imgOriginal) {
                             imgClassified.pixels[index+2] = 255;
                             imgClassified.pixels[index+3] = 255;
                             canopyCover += 1;
+                            
 
                         } else {
                             imgClassified.pixels[index+0] = 0;
@@ -516,7 +444,9 @@ function gotFile(imgOriginal) {
                         }
                     }
                 }
+
                 imgClassified.updatePixels();
+                console.log("canopy cover inside the R/G",canopyCover);
                 percentCanopyCover = round(canopyCover/(imgClassified.width * imgClassified.height)*1000)/10;
 
                 // Calculate aspect ratio for thumbnails and resize images
@@ -823,10 +753,10 @@ function getAddress(lat,lon) {
        // Seperated by /n 
        console.log("************************ Date Recieved *******************************************");
        var lineSeperation = data.split(/\r?\n/);
-       console.log("someDate",lineSeperation[0]);
+       //console.log("someDate",lineSeperation[0]);
        var apiData = lineSeperation[1].split(",");
        //PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR
-       console.log("thevalue",apiData[0]);
+      // console.log("thevalue",apiData[0]);
        //var weather  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
 
        localStorage.setItem('testObject', JSON.stringify(lineSeperation[1]));
@@ -870,7 +800,7 @@ function getAddress(lat,lon) {
        weatherT.storedDate    = dateStr;
        wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
        weatherT = wr;
-       console.log("printing new creted date", weatherT);
+       //console.log("printing new creted date", weatherT);
       // console.log("newDataSetCrated",data);
        
    });
@@ -879,7 +809,7 @@ function getAddress(lat,lon) {
    [2019-01-01 00:00:00,Ashland Bottoms,-1.73,-9.77,2.76,90.74,67.15,0.0,2.14],
    [2019-01-02 00:00:00,Ashland Bottoms,-9.75,-11.67,-7.85,77.15,62.65,0.0,3.74); */
    // 2019-02-04 00:00:00,Ashland Bottoms,14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73 // for today
-    console.log("testing the weather",  weatherT);
+   // console.log("testing the weather",  weatherT);
     //console.log("testing the weather", dataa);
 
     day = dayOftheYear();
@@ -909,12 +839,12 @@ function getAddress(lat,lon) {
     });
     wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
     //local storage 
-    console.log("retrievedObject",retrievedObject);
-    console.log("wr",wr);
+    //console.log("retrievedObject",retrievedObject);
+    //console.log("wr",wr);
 
    // console.log('retrievedObject: ', JSON.parse(retrievedObject));
-    console.log(weather);
-    console.log("temperatuure avg"+weather.tempAvg);
+    //console.log(weather);
+    //console.log("temperatuure avg"+weather.tempAvg);
     return wr;
     
 }
@@ -1006,11 +936,8 @@ function getETOValue(location,weather) {
   function dayOftheYear(){
     var today = new Date();
     var start = new Date(today.getFullYear(), 0, 0);
-    console.log("start",start);
     var diff = today - start;
     var oneDay = 1000 * 60 * 60 * 24;
-    var days = Math.floor(diff / oneDay);
-    console.log("day",days);
     return days;
   }
 
@@ -1018,9 +945,6 @@ function getETOValue(location,weather) {
   function getETCrop(cc,eto){
     let etCrop;
     etCrop = eto * getCropCoeffcient(cc);
-    console.log("eto",eto);
-    console.log("cc",cc);
-    console.log("etcrop",etCrop);
     return Math.round(etCrop * 100) / 100;
   }
 
