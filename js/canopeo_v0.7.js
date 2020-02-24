@@ -254,7 +254,7 @@ function setup() {
   
       // Use JSON to transform objects, all others display normally
       items.forEach( (item,i)=>{
-          alert(item);
+         // alert(item);
          // items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
       output.innerHTML += items.join(' ') + '<br />';
@@ -329,7 +329,8 @@ function takeSnap(){
 
     console.log("take snap");
     retakeButton.show();
-    var c = get();
+    var c = video.get();
+    
 
     const orignalImageDiv = document.getElementById("orignalImage");
     orignalImageDiv.innerHTML = '';
@@ -420,6 +421,11 @@ function gotFile(imgOriginal) {
                 let RGratio = 0.95;
                 let RBratio = 0.95;
                 let canopyCover = 0;
+                console.log("imgClassified.height",imgClassified.height);
+                console.log("imgClassified.width",imgClassified.width);
+                console.log("Red",float(imgOriginal.pixels[1]));
+                console.log("Grenn",float(imgOriginal.pixels[1]));
+                console.log("",float(imgOriginal.pixels[1]));
                 for(let y=0; y<imgClassified.height; y++){
                     for(let x=0; x<imgClassified.width; x++){
                         let index = (x + y * imgClassified.width)*4;
@@ -938,6 +944,7 @@ function getETOValue(location,weather) {
     var start = new Date(today.getFullYear(), 0, 0);
     var diff = today - start;
     var oneDay = 1000 * 60 * 60 * 24;
+    var days = Math.floor(diff / oneDay);
     return days;
   }
 
