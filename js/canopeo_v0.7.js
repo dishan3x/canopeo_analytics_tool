@@ -296,7 +296,6 @@ function setup() {
       items.forEach( (item,i)=>{
           items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
-      //alert(items);
       output.innerHTML += items.join(' ') + '<br />';
   
   };
@@ -417,9 +416,6 @@ function gotFile(imgOriginal) {
     cameraCanvas.style.display = 'none';
 
                 console.log("in geo location");
-                console.log("imgOriginal");
-                
-                console.log("imgOriginal",imgOriginal);
                 // Get geographic coordinates
                 getLocation();
                
