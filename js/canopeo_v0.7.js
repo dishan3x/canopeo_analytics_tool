@@ -294,7 +294,8 @@ function setup() {
   
       // Use JSON to transform objects, all others display normally
       items.forEach( (item,i)=>{
-          items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
+          alert(item);
+         // items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
       output.innerHTML += items.join(' ') + '<br />';
   
@@ -391,7 +392,10 @@ function takeSnap(){
     orignalImageDiv.innerHTML = '';
     const classifiedImageDiv = document.getElementById("classifiedImage");
     classifiedImageDiv.innerHTML = '';
+    console.log("printer the c in Got file");
+    console.log(c);
     gotFile(c);
+    
     canvas.clear();
 
     confirmarTakeSnap = true;
@@ -633,9 +637,9 @@ function gotFile(imgOriginal) {
                 //publicDatabaseRef.push(data);
                 
                 // Send original images to Firebase
-                imgOriginalsRef = storageRef.child(imgName);
+                /* imgOriginalsRef = storageRef.child(imgName);
                 imgOriginalsRef.put(dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg'))); //refImages.put(file.file); for full resolution img
-                
+                 */
                 // Send classified images to Firebase
                 //imgClassifiedRef = storageRef.child(imgName);
                 //imgClassifiedRef.put(dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')));
