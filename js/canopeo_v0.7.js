@@ -294,7 +294,7 @@ function setup() {
   
       // Use JSON to transform objects, all others display normally
       items.forEach( (item,i)=>{
-          alert(item);
+          //alert(item);
          // items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
       output.innerHTML += items.join(' ') + '<br />';
@@ -317,7 +317,16 @@ function consoleInput( data ) {
     }
 }
 
-
+// Alert javascript object in alert box
+function alertObject(obj){    
+    // adding the  alert obj 
+    for(var key in obj) {
+    alert('key: ' + key + '\n' + 'value: ' + obj[key]);
+    if( typeof obj[key] === 'object' ) {
+        alertObject(obj[key]);
+    }
+    }
+}
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -401,7 +410,7 @@ function takeSnap(){
     console.log(c);
     console.log("pixel");
     console.log(c.pixels);
-    pixels
+    alertObject(c);
     gotFile(c);
     
     canvas.clear();
