@@ -42,6 +42,8 @@ var classified = zip.folder("classified");
 var w = 0;
 var h = 0;
 
+
+//getWeatherData();
 //Creating 
 
 
@@ -157,11 +159,11 @@ function setup() {
     });
     
     
-
+    video.parent('cameraCanvas');
     video.elt.setAttribute('playsinline', '');
     canvas = createCanvas(screenWidth, sreenHeight);
     canvas.style('position','inherit');
-    canvas.parent('cameraCanvas');
+   // canvas.parent('cameraCanvas');
   
     resizeCanvas(screenWidth, sreenHeight);
 
@@ -199,7 +201,7 @@ function setup() {
     retakeButton.position((w/3)-20,(h)-150);
     retakeButton.mousePressed(retakeSnap);
 
-    video.hide();
+    //video.hide();
 
 
     let downloadTimestamp = new Date();
@@ -301,8 +303,8 @@ var confirmarTakeSnap = false;
 
 
 function draw() {  
-    
-    image(video, 0,0);   
+    //console.log("Print");
+    //image(video, 0,0);   
  /*    //background(0,128,0);
    // background(40,128,0);
    // console.log("worked");
@@ -331,15 +333,14 @@ function takeSnap(){
     retakeButton.show();
     var c = video.get();
     
-
     const orignalImageDiv = document.getElementById("orignalImage");
     orignalImageDiv.innerHTML = '';
     const classifiedImageDiv = document.getElementById("classifiedImage");
     classifiedImageDiv.innerHTML = '';
 
     gotFile(c);
-    
-    canvas.clear();
+  
+ 
 
     confirmarTakeSnap = true;
 }
@@ -353,7 +354,6 @@ function retakeSnap(){
     resultsGrid.style.display = "none";
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.display = 'block';
-  
     confirmarTakeSnap = true;
 }
 
@@ -361,6 +361,10 @@ function gotFile(imgOriginal) {
 
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.display = 'none';
+    document.getElementById("canopeoCover_val").innerHTML ="";
+    document.getElementById("cropCoefficient_val").innerHTML = "";
+    document.getElementById("evapotranspiration_val").innerHTML = "";
+    document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
                 getLocation();
@@ -804,8 +808,9 @@ function getAddress(lat,lon) {
        weatherT.windSpeed     = apiData[9];
        weatherT.doy           = dayOftheYear();
        weatherT.storedDate    = dateStr;
-       wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
-       weatherT = wr;
+       
+      // wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
+       //weatherT = wr;
        //console.log("printing new creted date", weatherT);
       // console.log("newDataSetCrated",data);
        
@@ -830,6 +835,7 @@ function getAddress(lat,lon) {
     }else{
         // The object is created 
         // Check the date
+        //wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
         console.log("The object is created/ Check the date ");
         //if()
 
@@ -842,8 +848,25 @@ function getAddress(lat,lon) {
     var retrievedObject = localStorage.getItem('testObject');
     var apiData = retrievedObject.split(",").map(function(item) {
         return parseInt(item, 10);
-    });
-    wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
+    });      
+    
+    //wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
+    weatherT.timestamp     = apiData[0];
+    weatherT.station       = apiData[1];
+    weatherT.tempAvg       = apiData[2];
+    weatherT.tempMin       = apiData[3];
+    weatherT.tempMax       = apiData[4];
+    weatherT.humidityMax   = apiData[5];
+    weatherT.humidityMin   = apiData[6];
+    weatherT.precp         = apiData[7]; // raim fall
+    weatherT.solarRad      = apiData[8];
+    weatherT.windSpeed     = apiData[9];
+    weatherT.doy           = dayOftheYear();
+    weatherT.storedDate    = dateStr;
+    
+    
+    
+    
     //local storage 
     //console.log("retrievedObject",retrievedObject);
     //console.log("wr",wr);
@@ -851,7 +874,7 @@ function getAddress(lat,lon) {
    // console.log('retrievedObject: ', JSON.parse(retrievedObject));
     //console.log(weather);
     //console.log("temperatuure avg"+weather.tempAvg);
-    return wr;
+    return weatherT;
     
 }
 
