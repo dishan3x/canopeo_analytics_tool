@@ -388,12 +388,20 @@ function takeSnap(){
     console.log("take snap");
     retakeButton.show();
     var c = get();
+               // Thumbnail original image
+              /*  thumbnailOriginal2 = createImg(c.canvas.toDataURL());
+               thumbnailOriginal2.size(128*aspectRatio,128);
+               thumbnailOriginal2.id(imgOriginalId);
+               thumbnailOriginal2.parent(orignalImage); */
     const orignalImageDiv = document.getElementById("orignalImage");
     orignalImageDiv.innerHTML = '';
     const classifiedImageDiv = document.getElementById("classifiedImage");
     classifiedImageDiv.innerHTML = '';
     console.log("printer the c in Got file");
     console.log(c);
+    console.log("pixel");
+    console.log(c.pixels);
+    pixels
     gotFile(c);
     
     canvas.clear();
@@ -469,6 +477,8 @@ function gotFile(imgOriginal) {
                 // Initiatve classified image
                 imgClassified = createImage(imgOriginal.width,imgOriginal.height);
                 imgClassified.loadPixels();
+                console.log("imgOriginalWidth",imgOriginal.width);
+                console.log("imgOriginalheight",imgOriginal.height);
                 console.log("passed classify images");
                 // Classify image following manuscript settings
                 let RGratio = 0.95;
@@ -502,12 +512,13 @@ function gotFile(imgOriginal) {
 
                 // Calculate aspect ratio for thumbnails and resize images
                 var aspectRatio = imgClassified.width/imgClassified.height;
+                console.log("aspectRatio",aspectRatio);
                 
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
-                thumbnailOriginal.size(128*aspectRatio,128)
-                thumbnailOriginal.id(imgOriginalId)
-                thumbnailOriginal.parent(orignalImage)
+                thumbnailOriginal.size(128*aspectRatio,128);
+                thumbnailOriginal.id(imgOriginalId);
+                thumbnailOriginal.parent(orignalImage);
                 //originalID
                 
                 // Thumbnail classified image
