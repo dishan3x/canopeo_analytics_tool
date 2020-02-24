@@ -155,17 +155,21 @@ function setup() {
     console.log("after createing the create capture");
 
     video.elt.setAttribute('playsinline', '');
-    //video.size(screenWidth, sreenHeight);
-    // createCanvas(width,height)
     canvas = createCanvas(screenWidth, sreenHeight);
     canvas.parent('cameraCanvas');
+    //canvas.style('position','relative');
     resizeCanvas(screenWidth, sreenHeight);
+
     
     var x = (windowWidth - width) / 2;
     var y = (windowHeight - height) / 2;
-    canvas.position(x, y);
+   
+    //canvas.position(x, y);
     //canvas.style('background-color',color(25, 23, 200, 50));
     canvas.center();
+
+    w = screenWidth;
+    h = sreenHeight;
     
     //https://github.com/processing/p5.js/issues/2847
 
@@ -177,7 +181,8 @@ function setup() {
     sanpButton.style('background-color', blue);
     sanpButton.style('height', '60px');
     sanpButton.style('width', '100px');
-    sanpButton.position((w/2)-20,h-100);
+    sanpButton.position(0, 0);
+    //sanpButton.position(w/2,h+1);
     sanpButton.mousePressed(takeSnap);
 
     retakeButton = createButton('Retake');
@@ -242,8 +247,7 @@ function setup() {
     resultsTable.style.visibility = 'hidden'; */
     
     resultsGrid = document.getElementById('resultGrid');
-    resultsGrid.style.visibility = 'hidden';
-
+    resultsGrid.style.display = "none";
 
      document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.sidenav');
@@ -350,7 +354,8 @@ function retakeSnap(){
   
     console.log("retakeSanp");
     modo = 1;
-    resultsGrid.style.visibility = 'hidden';
+    //resultsGrid.style.visibility = 'hidden';
+    resultsGrid.style.display = "none";
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.visibility = 'visible';
   
@@ -372,6 +377,7 @@ function gotFile(imgOriginal) {
 
                 // Displaying the result grid 
                 resultsGrid.style.visibility = 'visible';
+                resultsGrid.style.display = "block";
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
                 let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
