@@ -165,7 +165,10 @@ function setup() {
         audio: false,
         video: {
             width: screenWidth,
-            height: sreenHeight
+            height: sreenHeight,
+            facingMode: {
+                exact: "environment"
+              }
         }
     }, function() {
         console.log('capture ready.');
