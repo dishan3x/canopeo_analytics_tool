@@ -711,10 +711,6 @@ function getAddress(lat,lon) {
  function getWeatherData(){
     // module for weather
     
-   
-    console.log("todaysDate",date);
-    dateCustomize = "" ; 
-    
     dateStr = getDate();
     weatherT = ""; 
    url = "https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
