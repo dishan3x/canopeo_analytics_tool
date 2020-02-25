@@ -43,69 +43,46 @@ var w = 0;
 var h = 0;
 
 
-//getWeatherData();
-//Creating 
-
-
-/* 
-    - Getting the weather data stored in the system
-    - Just to get rid of any delay
-    - I think its works , But when tested this in local system its pretty slow. 
-*/
-/* initApp = function() {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        //console.log(user)
-
-        publicDatabaseRef = firebase.database().ref('publicMetadata');
-        //userDatabaseRef = firebase.database().ref(user.uid + '/metadata');
-        storageRef = firebase.storage().ref(user.uid + '/originals/');
-
-      } else {
-        // User is signed out.
-        window.location.href = 'index.html'
-      }
-    }, function(error) {
-      console.log(error);
-    });
-  };
-
-  window.addEventListener('load', function() {
-    initApp()
-  });
-
-  window.addEventListener('close', function(){
-      firebase.auth().signOut();
-  }) */
-
-/* 
-  window.onload = sayHello;
-
-  function sayHello(){
-    console.log("hello world to say hello");
-}
-
- */
-
 var video;
 var sanpButton;
 var retakeButton;
+var weatherObj; 
+
+
+// Check for the mesonent data retrive
+
+if (localStorage.getItem("mesonetWeatherData") === null) {
+    // Run the file getweather function 
+    console.log("Run the file getweather function ");
+    getWeatherData();
+    alert("connecting to mesonent servers to retrive data");
+}else{
+    // The object is created 
+    // Check the date
+    //wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
+    console.log("The object is created/ Check the date ");
+    weatherObj =  getMesonentDataFromLocalStorage();
+    //2020-02-24 00000000000
+    dateCheck = getDate();
+    loggedDate = weatherObj.storedDate;
+    console.log("dateCheck",dateCheck);
+    console.log("loggedDate",loggedDate);
+    if(dateCheck == loggedDate){
+        console.log("The mesonent data is loaded to the system");
+    }else{
+        // Retriving data from the Mesonent Api
+        getWeatherData();
+        alert("Date did not match, gethering Data from the mesonent Api");
+    }
+    
+
+}
+
+
 
 function setup() {
-    // Print software version
-   // console.log('Running v0.7');
-   
-    // Dropzone
-    // commented by dishan
-    // sinse we are not using the drop picture methods
-   /*  dropzone = select('body');
-    dropzone.drop(gotFile); // Handing the dropzon js library */
-
-    
-    // Create table for storing images
-    // Handle a  only  one picture 
-    // Dishan Changes
-    // no need
+  
+    var containerDiv;
 
     table = new p5.Table();
     table.addColumn('name');
@@ -123,7 +100,8 @@ function setup() {
     //c =createCanvas(window.innerWidth, window.innerHeight);
     w = window.outerWidth;
     h = window.outerHeight;
-    var containerDiv = document.getElementById('containerDiv') ;
+    containerDiv = document.getElementById('containerDiv') ;
+    containerDiv.style.visibility = "hidden";
     //console.log(clientWindow);
 
     var body = document.body, html = document.documentElement;
@@ -155,14 +133,16 @@ function setup() {
             facingMode: "environment"
         }
     }, function() {
-        //console.log('capture ready.');
+        console.log('capture ready.');
+        containerDiv.style.visibility = "visible";
+
     });
     
     
     video.parent('cameraCanvas');
     video.elt.setAttribute('playsinline', '');
-    canvas = createCanvas(screenWidth, sreenHeight);
-    canvas.style('position','inherit');
+    //canvas = createCanvas(screenWidth, sreenHeight);
+    //canvas.style('position','inherit');
    // canvas.parent('cameraCanvas');
   
     resizeCanvas(screenWidth, sreenHeight);
@@ -173,7 +153,7 @@ function setup() {
    
     //canvas.position(x, y);
     //canvas.style('background-color',color(25, 23, 200, 50));
-    canvas.center();
+    //canvas.center();
 
     w = screenWidth;
     h = sreenHeight;
@@ -200,10 +180,6 @@ function setup() {
     retakeButton.style('width', '100px');
     retakeButton.position((w/3)-20,(h)-150);
     retakeButton.mousePressed(retakeSnap);
-
-    //video.hide();
-
-    // testing comment
 
 
     let downloadTimestamp = new Date();
@@ -245,7 +221,7 @@ function setup() {
 
   // Or with jQuery
 
-  var output = document.createElement('pre');
+  /* var output = document.createElement('pre');
   document.body.appendChild(output);
   
   // Reference to native method(s)
@@ -263,7 +239,7 @@ function setup() {
       });
       output.innerHTML += items.join(' ') + '<br />';
   
-  };
+  }; */
 
 
 }  // End of setup **************************88
@@ -271,7 +247,7 @@ function setup() {
 
 
 // You could even allow Javascript input...
-function consoleInput( data ) {
+/* function consoleInput( data ) {
     // Print it to console as typed
     console.log( data + '<br />' );
     try {
@@ -280,7 +256,7 @@ function consoleInput( data ) {
         console.log( e.stack );
     }
 }
-
+ */
 
 
 function openNav() {
@@ -304,7 +280,7 @@ var confirmarTakeSnap = false;
 
 
 
-function draw() {  
+/* function draw() {  
     //console.log("Print");
     //image(video, 0,0);   
  /*    //background(0,128,0);
@@ -326,8 +302,8 @@ function draw() {
     capture.hide();
     //background(255);
     modo = 0;
-  } */
-} 
+  } 
+}  */
 
 function takeSnap(){
 
@@ -412,26 +388,17 @@ function gotFile(imgOriginal) {
                     imgOriginal.resize(0,1440);
                 }
                 imgOriginal.loadPixels();
-                console.log("loaded the pixel for image original");
-                console.log(imgOriginal);
-
-                console.log("passed resizing");
+               
                 
                 // Initiatve classified image
                 imgClassified = createImage(imgOriginal.width,imgOriginal.height);
                 imgClassified.loadPixels();
-                console.log("loaded the pixel for image classified");
-                console.log(imgClassified);
-                console.log("passed classify images");
+
                 // Classify image following manuscript settings
                 let RGratio = 0.95;
                 let RBratio = 0.95;
                 let canopyCover = 0;
-                console.log("imgClassified.height",imgClassified.height);
-                console.log("imgClassified.width",imgClassified.width);
-                console.log("Red",float(imgOriginal.pixels[1]));
-                console.log("Grenn",float(imgOriginal.pixels[1]));
-                console.log("",float(imgOriginal.pixels[1]));
+
                 for(let y=0; y<imgClassified.height; y++){
                     for(let x=0; x<imgClassified.width; x++){
                         let index = (x + y * imgClassified.width)*4;
@@ -458,13 +425,11 @@ function gotFile(imgOriginal) {
                 }
 
                 imgClassified.updatePixels();
-                console.log("canopy cover inside the R/G",canopyCover);
                 percentCanopyCover = round(canopyCover/(imgClassified.width * imgClassified.height)*1000)/10;
 
                 // Calculate aspect ratio for thumbnails and resize images
                 var aspectRatio = imgClassified.width/imgClassified.height;
-                console.log("aspectRatio",aspectRatio);
-                
+
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(128*aspectRatio,128);
@@ -523,12 +488,11 @@ function gotFile(imgOriginal) {
                     altitude = realtimeAltitude;
                 }
 
-                 // Get weather data
-                 weather =  getWeatherData();
+                // Get weather data
+                 weatherObj = getMesonentDataFromLocalStorage()
                  lt = new locationCustom(37.77071,-457.23999,-9999);
-                 etoVal = getETOValue(lt,weather);
+                 etoVal = getETOValue(lt,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
-                 console.log("passed eto crop value",etCrop);
                 // Update HTML table
 /*                 resultsTable.rows[imgCounter].cells[imgCounterCellId].innerHTML = imgCounter;
                 resultsTable.rows[imgCounter].cells[vegetationTypeCellId].innerHTML = vegetationType;
@@ -747,7 +711,7 @@ function getAddress(lat,lon) {
  function getWeatherData(){
     // module for weather
     
-   date = new Date();
+   
     console.log("todaysDate",date);
     dateCustomize = "" ; 
     
@@ -771,10 +735,8 @@ function getAddress(lat,lon) {
       // console.log("thevalue",apiData[0]);
        //var weather  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
 
-       localStorage.setItem('testObject', JSON.stringify(lineSeperation[1]));
+       localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
 
-    
-      
        /*  timestamp = 2019-02-04 00:00:00
        station = Ashland Bottoms
        tempAvg = 14.98
@@ -798,7 +760,7 @@ function getAddress(lat,lon) {
        apiData[6] // RELHUM10MMIN
        apiData[7] // SR
     */
-       weatherT.timestamp     = apiData[0];
+      /*  weatherT.timestamp     = apiData[0];
        weatherT.station       = apiData[1];
        weatherT.tempAvg       = apiData[2];
        weatherT.tempMin       = apiData[3];
@@ -810,7 +772,7 @@ function getAddress(lat,lon) {
        weatherT.windSpeed     = apiData[9];
        weatherT.doy           = dayOftheYear();
        weatherT.storedDate    = dateStr;
-       
+        */
       // wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
        //weatherT = wr;
        //console.log("printing new creted date", weatherT);
@@ -831,27 +793,25 @@ function getAddress(lat,lon) {
     var testObject = { 'one': 1, 'two': 2, 'three': 3 };
 
 
-    if (localStorage.getItem("retrievedObject") === null) {
-        // Run the file getweather function 
-        console.log("Run the file getweather function ");
-    }else{
-        // The object is created 
-        // Check the date
-        //wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
-        console.log("The object is created/ Check the date ");
-        //if()
-
-    }
+  
 // Put the object into storage
    // localStorage.setItem('testObject', JSON.stringify(weather));
 
     
-// Retrieve the object from storage
-    var retrievedObject = localStorage.getItem('testObject');
+   return day;
+
+    
+}
+
+function getMesonentDataFromLocalStorage(){
+    // Retrieve the object from storage
+    var retrievedObject = localStorage.getItem('mesonetWeatherData');
     var apiData = retrievedObject.split(",").map(function(item) {
         return parseInt(item, 10);
     });      
     
+    dateStr = getDate();
+    weatherT = new weather();
     //wr = new weather(apiData[0],apiData[1],apiData[2],apiData[3],apiData[4],apiData[5],apiData[6],apiData[7],apiData[8],dayOftheYear(),dateStr);
     weatherT.timestamp     = apiData[0];
     weatherT.station       = apiData[1];
@@ -867,35 +827,9 @@ function getAddress(lat,lon) {
     weatherT.storedDate    = dateStr;
     
     
-    
-    
-    //local storage 
-    //console.log("retrievedObject",retrievedObject);
-    //console.log("wr",wr);
-
-   // console.log('retrievedObject: ', JSON.parse(retrievedObject));
-    //console.log(weather);
-    //console.log("temperatuure avg"+weather.tempAvg);
     return weatherT;
-    
-}
 
-/* function getWeatherDatau(){
-    return fetch('http://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20190101000000&t_end=20190201000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR',
-    {
-    	method: "GET",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((response) => response.json())
-    .then((responseData) => {
-      console.log(responseData);
-      return responseData;
-    })
-    .catch(error => console.warn(error));
-  } */
+}
 
 function getETOValue(location,weather) {
 
@@ -986,6 +920,8 @@ function getETOValue(location,weather) {
 
   function getDate(){
     
+    date = new Date();
+
     var day = date.getDate();
 
     var dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
