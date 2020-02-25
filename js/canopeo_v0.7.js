@@ -164,19 +164,32 @@ function setup() {
 
     //Crreating the Snap button
     //background(0);
-    sanpButton = createButton('Snap');
+    sanpButton = createButton('');
     sanpButton.parent('cameraCanvas');
     let col = color(76, 175, 80);
-    sanpButton.style('background-color', col);
-    sanpButton.style('height', '60px');
-    sanpButton.style('width', '100px');
-    sanpButton.style('border', 'none');
+    sanpButton.style('background-color', 'Transparent');
+   // sanpButton.style('background', 'no-repeat');
+    sanpButton.style('cursor', 'pointer');
+    //sanpButton.style('background-color', Transparent);
+    sanpButton.style('height', '80px');
+    sanpButton.style('width', '50px');
+    //sanpButton.style('border', 'none');
     sanpButton.style('color', 'white');
     sanpButton.style('padding', '15px 32px');
-    sanpButton.style('border-radius','12px');
+    sanpButton.style('border-radius','50%');
+    sanpButton.style('border-color','white');
+    sanpButton.style('border-width','10px');
+    //border-width : 10px;
+    /* background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+ */
 
     //sanpButton.position(0, 0);
-    sanpButton.position(clientWidth/3,(3*clientHeight)/4);
+    sanpButton.position(screenWidth/3,(5*sreenHeight)/4);
     sanpButton.mousePressed(takeSnap);
 
 /*     retakeButton = createButton('Retake');
