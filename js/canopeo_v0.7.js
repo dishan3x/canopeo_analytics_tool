@@ -123,7 +123,9 @@ function setup() {
     clientWidth =  ((body.offsetWidth)*90)/100;
     
     screenWidth = clientWidth;
-      sreenHeight = clientHeight;
+    sreenHeight = clientHeight;
+    console.log("screen width",screenWidth);
+    console.log("screen height",sreenHeight);
     //create a video capture object
     video = createCapture({
         audio: false,
