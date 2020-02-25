@@ -179,16 +179,6 @@ function setup() {
     sanpButton.style('border-radius','50%');
     sanpButton.style('border-color','white');
     sanpButton.style('border-width','10px');
-    //border-width : 10px;
-    /* background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
- */
-
-    //sanpButton.position(0, 0);
     sanpButton.position(screenWidth/3,(5*sreenHeight)/4);
     sanpButton.mousePressed(takeSnap);
 
