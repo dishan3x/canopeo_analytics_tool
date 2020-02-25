@@ -27,8 +27,38 @@ body {
   display:none;
 }
 
-    .titleView{ 
-      font-size:5vw;
-      text-align: center;
-    }
+.titleView{ 
+  font-size:5vw;
+  text-align: center;
+}
+
+#cameraAppHeading{
+  font-family: sans-serif;
+  font-style: italic;
+}
+
+
+.indexPageHeadings{
+  color: white;
+}
+
+#retakeBtn{
+  /* background-color:blue; */
+  height: 60px !important;
+  width: 100px !important;
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left:35%;
+  border-radius: 12px;
+  
+}
 

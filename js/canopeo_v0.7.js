@@ -162,24 +162,32 @@ function setup() {
 
     //Crreating the Snap button
     //background(0);
-    sanpButton = createButton('Take snap');
+    sanpButton = createButton('Snap');
     sanpButton.parent('cameraCanvas');
-    let col = color(25, 23, 200, 50);
-    sanpButton.style('background-color', blue);
+    let col = color(76, 175, 80);
+    sanpButton.style('background-color', col);
     sanpButton.style('height', '60px');
     sanpButton.style('width', '100px');
+    sanpButton.style('border', 'none');
+    sanpButton.style('color', 'white');
+    sanpButton.style('padding', '15px 32px');
+    sanpButton.style('border-radius','12px');
+
     //sanpButton.position(0, 0);
     sanpButton.position(clientWidth/3,(3*clientHeight)/4);
     sanpButton.mousePressed(takeSnap);
 
-    retakeButton = createButton('Retake');
-    retakeButton.parent('resultGrid');
+/*     retakeButton = createButton('Retake');
+    retakeButton.parent('RetakeButtonDiv');
     let colv = color(25, 23, 200, 50);
     retakeButton.style('background-color', blue);
     retakeButton.style('height', '60px');
     retakeButton.style('width', '100px');
-    retakeButton.position((w/3)-20,(h)-150);
-    retakeButton.mousePressed(retakeSnap);
+    //retakeButton.center();
+    retakeButton.position((clientWidth/3),(3*clientHeight)/4);
+    //retakeButton.position(0,0);
+    retakeButton.style('positon', 'relative');
+    retakeButton.mousePressed(retakeSnap); */
 
 
     let downloadTimestamp = new Date();
@@ -308,7 +316,7 @@ var confirmarTakeSnap = false;
 function takeSnap(){
 
     console.log("take snap");
-    retakeButton.show();
+   // retakeButton.show();
     var c = video.get();
     
     const orignalImageDiv = document.getElementById("orignalImage");
@@ -345,7 +353,7 @@ function gotFile(imgOriginal) {
     document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
-                getLocation();
+                //getLocation();
                
 
                 // Start counting images
@@ -430,9 +438,16 @@ function gotFile(imgOriginal) {
                 // Calculate aspect ratio for thumbnails and resize images
                 var aspectRatio = imgClassified.width/imgClassified.height;
 
+                var cardData = document.getElementById('cardData') ;
+                console.log(cardData);
+                var cardHeight = cardData.offsetHeight;
+                var cardWidth = cardData.offsetWidth;
+                console.log("card height",cardHeight);
+                console.log("card width",cardWidth);
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(128*aspectRatio,128);
+                thumbnailOriginal.size(cardWidth,cardHeight);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent(orignalImage);
                 //originalID
@@ -440,6 +455,7 @@ function gotFile(imgOriginal) {
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
                 thumbnailClassified.size(128*aspectRatio,128);
+                thumbnailClassified.size(cardWidth,cardHeight);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent(classifiedImage);
                 thumbnailClassified.style.border = "5px solid black;"
@@ -636,6 +652,7 @@ function getVegetationType(){
 function getLocation() {
     console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
+        console.log("getting the location from the browser");
         navigator.geolocation.getCurrentPosition(realtimePosition);
         return navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
@@ -786,7 +803,7 @@ function getAddress(lat,lon) {
     day = dayOftheYear();
     //timestamp: "2020-02-10 00:00:00",station: "Ashland Bottoms",tempAvg: "2.79",tempMin: "-1.76",tempMax: "6.28",humidityMax: "77.43",humidityMin: "55.88",precp: "0.0",solarRad: "10.26",windSpeed: undefined,doy: 41,storedDate: "20200210000000"
     //var weather  = new weather("2019-02-04 00:00:00","Ashland Bottoms",14.98,12.29,20.69,90.38,49.51,0.0,10.32,4.73,day,dateStr);
-    var testObject = { 'one': 1, 'two': 2, 'three': 3 };
+   
 
 
   
