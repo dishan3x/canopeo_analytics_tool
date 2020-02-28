@@ -104,7 +104,7 @@ function setup() {
     console.log("screen width",screenWidth);
     console.log("screen height",sreenHeight);
 
-    //create a video capture object
+/*     //create a video capture object
     video = createCapture({
         audio: false,
         video: {
@@ -123,6 +123,14 @@ function setup() {
     // If you pass only one parameter to setAttribute in the JavaScript DOM API, 
     // if we dont set in Safari you'll get "playsinline"="undefined" which result crashing the video
     video.elt.setAttribute('playsinline', '');
+ */
+        // Upload button
+    btnUpload = createFileInput(gotFile,'multiple');
+    btnUpload.parent('btnUploadLabel');
+    btnUpload.style('display','none');
+    btnUpload.elt.disabled = true;
+    
+    //document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
  
     w = screenWidth;
     h = sreenHeight;
@@ -185,14 +193,18 @@ function retakeSnap(){
     confirmarTakeSnap = true;
 }
 
-function gotFile(imgOriginal) {
-
-    cameraCanvas = document.getElementById('cameraCanvas');
-    cameraCanvas.style.display = 'none';
-    document.getElementById("canopeoCover_val").innerHTML ="";
-    document.getElementById("cropCoefficient_val").innerHTML = "";
-    document.getElementById("evapotranspiration_val").innerHTML = "";
-    document.getElementById("cropEvapotranspiration_val").innerHTML ="";
+function gotFile(file) {
+    if(imgCounter <= 50){
+        if (file.type === 'image'){
+            loadImage(file.data,function(imgOriginal){
+                d = distance(59.3293371, 13.4877472, 59.3225525, 13.4619422)
+                console.log(d);
+        cameraCanvas = document.getElementById('cameraCanvas');
+        cameraCanvas.style.display = 'none';
+        document.getElementById("canopeoCover_val").innerHTML ="";
+        document.getElementById("cropCoefficient_val").innerHTML = "";
+        document.getElementById("evapotranspiration_val").innerHTML = "";
+        document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
                 //getLocation();
@@ -360,11 +372,13 @@ function gotFile(imgOriginal) {
                 // Add original and classified images to ZIP file
                 originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
                 classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true});
-           // });
+          });
     /*     }
         // getting the weather data
        
     } */
+        }
+    }
 }
 
 
@@ -671,5 +685,29 @@ function getETOValue(location,weather) {
     // create the year
     return (yyyy + MM +dd +"000000" );
  }
+
+
+
+ function distance(lat1, lon1, lat2, lon2, unit) {
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1/180;
+		var radlat2 = Math.PI * lat2/180;
+		var theta = lon1-lon2;
+		var radtheta = Math.PI * theta/180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180/Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit=="K") { dist = dist * 1.609344 }
+		if (unit=="N") { dist = dist * 0.8684 }
+		return dist;
+	}
+}
 
 
