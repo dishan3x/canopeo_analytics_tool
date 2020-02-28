@@ -100,6 +100,7 @@ function setup() {
 
     sreenHeight =((body.offsetHeight)*90)/100;
     screenWidth =  ((body.offsetWidth)*90)/100;
+    //print 
     console.log("screen width",screenWidth);
     console.log("screen height",sreenHeight);
 
