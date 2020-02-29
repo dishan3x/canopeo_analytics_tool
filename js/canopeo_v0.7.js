@@ -51,7 +51,7 @@ var capture;
 var modo = 0;
 var confirmarTakeSnap = false;
 
-
+getLocation();
 // Check for the mesonent data retrive
 if (localStorage.getItem("mesonetWeatherData") === null) {
     // Run the file getweather function 
@@ -87,7 +87,7 @@ function setup() {
     w = window.outerWidth;
     h = window.outerHeight;
     containerDiv = document.getElementById('containerDiv') ;
-    containerDiv.style.visibility = "hidden";
+    //containerDiv.style.visibility = "hidden";
     //console.log(clientWindow);
 
     var body = document.body, html = document.documentElement;
@@ -197,19 +197,19 @@ function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
-                d = distance(59.3293371, 13.4877472, 59.3225525, 13.4619422)
+                d = distance(59.3293371, 13.4877472, 59.3225525, 13.4619422);
                 console.log(d);
-        cameraCanvas = document.getElementById('cameraCanvas');
-        cameraCanvas.style.display = 'none';
-        document.getElementById("canopeoCover_val").innerHTML ="";
-        document.getElementById("cropCoefficient_val").innerHTML = "";
-        document.getElementById("evapotranspiration_val").innerHTML = "";
-        document.getElementById("cropEvapotranspiration_val").innerHTML ="";
+        /* cameraCanvas = document.getElementById('cameraCanvas');
+        cameraCanvas.style.display = 'none'; */
+                document.getElementById("canopeoCover_val").innerHTML ="";
+                document.getElementById("cropCoefficient_val").innerHTML = "";
+                document.getElementById("evapotranspiration_val").innerHTML = "";
+                document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
                 //getLocation();
+                getLocationInitial();
                
-
                 // Start counting images
                 imgCounter += 1;
 
@@ -218,12 +218,9 @@ function gotFile(file) {
                 resultsGrid.style.display = "block";
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
-                console.log("imgOriginalId",imgOriginalId);
+                
                 let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
     
- 
-    
-          
                 // Get upload timestamp
                 uploadDate = new Date();
                 
@@ -438,6 +435,8 @@ function getLocation() {
     if (navigator.geolocation) {
         console.log("getting the location from the browser");
         navigator.geolocation.getCurrentPosition(realtimePosition);
+        console.log("Navigation");
+        console.log(navigator.geolocation.getCurrentPosition(realtimePosition));
         return navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
         realtimeLatitude = null;
@@ -464,6 +463,7 @@ function getLocationInitial(){
 }
 
 function realtimePositionInitial(position) {
+    console.log("realtimePositionInitial Function", position.coords.latitude, position.coords.longitude);
     getAddress(position.coords.latitude, position.coords.longitude)
 }
 
@@ -687,7 +687,8 @@ function getETOValue(location,weather) {
  }
 
 
-
+// Using haversine function 
+// adaptation  http://www.movable-type.co.uk/scripts/latlong.html
  function distance(lat1, lon1, lat2, lon2, unit) {
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
