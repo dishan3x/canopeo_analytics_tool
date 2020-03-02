@@ -51,7 +51,7 @@ var capture;
 var modo = 0;
 var confirmarTakeSnap = false;
 
-getLocation();
+
 // Check for the mesonent data retrive
 if (localStorage.getItem("mesonetWeatherData") === null) {
     // Run the file getweather function 
@@ -78,7 +78,7 @@ if (localStorage.getItem("mesonetWeatherData") === null) {
 
 
 function setup() {
-  
+   
     var containerDiv;
 
     resultsGrid = document.getElementById('resultGrid');
@@ -97,73 +97,23 @@ function setup() {
     var clientWidth  =  Math.max( body.scrollWidth, body.offsetWidth, 
         html.clientWidth, html.scrollWidth, html.offsetWidth ); */
     
-
+      
     sreenHeight =((body.offsetHeight)*90)/100;
     screenWidth =  ((body.offsetWidth)*90)/100;
     //print 
     console.log("screen width",screenWidth);
     console.log("screen height",sreenHeight);
 
-/*     //create a video capture object
-    video = createCapture({
-        audio: false,
-        video: {
-            width: screenWidth,
-            height: sreenHeight,
-            facingMode: "environment"
-        }
-    }, function() {
-        console.log('capture ready.');
-        containerDiv.style.visibility = "visible";
 
-    });
-    
-    
-    video.parent('cameraCanvas');
-    // If you pass only one parameter to setAttribute in the JavaScript DOM API, 
-    // if we dont set in Safari you'll get "playsinline"="undefined" which result crashing the video
-    video.elt.setAttribute('playsinline', '');
- */
         // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
-    btnUpload.parent('btnUploadLabel');
-    btnUpload.style('display','none');
-    btnUpload.elt.disabled = true;
     
-    //document.getElementById('btnUploadLabel').addEventListener('click',getVegetationType)
- 
+    btnUpload.parent('btnUploadLabel');
+
     w = screenWidth;
     h = sreenHeight;
-    
-    // Creating the snap button using p5
-    sanpButton = createButton('');
-    sanpButton.parent('cameraCanvas');
-    let col = color(76, 175, 80);
-    sanpButton.style('background-color', 'Transparent');
-    sanpButton.style('cursor', 'pointer');
-    sanpButton.style('height', '80px');
-    sanpButton.style('width', '50px');
-    sanpButton.style('color', 'white');
-    sanpButton.style('padding', '15px 32px');
-    sanpButton.style('border-radius','50%');
-    sanpButton.style('border-color','white');
-    sanpButton.style('border-width','10px');
-    sanpButton.position((screenWidth/3)+20,(5*sreenHeight)/4);
-    sanpButton.mousePressed(takeSnap);
-
 
 }  // End setup()
-
-
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-  }
-  
-  /* Set the width of the side navigation to 0 */
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-  }
-
 
 
 
@@ -183,8 +133,6 @@ function takeSnap(){
 }
 
 function retakeSnap(){
-
-  
     modo = 1;
     //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
@@ -207,9 +155,8 @@ function gotFile(file) {
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
-                //getLocation();
-                getLocationInitial();
-               
+                getLocation();
+  
                 // Start counting images
                 imgCounter += 1;
 
@@ -467,7 +414,7 @@ function realtimePositionInitial(position) {
     getAddress(position.coords.latitude, position.coords.longitude)
 }
 
-getLocationInitial()
+//getLocationInitial()
 
 
 function getAddress(lat,lon) {

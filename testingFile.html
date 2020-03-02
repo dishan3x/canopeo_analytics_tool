@@ -5,138 +5,32 @@
 <script type="text/javascript" src="js/exif.js"></script>
 <script src="js/test.js"></script>
 
-<div id="cameraCanvas">
+<!DOCTYPE html>
+<html>
+<body>
 
-</div>
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
 
 <script>
-var modo = 0;
+var x = document.getElementById("demo");
 
- function   setup(){
-       w = window.outerWidth;
-    h = window.outerHeight;
-    //create a video capture object
-    capture = createCapture({
-        audio: false,
-        video: {
-            width: w,
-            height: h
-        }
-    }, function() {
-        console.log('capture ready.');
-    });
-
-    capture.elt.setAttribute('playsinline', '');
-    //capture.hide();
-    capture.size(w, h);
-    canvas = createCanvas(w, h);
-    canvas.parent('cameraCanvas');
-    //canvas.resize(w,h);
-
-    var x = (windowWidth - width) / 2;
-    var y = (windowHeight - height) / 2;
-    canvas.position(x, y);
-    //https://github.com/processing/p5.js/issues/2847
-
-    //Crreating the Snap button
-    //background(0);
-    buttonSnap = createButton('Take snap');
-    buttonSnap.parent('cameraCanvas');
-    let col = color(25, 23, 200, 50);
-    buttonSnap.style('background-color', blue);
-    buttonSnap.style('height', '60px');
-    buttonSnap.style('width', '100px');
-    buttonSnap.position(0,h);
-    buttonSnap.mousePressed(takeSnap);
-
-    buttonRetake = createButton('Retake');
-    buttonRetake.parent('cameraCanvas');
-    let colv = color(25, 23, 200, 50);
-    buttonRetake.style('background-color', blue);
-    buttonRetake.style('height', '60px');
-    buttonRetake.style('width', '100px');
-    buttonRetake.position(60,h- 200);
-    buttonRetake.mousePressed(retake(canvas));
-    //the createCapture() function creates an HTML video tag
-    //as well as pulls up image to be used in p5 canvas
-    //hide() function hides the HTML video element
-    capture.hide();
-    buttonRetake.hide();
-    }
-    function draw() {  
-    
-    width  = window.outerWidth;
-    height =  window.outerHeight;  
-    //background(0,128,0);
-    background(40,128,0);
-   // console.log("worked");
-  if(modo == 0){ 
-    //image(capture, width+ 25, 0); 
-     
-    image(capture, 0,0);   
-    console.log("lol");
-  }else if(modo == 1){
-    
-    console.log("here mode 1");
-    //image(fotoTirada, 0, 0, 0, 0);
-    //saveCanvas("minhaFoto", "jpg");
-    capture.hide();
-    //background(255);
-    modo = 0;
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
   }
-} 
-
-function takeSnap(){
-    //tint(255);
-    console.log("take snap");
-    buttonRetake.show();
-    //capture.stop();
-    //image(capture, 0, 0);
-    fotoTirada = capture.get();
-    //console.log(fotoTirada);
-    //capture.loop();
-   // gotFile(fotoTirada);
-    image(fotoTirada, 20, 0);
-    noLoop();
-   
-    //capture.remove();
-    //capture.hide();
-    
-    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
-    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
-    //capture.hide(); colocando o tint ali em cima.
-    
-    confirmarTakeSnap = true;
 }
 
-function retake(canvas){
-    //tint(255);
-    console.log("take snap");
-    //capture.show();
-    console.log(canvas);
-    console.log(capture);
-    //canvas.clear();    
-    console.log("canvas is cleard")
-    capture.loop();
-    image(capture, 0,0);
-     
-    
-    //capture.loop();
-    
-    console.log("successfull"); 
-    //image(capture, 0, 0);
-    loop();
-   // resultsGrid.style.visibility = 'hidden';
-   // cameraCanvas = document.getElementById('cameraCanvas');
-   // cameraCanvas.style.visibility = 'visible';
-    //capture.remove();
-    //capture.hide();
-    
-    //Tive que usar esse codigo abaixo anteriormente para a camera não travar ao usar o capture.get().
-    // capture = createCapture(VIDEO); consegui evitar de usar esse codigo que suja cada vez mais o html com novas tags de video
-    //capture.hide(); colocando o tint ali em cima.
-    
-    confirmarTakeSnap = true;
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
 }
-
 </script>
+
+</body>
+</html>
