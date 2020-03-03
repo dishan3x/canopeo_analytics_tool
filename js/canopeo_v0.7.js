@@ -50,7 +50,34 @@ var weatherObj;
 var capture;
 var modo = 0;
 var confirmarTakeSnap = false;
+var instances ="";
+var elems = ""
 
+
+/**  Get all the mesonenet station and store it in the local storage 
+ *  The file would be 
+ * Local storage variable : mesonentStations
+*/
+
+var CoordinatesHolder = document.getElementById('userCoordinates');
+
+
+if (localStorage.getItem("mesonentStations") === null) {
+    // Getting data from the mesonent stations and store it in the 
+    getMesonetStation();
+}
+
+
+ll = getLocation();
+console.log("ll",ll );
+sadasd = CoordinatesHolder.getAttribute('data-latitude');
+console.log("sdsd",sadasd);
+
+
+
+var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+
+loadingIcon.style.display = "none";
 
 // Check for the mesonent data retrive
 if (localStorage.getItem("mesonetWeatherData") === null) {
@@ -77,6 +104,8 @@ if (localStorage.getItem("mesonetWeatherData") === null) {
 
 
 
+
+  // onload
 function setup() {
    
     var containerDiv;
@@ -109,14 +138,27 @@ function setup() {
     btnUpload = createFileInput(gotFile,'multiple');
     
     btnUpload.parent('btnUploadLabel');
+    btnUpload.style('display','none');
+    //btnUpload.elt.disabled = true;
 
     w = screenWidth;
     h = sreenHeight;
 
+
+ 
+
 }  // End setup()
 
-
-
+    
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    alert("open");
+  }
+  
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    alert("close");
+  }
 /**
  *  Take a picture from the p5 video feed
  */
@@ -155,7 +197,7 @@ function gotFile(file) {
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
                 // Get geographic coordinates
-                getLocation();
+               // getLocation();
   
                 // Start counting images
                 imgCounter += 1;
@@ -380,11 +422,8 @@ function getVegetationType(){
 function getLocation() {
     console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
-        console.log("getting the location from the browser");
+        console.log("Got approval");
         navigator.geolocation.getCurrentPosition(realtimePosition);
-        console.log("Navigation");
-        console.log(navigator.geolocation.getCurrentPosition(realtimePosition));
-        return navigator.geolocation.getCurrentPosition(realtimePosition);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -398,12 +437,16 @@ function getLocation() {
 }
 
 function realtimePosition(position) {
+ 
    realtimeLatitude =  position.coords.latitude;
    realtimeLongitude = position.coords.longitude; 
    realtimeAltitude = position.coords.altitude;
+   
+   CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
+   CoordinatesHolder.setAttribute('data-longitude', realtimeLongitude);
 }
 
-function getLocationInitial(){
+/* function getLocationInitial(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(realtimePositionInitial);
     }
@@ -452,6 +495,7 @@ function getAddress(lat,lon) {
             console.log(country)
         });
 }
+ */
 
 /**
  *  Retrive data from the Mesonet Api and store the infromaton from in the local storage of the browser
@@ -462,6 +506,8 @@ function getWeatherData(){
     dateStr = getDate();
     weatherT = ""; 
     url = "https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+    console.log(url);
+    //https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20200302000000&t_end=20200302000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG
     fetch(url)
     .then(res => {
         return res.text();
@@ -659,3 +705,69 @@ function getETOValue(location,weather) {
 }
 
 
+
+function getMesonetStation(){
+   
+    const FETCH_TIMEOUT = 5000;
+    let didTimeOut = false;
+    //spinWheelLoadingforMesonentStation
+    var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+    loadingIcon.style.display = "block";
+    new Promise(function(resolve, reject) {
+        const timeout = setTimeout(function() {
+            didTimeOut = true;
+            findNearestStation();
+            reject(new Error('Request timed out'));
+        }, FETCH_TIMEOUT);
+        
+        fetch('https://mesonet.k-state.edu/rest/stationnames/')
+        .then(response =>  {
+            // Clear the timeout as cleanup
+            clearTimeout(timeout);
+            if(!didTimeOut) {
+                //console.log('fetch good! ', response);
+                //var objthing = response.text();
+                resolve(response);
+            }
+            return response.text();
+        })
+        .then(data => {
+            // The returned data set has columns names and values devidede  by /n 
+            // Seperated by /n 
+            console.log("got in the system");
+            //console.log(data);
+
+            array = dataToArray(data);
+            //localStorage.setItem('mesonentStationsArray', JSON.stringify(newArray));
+            localStorage.setItem('mesonentStations', JSON.stringify(array));
+            //var lineSeperation = data.split(/\r?\n/);
+            // Setting the value in the local storage
+        // localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
+        })
+        .catch(function(err) {
+            console.log('fetch failed! ', err);
+            
+            // Rejection already happened with setTimeout
+            if(didTimeOut) return;
+            // Reject with error
+            reject(err);
+        });
+    })
+    .then(function() {
+        // Request success and no timeout
+        console.log('good promise, no timeout! ');
+    })
+    .catch(function(err) {
+        // Error: response error, request timeout or runtime error
+        console.log('promise error! ', err);
+    });
+}
+
+// Convert a string to an array sdsds /n sdsdsd,asdsd,sdsd,sd /n
+function dataToArray (data) {
+    rows = data.split("\n");
+
+    return rows.map(function (row) {
+    	return row.split(",");
+    });
+};

@@ -12,50 +12,47 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="css/Custom.css" />
     <link rel="stylesheet" href="css/materialize.min.css" />
+    <link rel="stylesheet" href="css/fontawesome/all.css" />
     <!--  <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script> -->
    
-
-
 </head>
 
 <div id="containerDiv" class="container"> 
-      <div id="appHeader"class = "teal">
+      <!-- <div id="appHeader"class = "teal">
           <h1 id="cameraAppHeading" class="oblique center-align">Kola</h1>
           <blockquote>
             Please take a picture of the canopy!
           </blockquote> 
-   </div>
-     <!--  <div id="mySidenav" class="sidenav">
+   </div> -->
+  
+   <label class="button is-dark is-outlined is-light" id="btnUploadLabel" style="margin:5px;" disabled>
+    <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
+        <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Load images</strong></span>
+    </label>
+  
+    <label class="button is-dark is-outlined is-light" id="mesonetStation" style="margin:5px;" disabled>
+      <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i>
+          <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Finding nearest mesonent stations</strong></span>
+      </label>
+ 
+      
+      <i class="fa fa-broadcast-tower"></i> 
+
+
+        <!--   Navigation Bar    -->
+
+        <span id="sidenavButton" style="font-size:30px;cursor:pointer;display:none" onclick="openNav()"  >&#9776; open</span>
+        <div id="mySidenav"  style="width:250px;display:none;" >
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
           <a href="#">About</a>
-          <a href="#">share</a>
-          <a href="#">store it</a>
+          <a href="#">Services</a>
+          <a href="#">Clients</a>
           <a href="#">Contact</a>
-        </div> -->
-        <label id="btnUploadLabel"></label>
-        <!-- Use any element to open the sidenav -->
-      <!--   <span onclick="openNav()">open</span>
-        
-            <div class = "teal">
-                    <h2>Green Finder</h2>
-                    <p>Please take a picture of the canopy!</p>
-             </div> -->
- <!--        <table class="table is-full-width" style="margin-top: 50px;" id="resultsTable" style="visibility:hidden;">
-            <tr>
-                <th>#</th>
-                <th>Original</th>
-                <th>Classified</th>
-                <th class="is-hidden-mobile">Vegetation</th> 
-                <th class="is-hidden-mobile">Filename</th> 
-                <th class="is-hidden-mobile">Latitude</th>
-                <th class="is-hidden-mobile">Longitude</th>
-                <th class="is-hidden-mobile">Altitude</th>
-                <th class="is-hidden-mobile">Canopycover</th>
-                <th class="is-hidden-mobile">Eto</th>
-                <th class="is-hidden-mobile"> EtoCropValue</th>
+        </div>
 
-            </tr>
-        </table> -->
+        
+
+        <!--   Resluts Grid        -->
 
         <div id="resultGrid">
             <div class="row">
@@ -118,11 +115,11 @@
          <div id="cameraCanvas" style="width: 100%; height: 100%;" >
          </div>
 
-
+       
    </div> 
 
 
-
+   <input id="userCoordinates" data-latitude="" data-longitude="" />
   
         
 
