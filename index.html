@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="test">
 
 
 <head>
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="css/Custom.css" />
     <link rel="stylesheet" href="css/materialize.min.css" />
+    <link rel="stylesheet" href="css/fontawesome/all.css" />
     <!--  <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script> -->
    
 </head>
@@ -19,20 +20,23 @@
 
 <body>
     <nav class="navbar ">
-        <label class="">Kola<label> 
+        <label id="indexHeader">K<i id="headSqureBlock1" class="fas fa-square  headerSqure"></i>O<i id="headSqureBlock2" class="headerSqure fas fa-square"></i>L<i id="headSqureBlock3" class="fas fa-square headerSqure"></i>A<label> 
           <!--   <h4 class="">Canopeo analytics tool</h4> -->
         </nav>
-    <div id="picDiv">
+    
         <div class="container center-align ">
          <!--        <h1 class="indexPageHeadings">Kola<h1> 
                     <h4 class="indexPageHeadings">Canopeo analytics tool</h4> -->
-            
-            <img src="images/canopeo.png" alt="Smiley face" height="60%" width="40%">
+             <div id="leafcontainer center-align ">
+                <div id="indexLeaf" class="center-align" style="margin-left:20%;margin-top:10%;">
+                    <!-- <img src="images/canopeo.png" alt="Smiley face" height="60%" width="40%"> -->
+                </div>
+            </div>
             <div class="center-align" style="margin-top: 10%;margin-bottom: 10%;">
                 <button class="waves-effect waves-light btn" onClick="javascript:window.location.href='canopeo.html'" >Start</button>
             </div>
         </div>
-    </div>
+  
    
 </body>
 

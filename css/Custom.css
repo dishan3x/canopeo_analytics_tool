@@ -106,6 +106,51 @@ body {
   color:white !important;
 }
 
-#picDiv{
-   background-image: url('../images/canopeo.png'); 
+#indexLeaf{
+  /*  background-image: url('../images/canopeo.png');  */
 }
+
+/* #indexLeaf { 
+  width: 100px; height: 100px;
+  background-color: #A0DE21; 
+  -moz-border-radius: 100px 0px;
+  -webkit-border-radius: 100px 0px;
+  border-radius: 100px 0px;
+} */
+
+#indexLeaf {
+  width: 200px;
+  height: 300px;
+  background-image: linear-gradient(to top left, #d4f590 49%, transparent 49.5%, transparent 51%, #d4f590 51%);
+  -moz-border-radius: 100% /120px 0px;
+  -webkit-border-radius: 100% / 120px 0px;
+  border-radius: 100% 0 / 140px 0px;
+}
+
+.btn{
+  background-color: #512888 !important;
+}
+
+#indexHeader {
+  margin-left: 0.7em;
+  font-size: 3em !important;
+  color:white;
+}
+
+.headerSqure{
+  font-size: 0.15em ! important;
+  margin-left: 0.7em;
+  margin-right: 0.7em;
+}
+
+#headSqureBlock1{
+  color:red;
+}
+
+#headSqureBlock2{
+  color:blue;
+}
+#headSqureBlock3{
+  color:green;
+}
+
