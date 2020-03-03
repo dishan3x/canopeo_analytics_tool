@@ -18,13 +18,18 @@
 </head>
 <body>
 
-  <nav class="navbar purple">
+  <nav class="navbar ">
     <div id="navbarMenuHeroA" class="navbar-menu">
         <div class="navbar-start">
-          <label class="button is-dark is-outlined is-light" id="btnUploadLabel" style="margin:5px;" disabled>
+          <label class="button is-dark is-outlined is-light navBarLabels" id="btnUploadLabel" style="margin:5px;" disabled>
             <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
                 <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Load images</strong></span>
-            </label>
+          </label>
+          <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" disabled>
+            <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
+            <i class="fa fa-broadcast-tower"></i> 
+                <span class="is-hidden-mobile" style="padding-left: 10px;" id="nearestStationLabelId"><strong></strong></span>
+          </label>  
         </div>
         <div class="navbar-end">
           
@@ -41,13 +46,10 @@
   
   
   
-    <label class="button is-dark is-outlined is-light" id="mesonetStation" style="margin:5px;" disabled>
-      <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i>
-          <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Finding nearest mesonent stations</strong></span>
-      </label>
+  
  
       
-      <i class="fa fa-broadcast-tower"></i> 
+     
 
 
         <!--   Navigation Bar    -->

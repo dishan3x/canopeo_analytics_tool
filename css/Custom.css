@@ -95,3 +95,13 @@ body {
   font-size: 36px;
   margin-left: 50px;
 }
+
+.navbar {
+  background-color: #512888 !important;
+  color:white;
+}
+
+
+.navBarLabels{
+  color:white !important;
+}

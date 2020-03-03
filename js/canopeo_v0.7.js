@@ -75,7 +75,11 @@ if (localStorage.getItem("userLatitude") === null) {
 // What you need
 // All the mesonent station need to be loadeed and set
 // User geolocation need to be set
-findClosestStation();
+var nearestLocation = findClosestStation();
+
+
+resultsGrid = document.getElementById('nearestStationLabelId');
+resultsGrid.innerHTML = nearestLocation+" mesonent station";
 
 getWeatherData();
 
@@ -859,5 +863,5 @@ function findClosestStation(){
     var key = distanceList.indexOf(minimum);
     var index = key +1
     //  Returning the station 
-    return minimum;
+    return stationData[index][0];
 }
