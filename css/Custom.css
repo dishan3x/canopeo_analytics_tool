@@ -105,3 +105,7 @@ body {
 .navBarLabels{
   color:white !important;
 }
+
+#picDiv{
+   background-image: url('../images/canopeo.png'); 
+}
