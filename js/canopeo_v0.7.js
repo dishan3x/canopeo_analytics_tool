@@ -59,25 +59,32 @@ var elems = ""
  * Local storage variable : mesonentStations
 */
 
-var CoordinatesHolder = document.getElementById('userCoordinates');
-
+/* var CoordinatesHolder = document.getElementById('userCoordinates');
+ */
 
 if (localStorage.getItem("mesonentStations") === null) {
-    // Getting data from the mesonent stations and store it in the 
-    getMesonetStation();
+    // Getting data from the mesonent stations and store it in the local storage
+    getMesonetStations();
 }
 
+if (localStorage.getItem("userLatitude") === null) {
+// Get the user locations if userLatitude is not set
+   getLocation();
+}
 
-ll = getLocation();
-console.log("ll",ll );
-sadasd = CoordinatesHolder.getAttribute('data-latitude');
-console.log("sdsd",sadasd);
+// What you need
+// All the mesonent station need to be loadeed and set
+// User geolocation need to be set
+findClosestStation();
 
+getWeatherData();
 
+// Make the navigator geo async when have the time
+// https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
 
-var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+/* var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
 
-loadingIcon.style.display = "none";
+loadingIcon.style.display = "none"; */
 
 // Check for the mesonent data retrive
 if (localStorage.getItem("mesonetWeatherData") === null) {
@@ -441,9 +448,10 @@ function realtimePosition(position) {
    realtimeLatitude =  position.coords.latitude;
    realtimeLongitude = position.coords.longitude; 
    realtimeAltitude = position.coords.altitude;
-   
-   CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
-   CoordinatesHolder.setAttribute('data-longitude', realtimeLongitude);
+   localStorage.setItem('userLatitude', realtimeLatitude);
+   localStorage.setItem('userLongitude', realtimeLongitude);
+  /*  CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
+   CoordinatesHolder.setAttribute('data-longitude', realtimeLongitude); */
 }
 
 /* function getLocationInitial(){
@@ -503,12 +511,14 @@ function getAddress(lat,lon) {
 function getWeatherData(){
     // module for weather
     
+    nearestStation = localStorage.getItem("nearestStation");
     dateStr = getDate();
     weatherT = ""; 
-    url = "https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+    url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
     console.log(url);
     //https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20200302000000&t_end=20200302000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG
-    fetch(url)
+    
+  /*   fetch(url)
     .then(res => {
         return res.text();
     })
@@ -518,7 +528,56 @@ function getWeatherData(){
        var lineSeperation = data.split(/\r?\n/);
        // Setting the value in the local storage
        localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-   });
+   }); */
+
+   const FETCH_TIMEOUT = 5000;
+    let didTimeOut = false;
+    //spinWheelLoadingforMesonentStation
+   /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+    loadingIcon.style.display = "block"; */
+    new Promise(function(resolve, reject) {
+        const timeout = setTimeout(function() {
+            didTimeOut = true;
+            reject(new Error('Request timed out'));
+        }, FETCH_TIMEOUT);
+        
+        fetch(url)
+        .then(response =>  {
+            // Clear the timeout as cleanup
+            clearTimeout(timeout);
+            if(!didTimeOut) {
+                //console.log('fetch good! ', response);
+                //var objthing = response.text();
+                resolve(response);
+            }
+            return response.text();
+        })
+        .then(data => {
+                        // The returned data set has columns names and values devidede  by /n 
+                // Seperated by /n 
+                var lineSeperation = data.split(/\r?\n/);
+                // Setting the value in the local storage
+                localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
+        })
+        .catch(function(err) {
+            console.log('fetch failed! ', err);
+            
+            // Rejection already happened with setTimeout
+            if(didTimeOut) return;
+            // Reject with error
+            reject(err);
+        });
+    })
+    .then(function() {
+        // Request success and no timeout
+        console.log('good promise, no timeout! ');
+    })
+    .catch(function(err) {
+        // Error: response error, request timeout or runtime error
+        console.log('promise error! ', err);
+    });
+
+
 }
 
 /**
@@ -671,6 +730,8 @@ function getETOValue(location,weather) {
   function getDate(){
     
     date = new Date();
+    // getting the yesterday date
+    date.setDate(date.getDate() - 1);
     var dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
     var MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
     var yyyy = date.getFullYear();
@@ -706,13 +767,13 @@ function getETOValue(location,weather) {
 
 
 
-function getMesonetStation(){
+function getMesonetStations(){
    
     const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
     //spinWheelLoadingforMesonentStation
-    var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
-    loadingIcon.style.display = "block";
+   /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+    loadingIcon.style.display = "block"; */
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
@@ -771,3 +832,32 @@ function dataToArray (data) {
     	return row.split(",");
     });
 };
+
+
+function findClosestStation(){
+    var retrievedObject = localStorage.getItem('mesonentStations');
+    //mylocationLat = 39.1863889 ;
+    var mylocationLat = localStorage.getItem('userLatitude');
+    //mylocationLon  = -96.5894169;
+    var mylocationLon = localStorage.getItem('userLongitude');
+    var stationData = JSON.parse(retrievedObject);
+    // 2 lat
+    // 3 long
+    var d ; // distance
+    var distanceList = [];
+    for (var i=1;i < stationData.length; i++){
+        d = distance(mylocationLat,mylocationLon,stationData[i][2],stationData[i][3])
+        console.log(i,stationData[i][0],d);
+        distanceList.push(d);  
+    } 
+
+    Array.min = function( array ){
+        return Math.min.apply( Math, array );
+    };
+
+    var minimum = Array.min(distanceList);
+    var key = distanceList.indexOf(minimum);
+    var index = key +1
+    //  Returning the station 
+    return minimum;
+}

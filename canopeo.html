@@ -16,7 +16,21 @@
     <!--  <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script> -->
    
 </head>
+<body>
 
+  <nav class="navbar purple">
+    <div id="navbarMenuHeroA" class="navbar-menu">
+        <div class="navbar-start">
+          <label class="button is-dark is-outlined is-light" id="btnUploadLabel" style="margin:5px;" disabled>
+            <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
+                <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Load images</strong></span>
+            </label>
+        </div>
+        <div class="navbar-end">
+          
+        </div>
+    </div>
+</nav>
 <div id="containerDiv" class="container"> 
       <!-- <div id="appHeader"class = "teal">
           <h1 id="cameraAppHeading" class="oblique center-align">Kola</h1>
@@ -25,10 +39,7 @@
           </blockquote> 
    </div> -->
   
-   <label class="button is-dark is-outlined is-light" id="btnUploadLabel" style="margin:5px;" disabled>
-    <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
-        <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Load images</strong></span>
-    </label>
+  
   
     <label class="button is-dark is-outlined is-light" id="mesonetStation" style="margin:5px;" disabled>
       <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i>
@@ -119,7 +130,7 @@
    </div> 
 
 
-   <input id="userCoordinates" data-latitude="" data-longitude="" />
+  
   
         
 
@@ -133,6 +144,7 @@
 <script type="text/javascript" src="js/exif.js"></script>
 <script src="js/weather.js"></script> 
 <script src="js/canopeo_v0.7.js"></script>
+<script src="js/commonFunctoins.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
 
 
