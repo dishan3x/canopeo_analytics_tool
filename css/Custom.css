@@ -154,3 +154,11 @@ body {
   color:green;
 }
 
+
+
+@media ( max-width: 600px) {
+  .titleView{ 
+    font-size:15vw;
+    text-align: center;
+  }
+}
