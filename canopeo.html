@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="test">
+<html >
 
 
 <head>
@@ -30,7 +30,14 @@
             <i class="fa fa-broadcast-tower"></i> 
                 <span class="is-hidden-mobile" style="padding-left: 10px;" id="nearestStationLabelId"><strong></strong></span>
           </label>  
+          <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" onlick="window.location.href='index.html'" >
+            <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
+            <i class="fas fa-arrow-left" ></i>
+               
+          </label>
         </div>
+       
+
         <div class="navbar-end">
           
         </div>
@@ -72,7 +79,7 @@
                 <div class="col s12 m6">
                         <div id="cardData" class="card blue-grey darken-1">
                           <div class="card-content white-text">
-                            <span class="card-title">Canopeo Cover</span>
+                            <span class="card-title">Green Canopeo Cover (%)</span>
                             <p class="titleView" id="canopeoCover_val"> </p>
                           </div>
                           <div class="card-action">
@@ -83,7 +90,7 @@
                       <div class="col s12 m6">
                             <div class="card blue-grey darken-1">
                               <div class="card-content white-text">
-                                <span class="card-title">Kc</span>
+                                <span class="card-title">Crop Coefficient</span>
                                 <p class="titleView" id="cropCoefficient_val"></p>
                               </div>
                               <div class="card-action">
@@ -95,7 +102,7 @@
                           <div class="col s12 m6">
                               <div class="card blue-grey darken-1">
                                   <div class="card-content white-text">
-                                    <span class="card-title">ETO(mm)</span>
+                                    <span class="card-title">ETO (mm/day)</span>
                                     <p class="titleView" id="evapotranspiration_val"></p>
                                   </div>
                                   <div class="card-action">
@@ -107,7 +114,7 @@
                           <div class="col s12 m6">
                                     <div class="card blue-grey darken-1">
                                       <div class="card-content white-text">
-                                        <span class="card-title">ETc(mm)</span>
+                                        <span class="card-title">ETc (mm)</span>
                                         <p class="titleView" id="cropEvapotranspiration_val"></p>
                                       </div>
                                       <div class="card-action">
