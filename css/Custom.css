@@ -106,8 +106,13 @@ body {
   color:white !important;
 }
 
-#indexLeaf{
-  /*  background-image: url('../images/canopeo.png');  */
+/* #indexLeaf{
+  /*  background-image: url('../images/canopeo.png'); 
+} */
+
+#apiInformationDiv{
+  margin-top: 10%;
+  margin-left: 20%;
 }
 
 /* #indexLeaf { 

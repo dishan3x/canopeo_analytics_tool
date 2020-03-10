@@ -29,11 +29,13 @@
             <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
                 <span class="is-hidden-mobile" style="padding-left: 10px;"><strong class="navTags">Load images</strong></span>
           </label>
-          <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" disabled>
-            <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
+
+          <label id="indexHeader">K<i id="headSqureBlock1" class="fas fa-square  headerSqure"></i>O<i id="headSqureBlock2" class="headerSqure fas fa-square"></i>L<i id="headSqureBlock3" class="fas fa-square headerSqure"></i>A<label> 
+       
+         <!--  <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" disabled>
             <i class="fa fa-broadcast-tower"></i> 
                 <span class="is-hidden-mobile navTags" style="padding-left: 10px;" id="nearestStationLabelId"><strong ></strong></span>
-          </label>  
+          </label>   -->
          
         </div>
        
@@ -59,9 +61,9 @@
           <!-- search <i class="fas fa-search"></i> -->
           <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
           <!-- checked /done   <i class="fas fa-check"></i> -->
-        <div id="apiInformationDiv" class="center-align">
-          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><i class="fas  fa-check"></i><text id="loadMesonentTextLabel">Load mesonent stations</text></label>
-          <label id="nearestStationLabel"><text >Nearset station :</text ><text id="nearestStationLabelText"></text ></label>
+        <div id="apiInformationDiv" >
+          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><text id="loadMesonentTextLabel">Load mesonent stations </text><i class="fas  fa-check"></i></label>
+          <label id="nearestStationLabel"><text >Nearest station :</text ><text id="nearestStationLabelText"></text ></label>
           <label id="findnearestLabel"><text>Distance :</text><text id="distanceLabelText"></text></label>
          <!--  <label id="weatherDataLabel"><label=""></label><i class="fas fa-check"></i><text>Load weather data</text></label> -->
         <!--  <label=""><i class="fas fa-sync fa-spin"></i></label> -->

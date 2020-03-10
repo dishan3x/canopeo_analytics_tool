@@ -102,8 +102,8 @@ var nearestLocation = findClosestStation();
 
 
 // Station label
-stationLabel = document.getElementById('nearestStationLabelId');
-stationLabel.innerHTML = nearestLocation+" mesonent station";
+/* stationLabel = document.getElementById('nearestStationLabelId');
+stationLabel.innerHTML = nearestLocation+" mesonent station"; */
 
 // Users altutude and latitude
 userLattitudeText = document.getElementById('userLattitudeText');
@@ -112,10 +112,6 @@ userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
 // Users altutude and latitude
 userLongitudeText = document.getElementById('userLongitudeText');
 userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
-
-
-
-
 
 // Make the navigator geo async when have the time
 // https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
