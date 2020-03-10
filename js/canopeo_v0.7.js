@@ -90,7 +90,7 @@ localStorage.setItem('mesonentStations', JSON.stringify(mesonentStations));
 // All the mesonent station need to be loadeed and set
 // User geolocation need to be set
 var nearestLocation = findClosestStation();
-
+//localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
 
 // Station label
 /* stationLabel = document.getElementById('nearestStationLabelId');
@@ -888,7 +888,9 @@ function findClosestStation(){
     var key = distanceList.indexOf(minimumDistance);
     var index = key +1
     //  Returning the station 
+    
     console.log(stationData[index].NAME," -Name");
+    localStorage.setItem('nearestStation',stationData[index].NAME);
     var distanceLabelText = document.getElementById("distanceLabelText");
     distanceLabelText.innerHTML =minimumDistance.toFixed(2)+" miles ";
     var nearestStationLabelText = document.getElementById("nearestStationLabelText");

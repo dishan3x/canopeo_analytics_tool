@@ -136,7 +136,7 @@ function findClosestStation(){
     var key = distanceList.indexOf(minimum);
     var index = key +1
     //  Returning the station
-    localStorage.setItem("nearestStation",stationData[index][0]);
+  //  localStorage.setItem("nearestStation",stationData[index][0]);
     return minimum;
 }
 
