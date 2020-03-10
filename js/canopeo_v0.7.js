@@ -59,16 +59,7 @@ let mesonentStations;
 function preload() {
 
     mesonentStations= loadJSON('https://dishan3x.github.io/canopeo_analytics_tool/data/csvjson.json'); 
-
-    if (localStorage.getItem("userLatitude") === null) {
-        // Get the user locations if userLatitude is not set
-        // First time its loaded getting the users location
-        getLocation();
-    }
-
-
-
-
+    getLocation();
 }// preload end
 
 
