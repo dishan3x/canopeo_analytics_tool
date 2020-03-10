@@ -27,12 +27,12 @@
           </label>
           <label class="button is-dark is-outlined is-light navBarLabels" id="btnUploadLabel" style="margin:5px;" disabled>
             <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
-                <span class="is-hidden-mobile" style="padding-left: 10px;"><strong>Load images</strong></span>
+                <span class="is-hidden-mobile" style="padding-left: 10px;"><strong class="navTags">Load images</strong></span>
           </label>
           <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" disabled>
             <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
             <i class="fa fa-broadcast-tower"></i> 
-                <span class="is-hidden-mobile" style="padding-left: 10px;" id="nearestStationLabelId"><strong></strong></span>
+                <span class="is-hidden-mobile navTags" style="padding-left: 10px;" c id="nearestStationLabelId"><strong ></strong></span>
           </label>  
          
         </div>
@@ -44,21 +44,6 @@
     </div>
 </nav>
 <div id="containerDiv" class="container"> 
-      <!-- <div id="appHeader"class = "teal">
-          <h1 id="cameraAppHeading" class="oblique center-align">Kola</h1>
-          <blockquote>
-            Please take a picture of the canopy!
-          </blockquote> 
-   </div> -->
-  
-  
-  
-  
- 
-      
-     
-
-
         <!--   Navigation Bar    -->
 
         <span id="sidenavButton" style="font-size:30px;cursor:pointer;display:none" onclick="openNav()"  >&#9776; open</span>
@@ -70,8 +55,18 @@
           <a href="#">Contact</a>
         </div>
 
+        <!--   Api information / local storage information  -->
+          <!-- search <i class="fas fa-search"></i> -->
+          <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
+          <!-- checked /done   <i class="fas fa-check"></i> -->
+        <div id="apiInformationDiv" class="center-align">
+          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><i class="fas  fa-search"></i><text id="loadMesonentTextLabel">Load mesonent stations</text></label>
+          <label id="findnearestLabel"><label ><i class="fas  fa-search"></i></label><text id="findnearestTextLabel">Find the nearset station</text></label>
+         <!--  <label id="weatherDataLabel"><label=""></label><i class="fas fa-check"></i><text>Load weather data</text></label> -->
+        <!--  <label=""><i class="fas fa-sync fa-spin"></i></label> -->
+         <label id="weatherDataLabel"><label></label><i class="fas fa-search"></i><text id="weatherDataTextLabel">Load weather data</text></label>
+        </div>
         
-
         <!--   Resluts Grid        -->
 
         <div id="resultGrid">
@@ -102,7 +97,7 @@
                           <div class="col s12 m6">
                               <div class="card blue-grey darken-1">
                                   <div class="card-content white-text">
-                                    <span class="card-title">ETO (mm/day)</span>
+                                    <span class="card-title">ETo (mm/day)</span>
                                     <p class="titleView" id="evapotranspiration_val"></p>
                                   </div>
                                   <div class="card-action">
@@ -152,6 +147,7 @@
 <script src="libraries/p5/p5.js"></script>
 <script type="text/javascript" src="js/exif.js"></script>
 <script src="js/weather.js"></script> 
+<script type="text/javascript" src="data/csvjson.json"></script>
 <script src="js/canopeo_v0.7.js"></script>
 <script src="js/commonFunctoins.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>

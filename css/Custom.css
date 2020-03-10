@@ -154,11 +154,26 @@ body {
   color:green;
 }
 
+#apiInformationDIV{
+  position:center;
+  display:inline;
 
+}
 
 @media ( max-width: 600px) {
   .titleView{ 
     font-size:15vw;
     text-align: center;
   }
+
+  #apiInformationDiv{
+    display:inline-grid;
+  
+  }
+
+  .navTags{
+    display:none;
+  }
 }
+
+

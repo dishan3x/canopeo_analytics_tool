@@ -51,8 +51,18 @@ var capture;
 var modo = 0;
 var confirmarTakeSnap = false;
 var instances ="";
-var elems = ""
+var elems = "";
+var apiInformationDiv = "";
 
+let datasomething;
+
+function preload() {
+  datasomething= loadJSON('js/csvjson.json'); 
+}
+
+
+console.log("here at json");
+console.log(datasomething);
 
 /**  Get all the mesonenet station and store it in the local storage 
  *  The file would be 
@@ -62,13 +72,19 @@ var elems = ""
 /* var CoordinatesHolder = document.getElementById('userCoordinates');
  */
 
-if (localStorage.getItem("mesonentStations") === null) {
+
+
+/* if (localStorage.getItem("mesonentStations") === null) {
     // Getting data from the mesonent stations and store it in the local storage
     getMesonetStations();
 }
+ */
+
+
 
 if (localStorage.getItem("userLatitude") === null) {
 // Get the user locations if userLatitude is not set
+// First time its loaded getting the users location
    getLocation();
 }
 
@@ -78,10 +94,14 @@ if (localStorage.getItem("userLatitude") === null) {
 var nearestLocation = findClosestStation();
 
 
-resultsGrid = document.getElementById('nearestStationLabelId');
-resultsGrid.innerHTML = nearestLocation+" mesonent station";
+stationLabel = document.getElementById('nearestStationLabelId');
+stationLabel.innerHTML = nearestLocation+" mesonent station";
+sds = document.getElementById("canopeoCover_val");
+sdds = document.getElementById("canopeoCover_val");
+sdds = document.getElementById("canopeoCover_val");
+ssdsd = document.getElementById("canopeoCover_val");
 
-getWeatherData();
+//getWeatherData();
 
 // Make the navigator geo async when have the time
 // https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
@@ -94,6 +114,7 @@ loadingIcon.style.display = "none"; */
 if (localStorage.getItem("mesonetWeatherData") === null) {
     // Run the file getweather function 
     console.log("Run the file getweather function ");
+    // This function will run until it achieved the data
     getWeatherData();
     alert("connecting to mesonent servers to retrive data");
 }else{
@@ -123,6 +144,7 @@ function setup() {
 
     resultsGrid = document.getElementById('resultGrid');
     resultsGrid.style.display = "none";
+    apiInformationDiv = document.getElementById('apiInformationDiv');
 
     w = window.outerWidth;
     h = window.outerHeight;
@@ -189,6 +211,7 @@ function retakeSnap(){
     modo = 1;
     //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
+    apiInformationDiv.style.display = "block";
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.display = 'block';
     confirmarTakeSnap = true;
@@ -200,6 +223,7 @@ function gotFile(file) {
             loadImage(file.data,function(imgOriginal){
                 d = distance(59.3293371, 13.4877472, 59.3225525, 13.4619422);
                 console.log(d);
+                
         /* cameraCanvas = document.getElementById('cameraCanvas');
         cameraCanvas.style.display = 'none'; */
                 document.getElementById("canopeoCover_val").innerHTML ="";
@@ -216,6 +240,8 @@ function gotFile(file) {
                 // Displaying the result grid 
                 resultsGrid.style.visibility = 'visible';
                 resultsGrid.style.display = "block";
+                // Hide the api status from the screen
+                apiInformationDiv.style.display = "none";
     
                 let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
                 
@@ -773,15 +799,18 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 
 function getMesonetStations(){
+
+    var mesonentStationsLabel = getElementById()
    
     const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
     //spinWheelLoadingforMesonentStation
    /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
     loadingIcon.style.display = "block"; */
-    new Promise(function(resolve, reject) {
+    new Promise(function(resolve, reject) { 
         const timeout = setTimeout(function() {
             didTimeOut = true;
+            // Running the api again to retrievve data
             getMesonetStations();
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);

@@ -1,0 +1,104 @@
+<script src="js/update.js"></script>
+
+<!DOCTYPE html>
+<html>
+<body>
+<!-- 
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p> -->
+
+<script>
+
+
+    const fs = require('fs');
+
+    var mesonentStationsLabel = getElementById()
+
+    const FETCH_TIMEOUT = 5000;
+    let didTimeOut = false;
+    //spinWheelLoadingforMesonentStation
+    /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
+    loadingIcon.style.display = "block"; */
+    new Promise(function(resolve, reject) { 
+        const timeout = setTimeout(function() {
+            didTimeOut = true;
+            // Running the api again to retrievve data
+            getMesonetStations();
+            reject(new Error('Request timed out'));
+        }, FETCH_TIMEOUT);
+        
+        fetch('https://mesonet.k-state.edu/rest/stationnames/')
+        .then(response =>  {
+            // Clear the timeout as cleanup
+            clearTimeout(timeout);
+            if(!didTimeOut) {
+                //console.log('fetch good! ', response);
+                //var objthing = response.text();
+                resolve(response);
+            }
+            return response.text();
+        })
+        .then(data => {
+            // The returned data set has columns names and values devidede  by /n 
+            // Seperated by /n 
+            console.log("got in the system");
+
+            array = dataToArray(data);
+
+            localStorage.setItem('mesonentStations', JSON.stringify(array));
+
+            jsonContent =  JSON.stringify(array);
+            fs.writeFile("mesonentStations.json", jsonContent, 'utf8', function (err) {
+                if (err) {
+                    console.log("An error occured while writing JSON Object to File.");
+                    return console.log(err);
+                }
+        
+              console.log("JSON file has been saved.");
+             });
+        })
+        .catch(function(err) {
+            console.log('fetch failed! ', err);
+            
+            // Rejection already happened with setTimeout
+            if(didTimeOut) return;
+            // Reject with error
+            reject(err);
+        });
+    })
+    .then(function() {
+        // Request success and no timeout
+        console.log('good promise, no timeout! ');
+    })
+    .catch(function(err) {
+        // Error: response error, request timeout or runtime error
+        console.log('promise error! ', err);
+    });
+
+    function dataToArray (data) {
+        rows = data.split("\n");
+
+        return rows.map(function (row) {
+            return row.split(",");
+        });
+    };
+
+    function loadJSON(callback) {
+        var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+        xobj.open('GET', 'path_to_file_on_server.json', true); 
+        xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+        callback(xobj.responseText);
+        }
+        };
+        xobj.send(null); 
+    }
+
+</script>
+
+</body>
+</html>
