@@ -58,20 +58,26 @@
         </div>
 
         <!--   Api information / local storage information  -->
+
           <!-- search <i class="fas fa-search"></i> -->
           <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
           <!-- checked /done   <i class="fas fa-check"></i> -->
         <div id="apiInformationDiv" >
-          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><text id="loadMesonentTextLabel">Load mesonent stations </text><i class="fas  fa-check"></i></label>
-          <label id="nearestStationLabel"><text >Nearest station :</text ><text id="nearestStationLabelText"></text ></label>
+          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><text id="loadMesonentTextLabel"> Station found  </text><i class="fas  fa-check"></i></label>
+          <label id="nearestStationLabel"><text >Mesonet station : </text ><text id="nearestStationLabelText"></text ></label>
           <label id="findnearestLabel"><text>Distance :</text><text id="distanceLabelText"></text></label>
-         <!--  <label id="weatherDataLabel"><label=""></label><i class="fas fa-check"></i><text>Load weather data</text></label> -->
-        <!--  <label=""><i class="fas fa-sync fa-spin"></i></label> -->
-        <label id="userCordinates">Lattitude : <text id="userLattitudeText"></text>  Longitude : <text id="userLongitudeText"></text></label>
-          <label>
-        <!--  <label id="weatherDataLabel"><label></label><i class="fas fa-search"></i><text id="weatherDataTextLabel">Load weather data</text></label> -->
+          <label id="userCordinatesLattitude">Lattitude : <text id="userLattitudeText"></text>  </label>
+          <label id="userCordinatesLongitude">Longitude : <text id="userLongitudeText"></text> </label>
         </div>
-        
+
+        <!-- The image -->
+
+        <div id="leafcontainer" class="center-align">
+          <div id="indexLeaf" class="center-align" style="margin-left:20%;margin-top:10%;">
+              <!-- <img src="images/canopeo.png" alt="Smiley face" height="60%" width="40%"> -->
+          </div>
+        </div>
+
         <!--   Resluts Grid        -->
 
         <div id="resultGrid" style="display:none;">

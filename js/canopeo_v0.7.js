@@ -148,6 +148,8 @@ if (localStorage.getItem("mesonetWeatherData") === null) {
     resultsGrid.style.display = "none";
     apiInformationDiv = document.getElementById('apiInformationDiv');
 
+    leafImageContainer = document.getElementById("leafcontainer");
+
     w = window.outerWidth;
     h = window.outerHeight;
     containerDiv = document.getElementById('containerDiv') ;
@@ -201,6 +203,7 @@ function retakeSnap(){
     apiInformationDiv.style.display = "block";
     cameraCanvas = document.getElementById('cameraCanvas');
     cameraCanvas.style.display = 'block';
+    leafImageContainer.style.display  ="block";
     confirmarTakeSnap = true;
 }
 
@@ -214,6 +217,7 @@ function gotFile(file) {
                 document.getElementById("evapotranspiration_val").innerHTML = "";
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
+                leafImageContainer.style.display = "none";
                 // Get geographic coordinates
                // getLocation();
   
