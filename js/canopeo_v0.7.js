@@ -54,15 +54,31 @@ var instances ="";
 var elems = "";
 var apiInformationDiv = "";
 
-let datasomething;
+let mesonentStations;
 
 function preload() {
-  datasomething= loadJSON('https://dishan3x.github.io/canopeo_analytics_tool/data/csvjson.json'); 
-}
+    console.log("here inside");
+    mesonentStations= loadJSON('https://dishan3x.github.io/canopeo_analytics_tool/data/csvjson.json'); 
+    console.log("here pass"); 
+    mesoObject = JSON.parse(mesonentStations);
+    console.log("here pass"); 
+    console.log(mesoObject);
+    if (localStorage.getItem("userLatitude") === null) {
+        // Get the user locations if userLatitude is not set
+        // First time its loaded getting the users location
+        getLocation();
+    }
+
+    console.log(JSON.stringify(mesonentStations));
+    console.log(JSON.stringify(mesoObject));
+
+    localStorage.setItem('mesonentStations', mesonentStations);
+    localStorage.setItem('mesonentStations2', mesoObject);
+    console.log(mesonentStations);
+
+}// preload end
 
 
-console.log("here at json");
-console.log(datasomething);
 
 /**  Get all the mesonenet station and store it in the local storage 
  *  The file would be 
@@ -80,15 +96,11 @@ console.log(datasomething);
 }
  */
 
+  // onload
+function setup() {
 
 
-if (localStorage.getItem("userLatitude") === null) {
-// Get the user locations if userLatitude is not set
-// First time its loaded getting the users location
-   getLocation();
-}
-
-// What you need
+    // What you need
 // All the mesonent station need to be loadeed and set
 // User geolocation need to be set
 var nearestLocation = findClosestStation();
@@ -96,10 +108,6 @@ var nearestLocation = findClosestStation();
 
 stationLabel = document.getElementById('nearestStationLabelId');
 stationLabel.innerHTML = nearestLocation+" mesonent station";
-sds = document.getElementById("canopeoCover_val");
-sdds = document.getElementById("canopeoCover_val");
-sdds = document.getElementById("canopeoCover_val");
-ssdsd = document.getElementById("canopeoCover_val");
 
 //getWeatherData();
 
@@ -134,11 +142,6 @@ if (localStorage.getItem("mesonetWeatherData") === null) {
     }
 }
 
-
-
-
-  // onload
-function setup() {
    
     var containerDiv;
 
@@ -874,6 +877,7 @@ function findClosestStation(){
     var mylocationLat = localStorage.getItem('userLatitude');
     //mylocationLon  = -96.5894169;
     var mylocationLon = localStorage.getItem('userLongitude');
+    console.log(retrievedObject);
     var stationData = JSON.parse(retrievedObject);
     // 2 lat
     // 3 long
