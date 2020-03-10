@@ -468,6 +468,17 @@ function realtimePosition(position) {
 
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
+
+   // Users altutude and latitude
+    var userLattitudeText = document.getElementById('userLattitudeText');
+    userLattitudeText.innerHTML = realtimeLatitude;
+
+    // Users altutude and latitude
+    var userLongitudeText = document.getElementById('userLongitudeText');
+    userLongitudeText.innerHTML = realtimeLongitude;
+
+
+
   /*  CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
    CoordinatesHolder.setAttribute('data-longitude', realtimeLongitude); */
 }
