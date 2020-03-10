@@ -57,24 +57,17 @@ var apiInformationDiv = "";
 let mesonentStations;
 
 function preload() {
-    console.log("here inside");
+
     mesonentStations= loadJSON('https://dishan3x.github.io/canopeo_analytics_tool/data/csvjson.json'); 
-    console.log("here pass"); 
-    mesoObject = JSON.parse(mesonentStations);
-    console.log("here pass"); 
-    console.log(mesoObject);
+
     if (localStorage.getItem("userLatitude") === null) {
         // Get the user locations if userLatitude is not set
         // First time its loaded getting the users location
         getLocation();
     }
 
-    console.log(JSON.stringify(mesonentStations));
-    console.log(JSON.stringify(mesoObject));
 
-    localStorage.setItem('mesonentStations', mesonentStations);
-    localStorage.setItem('mesonentStations2', mesoObject);
-    console.log(mesonentStations);
+
 
 }// preload end
 
@@ -100,23 +93,33 @@ function preload() {
 function setup() {
 
 
-    // What you need
+// Storing the mesonent data in the locat storage for reuse 
+localStorage.setItem('mesonentStations', JSON.stringify(mesonentStations));
+
 // All the mesonent station need to be loadeed and set
 // User geolocation need to be set
 var nearestLocation = findClosestStation();
 
 
+// Station label
 stationLabel = document.getElementById('nearestStationLabelId');
 stationLabel.innerHTML = nearestLocation+" mesonent station";
 
-//getWeatherData();
+// Users altutude and latitude
+userLattitudeText = document.getElementById('userLattitudeText');
+userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
+
+// Users altutude and latitude
+userLongitudeText = document.getElementById('userLongitudeText');
+userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
+
+
+
+
 
 // Make the navigator geo async when have the time
 // https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
 
-/* var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
-
-loadingIcon.style.display = "none"; */
 
 // Check for the mesonent data retrive
 if (localStorage.getItem("mesonetWeatherData") === null) {
@@ -152,36 +155,21 @@ if (localStorage.getItem("mesonetWeatherData") === null) {
     w = window.outerWidth;
     h = window.outerHeight;
     containerDiv = document.getElementById('containerDiv') ;
-    //containerDiv.style.visibility = "hidden";
-    //console.log(clientWindow);
+
 
     var body = document.body, html = document.documentElement;
 
-  /*   var clientHeight = Math.max( body.scrollHeight, body.offsetHeight, 
-                        html.clientHeight, html.scrollHeight, html.offsetHeight );      
-    var clientWidth  =  Math.max( body.scrollWidth, body.offsetWidth, 
-        html.clientWidth, html.scrollWidth, html.offsetWidth ); */
-    
-      
     sreenHeight =((body.offsetHeight)*90)/100;
     screenWidth =  ((body.offsetWidth)*90)/100;
-    //print 
-    console.log("screen width",screenWidth);
-    console.log("screen height",sreenHeight);
-
-
+  
         // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
     
     btnUpload.parent('btnUploadLabel');
     btnUpload.style('display','none');
-    //btnUpload.elt.disabled = true;
 
     w = screenWidth;
     h = sreenHeight;
-
-
- 
 
 }  // End setup()
 
@@ -224,11 +212,7 @@ function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
-                d = distance(59.3293371, 13.4877472, 59.3225525, 13.4619422);
-                console.log(d);
-                
-        /* cameraCanvas = document.getElementById('cameraCanvas');
-        cameraCanvas.style.display = 'none'; */
+
                 document.getElementById("canopeoCover_val").innerHTML ="";
                 document.getElementById("cropCoefficient_val").innerHTML = "";
                 document.getElementById("evapotranspiration_val").innerHTML = "";
@@ -463,7 +447,7 @@ function getLocation() {
     console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
         console.log("Got approval");
-        navigator.geolocation.getCurrentPosition(realtimePosition);
+        navigator.geolocation.watchPosition(realtimePosition);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -481,6 +465,7 @@ function realtimePosition(position) {
    realtimeLatitude =  position.coords.latitude;
    realtimeLongitude = position.coords.longitude; 
    realtimeAltitude = position.coords.altitude;
+
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
   /*  CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
@@ -872,20 +857,24 @@ function dataToArray (data) {
 
 
 function findClosestStation(){
-    var retrievedObject = localStorage.getItem('mesonentStations');
+    var retrieve = localStorage.getItem('mesonentStations');
+    var stationData = JSON.parse(retrieve);
+    console.log(stationData);
     //mylocationLat = 39.1863889 ;
     var mylocationLat = localStorage.getItem('userLatitude');
     //mylocationLon  = -96.5894169;
     var mylocationLon = localStorage.getItem('userLongitude');
-    console.log(retrievedObject);
-    var stationData = JSON.parse(retrievedObject);
+    console.log(Object.keys(stationData).length);
+  //  var stationData = retrievedObject;
+   // console.log("length of the", retrievedObject[80].NAME);
     // 2 lat
     // 3 long
     var d ; // distance
     var distanceList = [];
-    for (var i=1;i < stationData.length; i++){
-        d = distance(mylocationLat,mylocationLon,stationData[i][2],stationData[i][3])
-        console.log(i,stationData[i][0],d);
+    for (var i=1;i < Object.keys(stationData).length; i++){
+        d = distance(mylocationLat,mylocationLon,stationData[i].LATITUDE,stationData[i].LONGITUDE);
+        console.log("latti",stationData[i].LATITUDE);
+        console.log(i,"-",d,stationData[i].NAME,stationData[i].LONGITUDE);
         distanceList.push(d);  
     } 
 
@@ -893,9 +882,14 @@ function findClosestStation(){
         return Math.min.apply( Math, array );
     };
 
-    var minimum = Array.min(distanceList);
-    var key = distanceList.indexOf(minimum);
+    var minimumDistance = Array.min(distanceList);
+    var key = distanceList.indexOf(minimumDistance);
     var index = key +1
     //  Returning the station 
-    return stationData[index][0];
+    console.log(stationData[index].NAME," -Name");
+    var distanceLabelText = document.getElementById("distanceLabelText");
+    distanceLabelText.innerHTML =minimumDistance.toFixed(2)+" miles ";
+    var nearestStationLabelText = document.getElementById("nearestStationLabelText");
+    nearestStationLabelText.innerHTML =stationData[index].NAME;
+    return stationData[index].NAME;
 }

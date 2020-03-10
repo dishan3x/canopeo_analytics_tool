@@ -32,7 +32,7 @@
           <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin:5px;" disabled>
             <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
             <i class="fa fa-broadcast-tower"></i> 
-                <span class="is-hidden-mobile navTags" style="padding-left: 10px;" c id="nearestStationLabelId"><strong ></strong></span>
+                <span class="is-hidden-mobile navTags" style="padding-left: 10px;" id="nearestStationLabelId"><strong ></strong></span>
           </label>  
          
         </div>
@@ -60,16 +60,20 @@
           <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
           <!-- checked /done   <i class="fas fa-check"></i> -->
         <div id="apiInformationDiv" class="center-align">
-          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><i class="fas  fa-search"></i><text id="loadMesonentTextLabel">Load mesonent stations</text></label>
-          <label id="findnearestLabel"><label ><i class="fas  fa-search"></i></label><text id="findnearestTextLabel">Find the nearset station</text></label>
+          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><i class="fas  fa-check"></i><text id="loadMesonentTextLabel">Load mesonent stations</text></label>
+          <label id="nearestStationLabel"><text >Nearset station :</text ><text id="nearestStationLabelText"></text ></label>
+          <label id="findnearestLabel"><text>Distance :</text><text id="distanceLabelText"></text></label>
          <!--  <label id="weatherDataLabel"><label=""></label><i class="fas fa-check"></i><text>Load weather data</text></label> -->
         <!--  <label=""><i class="fas fa-sync fa-spin"></i></label> -->
-         <label id="weatherDataLabel"><label></label><i class="fas fa-search"></i><text id="weatherDataTextLabel">Load weather data</text></label>
+        <label id="userCordinates">Lattitude : <text id="userLattitudeText"></text>  Longitude : <text id="userLongitudeText"></text></label>
+          <label>
+        <!--  <label id="weatherDataLabel"><label></label><i class="fas fa-search"></i><text id="weatherDataTextLabel">Load weather data</text></label> -->
         </div>
         
         <!--   Resluts Grid        -->
 
-        <div id="resultGrid">
+        <div id="resultGrid" style="display:none;">
+
             <div class="row">
                 <div class="col s12 m6">
                         <div id="cardData" class="card blue-grey darken-1">

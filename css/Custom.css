@@ -154,9 +154,9 @@ body {
   color:green;
 }
 
-#apiInformationDIV{
+#apiInformationDiv{
   position:center;
-  display:inline;
+  display:inline-grid ! important;
 
 }
 
@@ -167,7 +167,7 @@ body {
   }
 
   #apiInformationDiv{
-    display:inline-grid;
+    display:inline-grid ! important;
   
   }
 
