@@ -57,7 +57,7 @@ var apiInformationDiv = "";
 let datasomething;
 
 function preload() {
-  datasomething= loadJSON('js/csvjson.json'); 
+  datasomething= loadJSON('https://dishan3x.github.io/canopeo_analytics_tool/data/csvjson.json'); 
 }
 
 
