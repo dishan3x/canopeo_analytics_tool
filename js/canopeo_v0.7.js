@@ -169,28 +169,12 @@ function openNav() {
     document.getElementById("mySidenav").style.width = "0";
     alert("close");
   }
-/**
- *  Take a picture from the p5 video feed
- */
-function takeSnap(){
-
-    var capturedFrame = video.get();
-    const orignalImageDiv = document.getElementById("orignalImage");
-    orignalImageDiv.innerHTML = '';
-    const classifiedImageDiv = document.getElementById("classifiedImage");
-    classifiedImageDiv.innerHTML = '';
-
-    gotFile(capturedFrame);
-    confirmarTakeSnap = true;
-}
 
 function retakeSnap(){
     modo = 1;
     //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
     apiInformationDiv.style.display = "block";
-    cameraCanvas = document.getElementById('cameraCanvas');
-    cameraCanvas.style.display = 'block';
     leafImageContainer.style.display  ="block";
     confirmarTakeSnap = true;
 }

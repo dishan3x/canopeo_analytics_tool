@@ -106,9 +106,10 @@ body {
   color:white !important;
 }
 
-/* #indexLeaf{
-  /*  background-image: url('../images/canopeo.png'); 
-} */
+ #leafcontainer{
+
+  background-image: url('../images/greenEditedWithPhoteditor.png'); 
+} 
 
 #apiInformationDiv{
   margin-top: 10%;
@@ -122,7 +123,7 @@ body {
   -webkit-border-radius: 100px 0px;
   border-radius: 100px 0px;
 } */
-
+/* 
 #indexLeaf {
   width: 200px;
   height: 300px;
@@ -130,7 +131,7 @@ body {
   -moz-border-radius: 100% /120px 0px;
   -webkit-border-radius: 100% / 120px 0px;
   border-radius: 100% 0 / 140px 0px;
-}
+} */
 
 .btn{
   background-color: #512888 !important;
@@ -179,6 +180,28 @@ body {
   .navTags{
     display:none;
   }
-}
+
+  .card {
+    width: 50%;
+    float: left;
+  }
+  .card-content{
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .cardDiv{
+    /* color:red; */
+  }
+
+  .displayTilesRow{
+    display:flex ! important;
+  }
+
+  .row{
+    margin-bottom: -20px !important;
+  }
+} /* end small container  */
+
 
 
