@@ -116,13 +116,13 @@ body {
 }
 
  #leafcontainer{
-
-  background-image: url('../images/greenEditedWithPhoteditor.png'); 
+   margin-top:20%;
+  /* min-height: 7080vh;  */
+ /*  background-image: url('../images/greenEditedWithPhoteditor.png');  */
 } 
 
 #apiInformationDiv{
-  margin-top: 10%;
-  margin-left: 20%;
+  margin-top: 5%;
 }
 
 /* #indexLeaf { 
