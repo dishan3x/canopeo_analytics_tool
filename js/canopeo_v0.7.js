@@ -189,6 +189,12 @@ function gotFile(file) {
                 document.getElementById("evapotranspiration_val").innerHTML = "";
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
+                var isMobileVersion = document.getElementsByClassName('analysedImagesTag');
+                    if (isMobileVersion !== null){
+                        document.getElementById("orignalImage").innerHTML ="";
+                        document.getElementById("classifiedImage").innerHTML ="";
+                    }
+
                 leafImageContainer.style.display = "none";
                 // Get geographic coordinates
                // getLocation();
@@ -268,6 +274,7 @@ function gotFile(file) {
                 thumbnailOriginal.size(cardWidth,cardHeight);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent(orignalImage);
+                thumbnailOriginal.addClass('analysedImagesTag');
                 //originalID
                 
                 // Thumbnail classified image
@@ -276,7 +283,8 @@ function gotFile(file) {
                 thumbnailClassified.size(cardWidth,cardHeight);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent(classifiedImage);
-                thumbnailClassified.style.border = "5px solid black;"
+                thumbnailClassified.addClass('analysedImagesTag');
+                //thumbnailClassified.style.border = "5px solid black;"
                 
                 // Check EXIF dateTime
                 if (typeof snapDate === 'undefined'){

@@ -16,9 +16,18 @@ body {
     height: 90%;
   }
 
+
+  .analysedImagesTag{
+    border-style: groove;
+  }
+
   .container {
     width:95%;
     /* background-color:#190033; */
+  }
+
+  .pictureDiv{
+    display: flex;
   }
 
 #defaultCanvas0{
@@ -166,6 +175,8 @@ body {
 
 }
 
+
+
 @media ( max-width: 600px) {
   .titleView{ 
     font-size:15vw;
@@ -201,7 +212,10 @@ body {
   .row{
     margin-bottom: -20px !important;
   }
-} /* end small container  */
 
+  .pictureDiv{
+    margin-top : 20px;
+  }
+} /* end small container  */
 
 

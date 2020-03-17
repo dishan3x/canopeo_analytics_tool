@@ -20,13 +20,9 @@
 
   <nav class="navbar ">
     <div id="navbarMenuHeroA" class="navbar-menu">
-        <div class="navbar-start">
-          <label class="button is-dark is-outlined is-light navBarLabels" id="mesonetStation" style="margin-left:5px;margin-right:10px" onclick="window.location.href='index.html'" >
-            <!-- <i id="spinWheelLoadingforMesonentStation" class="fas fa-sync fa-spin"></i> -->
-            <i class="fas fa-chevron-left" ></i>    
-          </label>
+        <div class="navbar-start">    
           <label class="button is-dark is-outlined is-light navBarLabels" id="btnUploadLabel" style="margin:5px;" disabled>
-            <i class="fa fa-camera-retro fa-2x" aria-hidden="true"></i>
+            <i class="fa fa-camera-retro fa-4x" aria-hidden="true"></i>
                 <span class="is-hidden-mobile" style="padding-left: 10px;"><strong class="navTags">Load images</strong></span>
           </label>
 
@@ -63,11 +59,14 @@
           <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
           <!-- checked /done   <i class="fas fa-check"></i> -->
         <div id="apiInformationDiv" >
-          <label id="mesonentStationsLabel" onclick="getMesonetStations()"><text id="loadMesonentTextLabel"> Station found  </text><i class="fas  fa-check"></i></label>
-          <label id="nearestStationLabel"><text >Nearest station : </text ><text id="nearestStationLabelText"></text ></label>
-          <label id="findnearestLabel"><text>Distance :</text><text id="distanceLabelText"></text></label>
-          <label id="userCordinatesLattitude">Lattitude : <text id="userLattitudeText"></text>  </label>
-          <label id="userCordinatesLongitude">Longitude : <text id="userLongitudeText"></text> </label>
+          <div class="col s6 m6" >
+            <label id="nearestStationLabel"><text >Nearest station : </text ><text id="nearestStationLabelText"></text ></label>
+            <label id="findnearestLabel"><text>| Distance :</text><text id="distanceLabelText"></text></label>
+          </div>
+          <div class="col s6 m6" >
+            <label id="userCordinatesLattitude">Lattitude : <text id="userLattitudeText"></text>  </label>
+            <label id="userCordinatesLongitude">| Longitude : <text id="userLongitudeText"></text> </label>
+          </div>
         </div>
 
         <!-- The image -->
@@ -120,10 +119,10 @@
                                   </div>
                               </div>       
         </div>
-                    <div class="row">
-                                  <div class="col s12 m6"  id="orignalImage"></div>
-                                  <div class="col s12 m6" id="classifiedImage"></div>
-                    </div>
+        <div class="row pictureDiv">
+                              <div  id="orignalImage"></div>
+                              <div  id="classifiedImage"></div>
+        </div>
 
                      <!-- <div class="row">
                               <div id="retakeButtonDiv"><button id="retakeBtn" class="center-align" onclick="retakeSnap()" >Retake</button></div>
