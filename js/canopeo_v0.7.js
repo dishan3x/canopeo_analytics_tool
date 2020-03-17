@@ -42,13 +42,7 @@ var w = 0;
 var h = 0;
 
 
-var video;
-var sanpButton;
-var retakeButton;
 var weatherObj; 
-
-var capture;
-var modo = 0;
 var confirmarTakeSnap = false;
 var instances ="";
 var elems = "";
@@ -58,29 +52,11 @@ let mesonentStations;
 
 function preload() {
      getLocation();
-}// preload end
-
-
-
-/**  Get all the mesonenet station and store it in the local storage 
- *  The file would be 
- * Local storage variable : mesonentStations
-*/
-
-/* var CoordinatesHolder = document.getElementById('userCoordinates');
- */
-
-
-
-/* if (localStorage.getItem("mesonentStations") === null) {
-    // Getting data from the mesonent stations and store it in the local storage
-    getMesonetStations();
 }
- */
 
-  // onload
 function setup() {
 
+console.log("Running setp");
 // Storing the mesonent data in the locat storage for reuse 
 localStorage.setItem('mesonentStations', JSON.stringify(mesonentStations));
 
@@ -88,10 +64,6 @@ localStorage.setItem('mesonentStations', JSON.stringify(mesonentStations));
 // User geolocation need to be set
 var nearestLocation = findClosestStation();
 //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
-
-// Station label
-/* stationLabel = document.getElementById('nearestStationLabelId');
-stationLabel.innerHTML = nearestLocation+" mesonent station"; */
 
 // Users altutude and latitude
 userLattitudeText = document.getElementById('userLattitudeText');
@@ -171,7 +143,6 @@ function openNav() {
   }
 
 function retakeSnap(){
-    modo = 1;
     //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
     apiInformationDiv.style.display = "block";

@@ -47,9 +47,6 @@ function getMesonetStations(){
    
     const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
-    //spinWheelLoadingforMesonentStation
-   /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
-    loadingIcon.style.display = "block"; */
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
