@@ -1,53 +1,85 @@
 <!DOCTYPE html>
-<html id="test">
+<html>
 
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Canopeo</title>
-    <!--<link rel="stylesheet" href="public/css/bulma.min.css">
-    <link rel="stylesheet" href="public/css/custom.css"> -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/Custom.css" />
-    <link rel="stylesheet" href="css/materialize.min.css" />
-    <link rel="stylesheet" href="css/fontawesome/all.css" />
-    <!--  <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script> -->
+
    
 </head>
 
 
 <body>
-    <nav class="navbar ">
-        <!-- <label id="indexHeader">K<i id="headSqureBlock1" class="fas fa-square  headerSqure"></i>O<i id="headSqureBlock2" class="headerSqure fas fa-square"></i>L<i id="headSqureBlock3" class="fas fa-square headerSqure"></i>A<label> 
-         -->
-        <label id="indexHeader">KOLA</label> 
-       
-            <!--   <h4 class="">Canopeo analytics tool</h4> -->
-        </nav>
-    
-        <div class="container center-align ">
-         <!--        <h1 class="indexPageHeadings">Kola<h1> 
-                    <h4 class="indexPageHeadings">Canopeo analytics tool</h4> -->
-             <div id="leafcontainer center-align ">
-                <div id="indexLeaf" class="center-align" style="margin-left:20%;margin-top:10%;">
-                    <!-- <img src="images/canopeo.png" alt="Smiley face" height="60%" width="40%"> -->
-                </div>
-            </div>
-            <div class="center-align" style="margin-top: 20%;margin-bottom: 10%;">
-                <button class="waves-effect waves-light btn" onClick="javascript:window.location.href='canopeo.html'" >Start</button>
-            </div>
-        </div>
-  
-   
+    <div id="retryDic">
+        <i class="fas fa-frown"></i>
+        <button id="retry" style="display: none;" onclick="javascript:window.location.href='';">Retry</button>
+    </div>
 </body>
 
-<script src="js/FileSaver.js"></script>
-<script src="js/jszip.min.js"></script>
-<script src="js/weather.js"></script> 
-<script src="js/index.js"></script> 
-<!-- <script src="js/canopeo_v0.7.js"></script> -->
+<script>
+
+
+var retryButton = document.getElementById("retry");
+    getLocation();
+    
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+}
+
+function showPosition(position) {
+
+  realtimeLatitude =  position.coords.latitude;
+   realtimeLongitude = position.coords.longitude; 
+   realtimeAltitude = position.coords.altitude;
+
+   // Reduce the sensitivit of the cordinates
+
+   realtimeLatitude = realtimeLatitude * 1000
+   realtimeLatitude = realtimeLatitude.toFixed(2);
+   realtimeLatitude = realtimeLatitude/1000;
+   
+   realtimeLongitude = realtimeLongitude * 1000
+   realtimeLongitude = realtimeLongitude.toFixed(2);
+   realtimeLongitude = realtimeLongitude/1000;
+
+   localStorage.setItem('userLatitude', realtimeLatitude);
+   localStorage.setItem('userLongitude', realtimeLongitude);
+
+   window.location = "canopeo.html";
+
+}
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      //x.innerHTML = "User denied the request for Geolocation.
+      retryButton.style.display="block";
+      alert("User denied the request for Geolocation. Inorder for the app to perform we need the locations.");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      x.innerHTML = "Location information is unavailable."
+      break;
+    case error.TIMEOUT:
+      x.innerHTML = "The request to get user location timed out."
+      break;
+    case error.UNKNOWN_ERROR:
+      x.innerHTML = "An unknown error occurred."
+      break;
+  }
+}
+
+
+
+    
+</script>
+
 
 
 

@@ -51,6 +51,11 @@ var apiInformationDiv = "";
 let mesonentStations;
 
 function preload() {
+     // Check the user variable are set from the index.html page
+     // If not redirect the user to the inorder to preserve the flow of the code.
+     if (localStorage.getItem("userLatitude") === null) {
+         window.location = "index.html";
+     }
      getLocation();
 }
 
@@ -393,7 +398,6 @@ function getVegetationType(){
     }
 }
 
-
 function getLocation() {
     console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
@@ -426,8 +430,6 @@ function realtimePosition(position) {
    realtimeLongitude = realtimeLongitude * 1000
    realtimeLongitude = realtimeLongitude.toFixed(2);
    realtimeLongitude = realtimeLongitude/1000;
- 
-
 
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
