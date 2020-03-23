@@ -69,14 +69,11 @@ function preload() {
 
 function setup() {
 
-  print(stationDataCSV.getRowCount() + ' total rows in table');
-  print(stationDataCSV.getColumnCount() + ' total columns in table');
-
-  print(stationDataCSV.getColumn('name'));
-  print(stationDataCSV.columns);
-
-convertStationsTOJSON();
 console.log("Running app. version 1.0.");
+
+// Converting the data in to JSON
+convertStationsTOJSON();
+
 // Storing the mesonent data in the locat storage for reuse 
 //localStorage.setItem('mesonentStations', JSON.stringify(mesonetStations));
 
@@ -754,6 +751,27 @@ function getETOValue(location,weather) {
 // adaptation  http://www.movable-type.co.uk/scripts/latlong.html
 // function distance(lat1, lon1, lat2, lon2, unit) {
 function distance(lat1, lon1, lat2, lon2, unit) {
+
+/* function functionNEw(lat1, lon1, lat2, lon2){
+    var dLat = (lat2 - lat1).toRad(); 
+     var dLon = (lon2 - lon1).toRad(); 
+console.log("dLon",dLon);
+     // convert to radians 
+     lat1 = (lat1).toRad(); 
+     lat2 = (lat2).toRad(); 
+console.log("xx",lat1);
+console.log("dyyLon",lat2);
+
+
+     // apply formulae 
+     var a = Math.pow(Math.sin(dLat / 2), 2) +  
+                Math.pow(Math.sin(dLon / 2), 2) *  
+                Math.cos(lat1) *  
+                Math.cos(lat2); 
+     var rad = 6371; 
+     var c = 2 * Math.asin(Math.sqrt(a)); 
+     return rad * c; 
+} */
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
 	}
@@ -779,31 +797,25 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 function convertStationsTOJSON(){
 
-    // stationDataCSV = 
-    
-    print(stationDataCSV);
-     //count the columns
-     print(stationDataCSV.getRowCount() + ' total rows in table');
-     print(stationDataCSV.getColumnCount() + ' total columns in table');
-   
-     print(stationDataCSV.getColumn());
-;  //["Goat", "Leopard", "Zebra"]
-
   //cycle through the table
-  stationDataCSV.columns[1];
-  var strMesonentStation = "";
+  var strMesonentStation ="{"
  
   for ( let r = 0; r < stationDataCSV.getRowCount(); r++){
     strMesonentStation += '"'+ stationDataCSV.getString(r, 0)+'":{';
     for (let c = 0; c < stationDataCSV.getColumnCount(); c++) {
-      strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';
+        strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';
+          
     }
+    strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
+    strMesonentStation += "}," ;   
   } 
   
   strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
-  strMesonentStation += "}';"
+  strMesonentStation += "}"
   console.log(strMesonentStation);
-  localStorage.setItem('mesonentStations', JSON.stringify(strMesonentStation));
+
+  // Place the strigyfy JSON string in the local storage
+  localStorage.setItem('mesonentStations', strMesonentStation);
 
 
 
@@ -836,7 +848,7 @@ function dataToArray (data) {
 function findClosestStation(){
     var retrievedStations = localStorage.getItem('mesonentStations');
     var stationData = JSON.parse(retrievedStations);
-    console.log(stationData);
+    console.log("parsedData",stationData);
     //mylocationLat = 39.1863889 ;
     var mylocationLat = localStorage.getItem('userLatitude');
     //mylocationLon  = -96.5894169;
