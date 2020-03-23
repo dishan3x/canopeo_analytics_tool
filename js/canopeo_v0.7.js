@@ -799,10 +799,10 @@ function convertStationsTOJSON(){
       strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';
     }
   } 
-
+  
   strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
   strMesonentStation += "}';"
-
+  console.log(strMesonentStation);
   localStorage.setItem('mesonentStations', JSON.stringify(strMesonentStation));
 
 
@@ -834,8 +834,8 @@ function dataToArray (data) {
 
 
 function findClosestStation(){
-    //var retrieve = localStorage.getItem('mesonentStations');
-    var stationData = JSON.parse(mesonetStations);
+    var retrievedStations = localStorage.getItem('mesonentStations');
+    var stationData = JSON.parse(retrievedStations);
     console.log(stationData);
     //mylocationLat = 39.1863889 ;
     var mylocationLat = localStorage.getItem('userLatitude');
