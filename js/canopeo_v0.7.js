@@ -49,21 +49,36 @@ var elems = "";
 var apiInformationDiv = "";
 
 let mesonentStations;
+var stationDataCSV;
 
 function preload() {
-     // Check the user variable are set from the index.html page
+
+    //getMesonetStations();
+     // Check whether the user variable get set from the index.html page
      // If not redirect the user to the inorder to preserve the flow of the code.
-     if (localStorage.getItem("userLatitude") === null) {
+     if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
          window.location = "index.html";
      }
+
+     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     console.log(stationDataCSV);
+     console.log("loaded the data");
      getLocation();
 }
 
 function setup() {
 
-console.log("Running setp");
+  print(stationDataCSV.getRowCount() + ' total rows in table');
+  print(stationDataCSV.getColumnCount() + ' total columns in table');
+
+  print(stationDataCSV.getColumn('name'));
+  print(stationDataCSV.columns);
+
+convertStationsTOJSON();
+console.log("Running app. version 1.0.");
 // Storing the mesonent data in the locat storage for reuse 
-localStorage.setItem('mesonentStations', JSON.stringify(mesonentStations));
+//localStorage.setItem('mesonentStations', JSON.stringify(mesonetStations));
 
 // All the mesonent station need to be loadeed and set
 // User geolocation need to be set
@@ -83,7 +98,7 @@ userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 
 
 // Check for the mesonent data retrive
-if (localStorage.getItem("mesonetWeatherData") === null) {
+if (localStorage.getItem("mesonetWeatherData") === null || localStorage.getItem("mesonetWeatherData")  =="" ) {
     // Run the file getweather function 
     console.log("Run the file getweather function ");
     // This function will run until it achieved the data
@@ -762,64 +777,50 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 
 
 
-function getMesonetStations(){
+function convertStationsTOJSON(){
 
-    var mesonentStationsLabel = getElementById()
+    // stationDataCSV = 
+    
+    print(stationDataCSV);
+     //count the columns
+     print(stationDataCSV.getRowCount() + ' total rows in table');
+     print(stationDataCSV.getColumnCount() + ' total columns in table');
    
-    const FETCH_TIMEOUT = 5000;
-    let didTimeOut = false;
-    //spinWheelLoadingforMesonentStation
-   /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
-    loadingIcon.style.display = "block"; */
-    new Promise(function(resolve, reject) { 
-        const timeout = setTimeout(function() {
-            didTimeOut = true;
-            // Running the api again to retrievve data
-            getMesonetStations();
-            reject(new Error('Request timed out'));
-        }, FETCH_TIMEOUT);
-        
-        fetch('https://mesonet.k-state.edu/rest/stationnames/')
-        .then(response =>  {
-            // Clear the timeout as cleanup
-            clearTimeout(timeout);
-            if(!didTimeOut) {
-                //console.log('fetch good! ', response);
-                //var objthing = response.text();
-                resolve(response);
-            }
-            return response.text();
-        })
-        .then(data => {
-            // The returned data set has columns names and values devidede  by /n 
-            // Seperated by /n 
-            console.log("got in the system");
-            //console.log(data);
+     print(stationDataCSV.getColumn());
+;  //["Goat", "Leopard", "Zebra"]
 
-            array = dataToArray(data);
-            //localStorage.setItem('mesonentStationsArray', JSON.stringify(newArray));
-            localStorage.setItem('mesonentStations', JSON.stringify(array));
-            //var lineSeperation = data.split(/\r?\n/);
-            // Setting the value in the local storage
-        // localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-        })
-        .catch(function(err) {
-            console.log('fetch failed! ', err);
-            
-            // Rejection already happened with setTimeout
-            if(didTimeOut) return;
-            // Reject with error
-            reject(err);
-        });
-    })
-    .then(function() {
-        // Request success and no timeout
-        console.log('good promise, no timeout! ');
-    })
-    .catch(function(err) {
-        // Error: response error, request timeout or runtime error
-        console.log('promise error! ', err);
-    });
+  //cycle through the table
+  stationDataCSV.columns[1];
+  var strMesonentStation = "";
+ 
+  for ( let r = 0; r < stationDataCSV.getRowCount(); r++){
+    strMesonentStation += '"'+ stationDataCSV.getString(r, 0)+'":{';
+    for (let c = 0; c < stationDataCSV.getColumnCount(); c++) {
+      strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';
+    }
+  } 
+
+  strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
+  strMesonentStation += "}';"
+
+  localStorage.setItem('mesonentStations', JSON.stringify(strMesonentStation));
+
+
+
+  /*   for index, row in stationCSV.iterrows():
+    
+    stringStation += '"'+ (str(row[0])+'":{')
+    for i in range(1,lengthOfColumns):
+        stringStation += '"'+stationColumn[i] + '":"'+str(row[stationColumn[i]]) +'",'
+    
+    stringStation = stringStation[:-1]
+    stringStation += "},"  
+
+
+text_file.write(stringStation)
+
+text_file.close() */
+   
 }
 
 // Convert a string to an array sdsds /n sdsdsd,asdsd,sdsd,sd /n
@@ -834,7 +835,7 @@ function dataToArray (data) {
 
 function findClosestStation(){
     //var retrieve = localStorage.getItem('mesonentStations');
-    var stationData = JSON.parse(mesonetstations);
+    var stationData = JSON.parse(mesonetStations);
     console.log(stationData);
     //mylocationLat = 39.1863889 ;
     var mylocationLat = localStorage.getItem('userLatitude');
