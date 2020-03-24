@@ -157,6 +157,11 @@ main {
     
 /*  for small devices etc phones, tablets */
 @media ( max-width: 600px) {
+  .analysedImagesTag {
+    border-style: groove;
+    height: 150% !important;
+    width: 100% !important;
+  }
   .titleView{ 
     font-size:15vw;
     text-align: center;
@@ -179,11 +184,9 @@ main {
     text-align: center;
     font-weight: bold;
   }
-  
-  .cardDiv{
-    /* color:red; */
+  .extraString{
+    margin-bottom: 30% !important;
   }
-
   .displayTilesRow{
     display:flex ! important;
   }

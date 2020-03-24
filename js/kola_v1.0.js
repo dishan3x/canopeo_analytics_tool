@@ -241,8 +241,8 @@ function gotFile(file) {
 
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
-                thumbnailOriginal.size(128*aspectRatio,128);
-                thumbnailOriginal.size(cardWidth,cardHeight);
+                thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
+                thumbnailOriginal.size(cardWidth/2,cardHeight*2);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent(orignalImage);
                 thumbnailOriginal.addClass('analysedImagesTag');
@@ -250,8 +250,8 @@ function gotFile(file) {
                 
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
-                thumbnailClassified.size(128*aspectRatio,128);
-                thumbnailClassified.size(cardWidth,cardHeight);
+                thumbnailClassified.size(128*aspectRatio,128*aspectRatio);
+                thumbnailClassified.size(cardWidth/2,cardHeight*2);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent(classifiedImage);
                 thumbnailClassified.addClass('analysedImagesTag');
