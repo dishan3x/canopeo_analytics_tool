@@ -45,6 +45,7 @@ var apiInformationDiv = "";
 
 let mesonentStations;
 var stationDataCSV;
+var loadingWeatherDataLabel;
 
 function preload() {
 
@@ -85,10 +86,23 @@ userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
 userLongitudeText = document.getElementById('userLongitudeText');
 userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 
-// Make the navigator geo async when have the time
-// https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
+// Arranging HTML content 
+resultsGrid = document.getElementById('resultGrid');
+resultsGrid.style.display = "none";
+apiInformationDiv = document.getElementById('apiInformationDiv');
+leafImageContainer = document.getElementById("leafcontainer");
+loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
 
+var containerDiv = document.getElementById('containerDiv') ;
 
+var body = document.body;
+sreenHeight =((body.offsetHeight)*90)/100;
+screenWidth =  ((body.offsetWidth)*90)/100;
+
+// Upload button
+btnUpload = createFileInput(gotFile,'multiple');
+btnUpload.style('display','none');
+btnUpload.parent('btnUploadLabel');
 
 
 // Check for the mesonent data retrive
@@ -100,7 +114,8 @@ if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
     console.log("Run the file getweather function ");
     // This function will run until it achieved the data
     getWeatherData();
-    alert("connecting to mesonent servers to retrive data");
+    btnUpload.attribute('disabled', '');
+    //alert("connecting to mesonent servers to retrive data");
 }else{
     // The object is created 
     // Check the date
@@ -117,34 +132,6 @@ if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
         alert("Date did not match, gethering Data from the mesonent Api");
     }
 }
-
-   
-  
-
-    resultsGrid = document.getElementById('resultGrid');
-    resultsGrid.style.display = "none";
-    apiInformationDiv = document.getElementById('apiInformationDiv');
-    leafImageContainer = document.getElementById("leafcontainer");
-
-   /*  w = window.outerWidth;
-    h = window.outerHeight; */
-
-    var containerDiv = document.getElementById('containerDiv') ;
-
-    var body = document.body;
-
-    sreenHeight =((body.offsetHeight)*90)/100;
-    screenWidth =  ((body.offsetWidth)*90)/100;
-  
-        // Upload button
-    btnUpload = createFileInput(gotFile,'multiple');
-
-    btnUpload.style('display','none');
-    btnUpload.parent('btnUploadLabel');
-    
-    //btnUpload.attribute('disabled', '');
-    
-  
 
 }  // End setup()
 
@@ -182,8 +169,6 @@ function gotFile(file) {
                     }
 
                 leafImageContainer.style.display = "none";
-                // Get geographic coordinates
-               // getLocation();
   
                 // Start counting images
                 imgCounter += 1;
@@ -449,7 +434,7 @@ function getWeatherData(){
     console.log(url);
     //https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20200302000000&t_end=20200302000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG
 
-    let loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
+   
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
     const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
@@ -474,7 +459,8 @@ function getWeatherData(){
         .then(data => {
                         // The returned data set has columns names and values devidede  by /n 
                 // Seperated by /n 
-                loadingWeatherDataLabel.innerHTML = 'Weather retrieved <i class="fas fa-check"></i>';
+                loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
+                btnUpload.removeAttribute('disabled');          
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));

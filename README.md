@@ -14,7 +14,7 @@ This is stand alone web application which calculates following fucntionalities
   - Open the camera and point over the canopy area over the ground 1m away from  ground
   - Take the picture and see the results
 
-# Brosers recommendation 
+# Browser recommendation 
   - This application uses users locations for specfic calculations. Some browsers
     are not compatible with javascript location extracters. Therefore we recommend to
     use the browsers mentioned in the bellow.   
@@ -24,5 +24,5 @@ This is stand alone web application which calculates following fucntionalities
  - Google chrome version - 
  - Mozilla firefox version - 
 
-# website
+# Visit app
  https://dishan3x.github.io/canopeo_analytics_tool/
