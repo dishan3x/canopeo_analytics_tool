@@ -44,10 +44,12 @@ function showPosition(position) {
    realtimeLatitude = realtimeLatitude * 1000
    realtimeLatitude = realtimeLatitude.toFixed(2);
    realtimeLatitude = realtimeLatitude/1000;
+   realtimeLatitude = realtimeLatitude.toFixed(2);
    
    realtimeLongitude = realtimeLongitude * 1000
    realtimeLongitude = realtimeLongitude.toFixed(2);
    realtimeLongitude = realtimeLongitude/1000;
+   realtimeLongitude = realtimeLongitude.toFixed(2);
 
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
@@ -61,7 +63,7 @@ function showError(error) {
     case error.PERMISSION_DENIED:
       //x.innerHTML = "User denied the request for Geolocation.
       retryButton.style.display="block";
-      alert("User denied the request for Geolocation. Inorder for the app to perform we need the locations.");
+      alert("User denied permission for geolocation. Please click on retry");
       break;
     case error.POSITION_UNAVAILABLE:
       x.innerHTML = "Location information is unavailable."

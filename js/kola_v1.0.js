@@ -58,8 +58,11 @@ function preload() {
      //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
      stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      
-      // Get the users permission to enable geolocation in browser
-      getLocation();
+     /*  // Get the users permission to enable geolocation in browser
+    if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
+        getLocation(); // If user havent allow permission to 
+    } */
+      
    
 }
 
@@ -401,10 +404,12 @@ function realtimePosition(position) {
    realtimeLatitude = realtimeLatitude * 1000
    realtimeLatitude = realtimeLatitude.toFixed(2);
    realtimeLatitude = realtimeLatitude/1000;
+   realtimeLatitude = realtimeLatitude.toFixed(2);
    
    realtimeLongitude = realtimeLongitude * 1000
    realtimeLongitude = realtimeLongitude.toFixed(2);
    realtimeLongitude = realtimeLongitude/1000;
+   realtimeLongitude = realtimeLongitude.toFixed(2);
 
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
