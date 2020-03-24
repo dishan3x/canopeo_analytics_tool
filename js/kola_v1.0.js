@@ -1,12 +1,8 @@
 let imgOriginal;
 let imgCounter = 0;
-var canvasDiv;
-var table;
-var thumbnail;
 var percentCanopyCover;
 
 var resultsTable;
-var btnDownload;
 
 var realtimeLatitude;
 var latitude;
@@ -43,7 +39,6 @@ var h = 0;
 
 
 var weatherObj; 
-var confirmarTakeSnap = false;
 var instances ="";
 var elems = "";
 var apiInformationDiv = "";
@@ -59,11 +54,12 @@ function preload() {
          window.location = "index.html";
      }
 
-     stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
-     console.log(stationDataCSV);
-     console.log("loaded the data");
-     getLocation();
+     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     
+      // Get the users permission to enable geolocation in browser
+      getLocation();
+   
 }
 
 function setup() {
@@ -93,8 +89,13 @@ userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 // https://stackoverflow.com/questions/51843227/how-to-use-async-wait-with-html5-geolocation-api
 
 
+
+
 // Check for the mesonent data retrive
-if (localStorage.getItem("mesonetWeatherData") === null || localStorage.getItem("mesonetWeatherData")  =="" ) {
+// null, undefined , Nan, Empty string ,  0 ,false   
+//if (localStorage.getItem("mesonetWeatherData")) {
+if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
+                          
     // Run the file getweather function 
     console.log("Run the file getweather function ");
     // This function will run until it achieved the data
@@ -118,29 +119,32 @@ if (localStorage.getItem("mesonetWeatherData") === null || localStorage.getItem(
 }
 
    
-    var containerDiv;
+  
 
     resultsGrid = document.getElementById('resultGrid');
     resultsGrid.style.display = "none";
     apiInformationDiv = document.getElementById('apiInformationDiv');
-
     leafImageContainer = document.getElementById("leafcontainer");
 
-    w = window.outerWidth;
-    h = window.outerHeight;
-    containerDiv = document.getElementById('containerDiv') ;
+   /*  w = window.outerWidth;
+    h = window.outerHeight; */
 
+    var containerDiv = document.getElementById('containerDiv') ;
 
-    var body = document.body, html = document.documentElement;
+    var body = document.body;
 
     sreenHeight =((body.offsetHeight)*90)/100;
     screenWidth =  ((body.offsetWidth)*90)/100;
   
         // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
-    
-    btnUpload.parent('btnUploadLabel');
+
     btnUpload.style('display','none');
+    btnUpload.parent('btnUploadLabel');
+    
+    //btnUpload.attribute('disabled', '');
+    
+  
 
 }  // End setup()
 
@@ -156,11 +160,9 @@ function openNav() {
   }
 
 function retakeSnap(){
-    //resultsGrid.style.visibility = 'hidden';
     resultsGrid.style.display = "none";
     apiInformationDiv.style.display = "block";
     leafImageContainer.style.display  ="block";
-    confirmarTakeSnap = true;
 }
 
 function gotFile(file) {
@@ -347,10 +349,6 @@ function gotFile(file) {
                 originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
                 classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true});
           });
-    /*     }
-        // getting the weather data
-       
-    } */
         }
     }
 }
@@ -393,23 +391,8 @@ function dataURItoBlob(dataURI) {
     return new Blob([ia], {type:mimeString});
 }
 
-function getVegetationType(){
-    if(document.getElementById('vegetationTypeList') !== null){
-        vegetationType = document.getElementById('vegetationTypeList').value;
-        if(vegetationType !== 'empty'){
-            btnUpload.elt.disabled = false;
-            document.getElementById('vegetationTypeRequireMsg').innerHTML = '';
-        } else {
-            btnUpload.elt.disabled = true;
-            document.getElementById('vegetationTypeRequireMsg').innerHTML = 'Required field';
-        }
-    }
-}
-
 function getLocation() {
-    console.log("wating on lnavigator.geolocationocation");
     if (navigator.geolocation) {
-        console.log("Got approval");
         navigator.geolocation.watchPosition(realtimePosition);
     } else {
         realtimeLatitude = null;
@@ -420,7 +403,6 @@ function getLocation() {
         region = null;
         console.log('Navigator not available')
     }
-    console.log("Passed the location test");
 }
 
 function realtimePosition(position) {
@@ -450,62 +432,8 @@ function realtimePosition(position) {
     var userLongitudeText = document.getElementById('userLongitudeText');
     userLongitudeText.innerHTML = realtimeLongitude;
 
-
-
-  /*  CoordinatesHolder.setAttribute('data-latitude', realtimeLatitude);
-   CoordinatesHolder.setAttribute('data-longitude', realtimeLongitude); */
 }
 
-/* function getLocationInitial(){
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(realtimePositionInitial);
-    }
-}
-
-function realtimePositionInitial(position) {
-    console.log("realtimePositionInitial Function", position.coords.latitude, position.coords.longitude);
-    getAddress(position.coords.latitude, position.coords.longitude)
-}
-
-//getLocationInitial()
-
-
-function getAddress(lat,lon) {
-    var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&' + 'lon=' + lon;
-
-    fetch(url)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(jsonData) {
-            //console.log(JSON.stringify(jsonData));
-
-            // Country
-            if ('country' in jsonData.address){
-                country = jsonData.address.country;
-            } else {
-                country = null;
-            }
-        
-            // State
-            if ('state' in jsonData.address){
-                state = jsonData.address.state;
-            } else {
-                state = null;
-            }
-        
-            // Region (this entry is not the same for different parts of the world)
-            if ('state_district' in jsonData.address){
-                region = jsonData.address.state_district;
-            } else if ('county' in jsonData.address) {
-                region = jsonData.address.county;
-            } else {
-                region = null;
-            }
-            console.log(country)
-        });
-}
- */
 
 /**
  *  Retrive data from the Mesonet Api and store the infromaton from in the local storage of the browser
@@ -514,32 +442,21 @@ function getWeatherData(){
     // module for weather
     
     nearestStation = localStorage.getItem("nearestStation");
+
     dateStr = getDate();
     weatherT = ""; 
     url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
     console.log(url);
     //https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20200302000000&t_end=20200302000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG
-    
-  /*   fetch(url)
-    .then(res => {
-        return res.text();
-    })
-    .then(data => {
-       // The returned data set has columns names and values devidede  by /n 
-       // Seperated by /n 
-       var lineSeperation = data.split(/\r?\n/);
-       // Setting the value in the local storage
-       localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-   }); */
 
-   const FETCH_TIMEOUT = 5000;
+    let loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
+    loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
+    const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
-    //spinWheelLoadingforMesonentStation
-   /*  var loadingIcon = document.getElementById('spinWheelLoadingforMesonentStation');
-    loadingIcon.style.display = "block"; */
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
+            getWeatherData();
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
@@ -557,6 +474,7 @@ function getWeatherData(){
         .then(data => {
                         // The returned data set has columns names and values devidede  by /n 
                 // Seperated by /n 
+                loadingWeatherDataLabel.innerHTML = 'Weather retrieved <i class="fas fa-check"></i>';
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
@@ -795,27 +713,9 @@ function convertStationsTOJSON(){
   
   strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
   strMesonentStation += "}"
-  console.log(strMesonentStation);
 
   // Place the strigyfy JSON string in the local storage
-  localStorage.setItem('mesonentStations', strMesonentStation);
-
-
-
-  /*   for index, row in stationCSV.iterrows():
-    
-    stringStation += '"'+ (str(row[0])+'":{')
-    for i in range(1,lengthOfColumns):
-        stringStation += '"'+stationColumn[i] + '":"'+str(row[stationColumn[i]]) +'",'
-    
-    stringStation = stringStation[:-1]
-    stringStation += "},"  
-
-
-text_file.write(stringStation)
-
-text_file.close() */
-   
+  localStorage.setItem('mesonentStations', strMesonentStation);   
 }
 
 // Convert a string to an array sdsds /n sdsdsd,asdsd,sdsd,sd /n
@@ -829,45 +729,20 @@ function dataToArray (data) {
 
 
 function findClosestStation(){
+
     var retrievedStations = localStorage.getItem('mesonentStations');
     var stationData = JSON.parse(retrievedStations);
-    console.log("parsedData",stationData);
-    //mylocationLat = 39.1863889 ;
     var mylocationLat = localStorage.getItem('userLatitude');
-    //mylocationLon  = -96.5894169;
     var mylocationLon = localStorage.getItem('userLongitude');
-    console.log(Object.keys(stationData).length);
-    // var stationData = retrievedObject;
-   // console.log("length of the", retrievedObject[80].NAME);
-    // 2 lat
-    // 3 long
     var d ; // distance
-    var distanceList = [];
     var distanceArray = new Array();
-    /* for (var i=1;i < Object.keys(stationData).length; i++){
-        d = distance(mylocationLat,mylocationLon,stationData[i].LATITUDE,stationData[i].LONGITUDE);
-        console.log("latti",stationData[i].LATITUDE);
-        console.log(i,"-",d,stationData[i].NAME,stationData[i].LONGITUDE);
-        distanceList.push(d);  
-    }  */
 
-
+    // Calculate distance between two locations
     for ( stationName in stationData){  
         d = distance(mylocationLat,mylocationLon,stationData[stationName].LATITUDE,stationData[stationName].LONGITUDE);
-        //distanceList.push(d);  
         distanceArray[stationName] = d;
     }
 
- /*    console.log(distanceArray);
-    Array.min = function( array ){
-        return Math.min.apply( Math, array );
-    };
-
-    var minimumDistance = Array.min(distanceArray);
-    console.log("minimumz distance for dishan", minimumDistance);
-    var key = distanceList.indexOf(minimumDistance);
-    var index = key +1 */
-    //  Returning the station 
     var keys   = Object.keys(distanceArray);
     var minimumDistance = Math.min.apply(null, keys.map(function(x) { return distanceArray[x]} ));
     var matchedStation  = keys.filter(function(y) { return distanceArray[y] === minimumDistance });

@@ -12,59 +12,56 @@
   </head>
 
   <body>
-    <!-- <header></header> -->
-    <main>
-        <nav class="navbar ">
-        <!--  <div id="navbarMenuHeroA" class="navbar-menu"> -->
+
+    <header>
+       <!--   Navigation Bar    -->
+      <nav class="navbar ">
           <div class="nav-wrapper">
                 <label class="button navBarLabels" id="btnUploadLabel" style="margin:5px;" disabled>
                     <i class="fa fa-camera-retro fa-4x" aria-hidden="true"></i>
                     <span class="is-hidden-mobile" style="padding-left: 10px;"><strong class="navTags">Load images</strong></span>
                 </label>
-
-                
-                  <label id="indexHeader">KOLA</label>
-                  <!--   <figure> -->
-                        <img src="images/Transparent.png" alt="logo" height="40%" width="4%" />
-                  <!--  </figure> -->
-                  
-                  
-                </div>
-        <!--   </div> -->  
+                <label id="indexHeader">KOLA</label>
+                <img src="images/Transparent.png" alt="logo" height="40%" width="4%" />
+          </div> 
       </nav>
-      <div id="containerDiv" class="container"> 
-              <!--   Navigation Bar    -->
+    </header> 
 
-              <span id="sidenavButton" style="font-size:30px;cursor:pointer;display:none" onclick="openNav()"  >&#9776; open</span>
-              <div id="mySidenav"  style="width:250px;display:none;" >
+    <main>
+      <div id="containerDiv" class="container"> 
+
+        <!-- side nav -->
+
+        <span id="sidenavButton" style="font-size:30px;cursor:pointer;display:none" onclick="openNav()"  >&#9776; open</span>
+        <div id="mySidenav"  style="width:250px;display:none;" >
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                 <a href="#">About</a>
-                <a href="#">Services</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-              </div>
+                <a href="#">FaceBook</a>
+                <a href="#">Chat</a>
+                <a href="#">Summary</a>
+          </div>
 
-              <!--   Api information / local storage information  -->
+              <!-- Station/Api status infromation Div -->
 
-                <!-- search <i class="fas fa-search"></i> -->
-                <!-- loading spin  <i class="fas fa-sync fa-spin"> -->
-                <!-- checked /done   <i class="fas fa-check"></i> -->
               <div id="apiInformationDiv" >
-                <div class="col s12 m12" >
-                  <label id="nearestStationLabel"><text >Nearest station : </text ><text id="nearestStationLabelText"></text ></label>
-                  <label id="findnearestLabel"><text>| Distance :</text><text id="distanceLabelText"></text></label>
-                </div>
-                <div class="col s12 m12" >
-                  <label id="userCordinatesLattitude">Lattitude : <text id="userLattitudeText"></text>  </label>
-                  <label id="userCordinatesLongitude">| Longitude : <text id="userLongitudeText"></text> </label>
-                </div>
+                  <div class="col s12 m12" >
+                    <label id="nearestStationLabel"><text >Nearest station : </text ><text id="nearestStationLabelText"></text ></label>
+                    <label id="findnearestLabel"><text>| Distance :</text><text id="distanceLabelText"></text></label>
+                  </div>
+                  <div class="col s12 m12" >
+                    <label id="userCordinatesLattitude">Lattitude : <text id="userLattitudeText"></text>  </label>
+                    <label id="userCordinatesLongitude">| Longitude : <text id="userLongitudeText"></text> </label>
+                  </div>
+                  <div class="col s12 m12" >
+                    <label id="weatherDataStatusLabel"></label>
+                  </div>
               </div>
 
-              <!-- The image -->
+              <!-- The logo -->
 
               <div id="leafcontainer" class="center-align" >
                 <div id="indexLeaf" class="center-align">
-                <img src="images/greenEditedWithRotate.png" alt="Smiley face" height="40%" width="50%"> 
+                  <img src="images/greenEditedWithRotate.png" alt="Smiley face" height="40%" width="50%"> 
                 </div>
                 <p class="center-align">powered by</p>
                 <p>Kansas state university</p>
@@ -74,9 +71,7 @@
 
               <div id="resultGrid" style="display:none;">
 
-                  <div class="row displayTilesRow">
-
-                      
+                <div class="row displayTilesRow">
                               <div id="cardData" class="card blue-grey darken-1">
                                 <div class="card-content white-text">
                                   <span class="card-title">Green Canopy Cover (%)</span>
@@ -84,17 +79,13 @@
                                 </div>
                               </div>
                       
-
-                      
-                                  <div class="card blue-grey darken-1">
+                              <div class="card blue-grey darken-1">
                                     <div class="card-content white-text">
                                       <span class="card-title">Crop Coefficient</span>
                                       <p class="titleView" id="cropCoefficient_val"></p>
-                                    </div>
-                                  
-                                  </div>
-                        
-                </div>
+                                    </div>  
+                              </div>
+               </div>
 
               <div class="row displayTilesRow">
 
@@ -112,15 +103,14 @@
                                         </div>
                                     </div>       
               </div>
+
               <div class="row pictureDiv">
                                     <div  id="orignalImage"></div>
                                     <div  id="classifiedImage"></div>
               </div>
                 
-              </div>           
+            </div> <!-- end result tab -->          
 
-
-            
         </div> <!-- container div -->
 </main>
 
@@ -158,7 +148,7 @@
     <script type="text/javascript" src="js/exif.js"></script>
     <script src="js/weather.js"></script> 
     <script type="text/javascript" src="data/stationDataCSV.js"></script>
-    <script src="js/canopeo_v0.7.js"></script>
+    <script src="js/kola_v1.0.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
           
 
