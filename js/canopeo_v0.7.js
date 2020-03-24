@@ -53,15 +53,14 @@ var stationDataCSV;
 
 function preload() {
 
-    //getMesonetStations();
      // Check whether the user variable get set from the index.html page
      // If not redirect the user to the inorder to preserve the flow of the code.
      if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
          window.location = "index.html";
      }
 
-     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      console.log(stationDataCSV);
      console.log("loaded the data");
      getLocation();
@@ -69,7 +68,7 @@ function preload() {
 
 function setup() {
 
-console.log("Running app. version 1.0.");
+console.log("Running Kola app. version 1.0.");
 
 // Converting the data in to JSON
 convertStationsTOJSON();
@@ -142,9 +141,6 @@ if (localStorage.getItem("mesonetWeatherData") === null || localStorage.getItem(
     
     btnUpload.parent('btnUploadLabel');
     btnUpload.style('display','none');
-
-    w = screenWidth;
-    h = sreenHeight;
 
 }  // End setup()
 
@@ -747,52 +743,39 @@ function getETOValue(location,weather) {
  }
 
 
+ 
 // Using haversine function 
 // adaptation  http://www.movable-type.co.uk/scripts/latlong.html
 // function distance(lat1, lon1, lat2, lon2, unit) {
+// from wikipedia
+
 function distance(lat1, lon1, lat2, lon2, unit) {
 
-/* function functionNEw(lat1, lon1, lat2, lon2){
-    var dLat = (lat2 - lat1).toRad(); 
-     var dLon = (lon2 - lon1).toRad(); 
-console.log("dLon",dLon);
-     // convert to radians 
-     lat1 = (lat1).toRad(); 
-     lat2 = (lat2).toRad(); 
-console.log("xx",lat1);
-console.log("dyyLon",lat2);
-
-
-     // apply formulae 
-     var a = Math.pow(Math.sin(dLat / 2), 2) +  
-                Math.pow(Math.sin(dLon / 2), 2) *  
-                Math.cos(lat1) *  
-                Math.cos(lat2); 
-     var rad = 6371; 
-     var c = 2 * Math.asin(Math.sqrt(a)); 
-     return rad * c; 
-} */
+     // Prototype function to ease the calucation of the radians
+   
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
 	}
 	else {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180; 
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
-		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-		if (dist > 1) {
-			dist = 1;
-		}
-		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
-		dist = dist * 60 * 1.1515;
-	//	if (unit=="K") { dist = dist * 1.609344 }
-	//	if (unit=="N") { dist = dist * 0.8684 }
-		return dist;
+        // converting to radians in to radians
+        var dLat =((lat2 - lat1) * Math.PI ) / 180;  
+        var dLon = ((lon2 - lon1)* Math.PI ) / 180;  
+
+        // convert to radians 
+        lat1 = (lat1 * Math.PI ) / 180; 
+        lat2 = (lat2 * Math.PI ) / 180; 
+
+        // apply formulae 
+        var a = Math.pow(Math.sin(dLat / 2), 2) +  
+                Math.pow(Math.sin(dLon / 2), 2) *  
+                Math.cos(lat1) *  
+                Math.cos(lat2); 
+        var rad = 3958.8;  // radias of the world in miles
+        var c = 2 * Math.asin(Math.sqrt(a)); 
+        return rad * c ; // distance in miles 
+		
 	}
 }
-
 
 
 function convertStationsTOJSON(){
