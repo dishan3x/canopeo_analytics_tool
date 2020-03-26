@@ -44,6 +44,8 @@ main {
 
 .card .card-content{ 
   flex-grow:1;
+ /*  margin: .5rem 0 1rem 0 !important; */
+  /* margin: .1rem .1rem .1rem .1rem !important; */
  /*  padding: unset ! important;  */
  /*  padding-top: 24px ! important; 
   padding-left: 24px ! important; 
@@ -168,7 +170,7 @@ main {
 }
 
  .displayTilesRow{
-  margin-bottom:1px ! important;
+  margin-bottom:unset! important;
   display:flex;
 }
 
