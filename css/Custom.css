@@ -42,8 +42,9 @@ main {
   color: Gray;
 }
 
-.card .card-content{ 
+.card { 
   flex-grow:1;
+  margin: 1px 1px 1px 1px ! important;
  /*  margin: .5rem 0 1rem 0 !important; */
   /* margin: .1rem .1rem .1rem .1rem !important; */
  /*  padding: unset ! important;  */
@@ -51,6 +52,8 @@ main {
   padding-left: 24px ! important; 
   padding-right: 24px ! important;  */
 }
+
+
 
 /* .cardCol{
  background-color :  #546e7a !important;
@@ -177,6 +180,10 @@ main {
     
 /*  for small devices etc phones, tablets */
 @media ( max-width: 600px) {
+
+  .card{
+    margin: 0.2rem 0.2rem 1.5rem 0rem !important;
+  }
   .analysedImagesTag {
     border-style: groove;
     height: 150% !important;
