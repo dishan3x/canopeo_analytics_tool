@@ -238,14 +238,14 @@ function gotFile(file) {
                 // Calculate aspect ratio for thumbnails and resize images
                 var aspectRatio = imgClassified.width/imgClassified.height;
 
-                var cardData = document.getElementById('cardData') ;
+              /*   var cardData = document.getElementById('cardData') ;
                 var cardHeight = cardData.offsetHeight;
-                var cardWidth = cardData.offsetWidth;
+                var cardWidth = cardData.offsetWidth; */
 
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
-                thumbnailOriginal.size(cardWidth/2,cardHeight*2);
+                thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent(orignalImage);
                 thumbnailOriginal.addClass('analysedImagesTag');
@@ -254,7 +254,7 @@ function gotFile(file) {
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
                 thumbnailClassified.size(128*aspectRatio,128*aspectRatio);
-                thumbnailClassified.size(cardWidth/2,cardHeight*2);
+                thumbnailClassified.size(imgOriginal.width,imgOriginal.height);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent(classifiedImage);
                 thumbnailClassified.addClass('analysedImagesTag');

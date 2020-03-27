@@ -177,7 +177,21 @@ main {
   display:flex;
 }
 
-    
+/* setting the img size equal to the div size */
+#orignalImage img{
+  height: 100% !important;
+   width: 100% !important;
+} 
+
+#classifiedImage img{
+  height: 100% !important;
+  width: 100% !important;
+} 
+
+.parent img {
+  height: 100%;
+  width: 100%;
+}
 /*  for small devices etc phones, tablets */
 @media ( max-width: 600px) {
 
@@ -215,6 +229,7 @@ main {
   .pictureDiv{
     margin-top : 20px;
   }
+ 
 } /* end small container  */
 
 
