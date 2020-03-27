@@ -30,9 +30,6 @@ var imgOriginalsRef;
 var imgClassifiedRef;
 var storageRef;
 var user;
-var zip = new JSZip();
-var originals = zip.folder("originals");
-var classified = zip.folder("classified");
 
 var w = 0;
 var h = 0;
@@ -68,77 +65,73 @@ function preload() {
 
 function setup() {
 
-console.log("Running Kola app. version 1.0.");
+    console.log("Running Kola app. version 1.0.");
 
-// Converting the data in to JSON
-convertStationsTOJSON();
+    // Converting the data in to JSON
+    convertStationsTOJSON();
+    // All the mesonent station need to be loadeed and set
 
-// Storing the mesonent data in the locat storage for reuse 
-//localStorage.setItem('mesonentStations', JSON.stringify(mesonetStations));
+    var nearestLocation = findClosestStation(); // User geolocation need to be set
+    var containerDiv = document.getElementById('containerDiv') ;
+    var body = document.body;
+    //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
 
-// All the mesonent station need to be loadeed and set
-// User geolocation need to be set
-var nearestLocation = findClosestStation();
-//localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
+    // Users altutude and latitude
+    userLattitudeText = document.getElementById('userLattitudeText');
+    userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
 
-// Users altutude and latitude
-userLattitudeText = document.getElementById('userLattitudeText');
-userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
+    // Users altutude and latitude
+    userLongitudeText = document.getElementById('userLongitudeText');
+    userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 
-// Users altutude and latitude
-userLongitudeText = document.getElementById('userLongitudeText');
-userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
+    // Arranging HTML content 
+    resultsGrid = document.getElementById('resultGrid');
+    resultsGrid.style.display = "none";
+    apiInformationDiv = document.getElementById('apiInformationDiv');
+    leafImageContainer = document.getElementById("leafcontainer");
+    loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
 
-// Arranging HTML content 
-resultsGrid = document.getElementById('resultGrid');
-resultsGrid.style.display = "none";
-apiInformationDiv = document.getElementById('apiInformationDiv');
-leafImageContainer = document.getElementById("leafcontainer");
-loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
+    // Upload button
+    btnUpload = createFileInput(gotFile,'multiple');
+    btnUpload.style('display','none');
+    btnUpload.parent('btnUploadLabel');
 
-var containerDiv = document.getElementById('containerDiv') ;
-
-var body = document.body;
-sreenHeight =((body.offsetHeight)*90)/100;
-screenWidth =  ((body.offsetWidth)*90)/100;
-
-// Upload button
-btnUpload = createFileInput(gotFile,'multiple');
-btnUpload.style('display','none');
-btnUpload.parent('btnUploadLabel');
-
-
-// Check for the mesonent data retrive
-// null, undefined , Nan, Empty string ,  0 ,false   
-//if (localStorage.getItem("mesonetWeatherData")) {
-if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
-                          
-    // Run the file getweather function 
-    console.log("Run the file getweather function ");
-    // This function will run until it achieved the data
-    getWeatherData();
-    btnUpload.attribute('disabled', '');
-    //alert("connecting to mesonent servers to retrive data");
-}else{
-    // The object is created 
-    // Check the date
-    console.log("The object is created/ Check the date ");
-    weatherObj =  getMesonentDataFromLocalStorage();
-    //2020-02-24 00000000000
-    dateCheck = getDate();
-    loggedDate = weatherObj.storedDate;
-    if(dateCheck == loggedDate){
-        console.log("The mesonent data is loaded to the system");
-    }else{
-        // Retriving data from the Mesonent Api
-        getWeatherData();
-        alert("Date did not match, gethering Data from the mesonent Api");
+    // Check for the mesonent data retrive
+    // null, undefined , Nan, Empty string ,  0 ,false   
+    if (localStorage.getItem("mesonetWeatherData")) {
+        localStorage.setItem("mesonetWeatherData","");
     }
-}
+
+    if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
+                            
+        // Run the file getweather function 
+        console.log("Run the file getweather function ");
+        // This function will run until it achieved the data
+        getWeatherData();
+        btnUpload.attribute('disabled', '');
+
+    }else{
+        // The object is created 
+        // Check the date
+        weatherObj =  getMesonentDataFromLocalStorage();
+        // format of dat  : 2020-02-2400000000000
+        //               ex :2020-02-24 00000000000
+        dateCheck = getDate();
+        loggedDate = weatherObj.storedDate;
+        if(dateCheck == loggedDate){ // check the weather updated time stamo
+            console.log("The mesonent data is loaded to the system");
+        }else{
+            // Retriving data from the Mesonent Api
+            getWeatherData();
+            alert("Date did not match, gethering Data from the mesonent Api");
+        }
+    }
 
 }  // End setup()
 
-    
+/** 
+ * Navigation Bar Functions
+ * */  
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     alert("open");
@@ -155,6 +148,9 @@ function retakeSnap(){
     leafImageContainer.style.display  ="block";
 }
 
+/**
+ * got File function will trigger when the data is updated.
+ */
 function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
@@ -334,8 +330,8 @@ function gotFile(file) {
                 };
 
                 // Add original and classified images to ZIP file
-                originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
-                classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true});
+               /*  originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
+                classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true}); */
           });
         }
     }
@@ -358,27 +354,10 @@ function altitudeToMeters(value, ref) {
     meters = Math.round(value);
     return meters;
 }
-
-function dataURItoBlob(dataURI) {
-    // Found this solution at: https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
-    // convert base64/URLEncoded data component to raw binary data held in a string
-    var byteString;
-    if (dataURI.split(',')[0].indexOf('base64') >= 0)
-        byteString = atob(dataURI.split(',')[1]);
-    else
-        byteString = unescape(dataURI.split(',')[1]);
-
-    // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-    // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ia], {type:mimeString});
-}
-
+/* 
+    Get users location
+    The location will be updated to the local storage
+*/
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(realtimePosition);
