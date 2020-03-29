@@ -31,10 +31,6 @@ var imgClassifiedRef;
 var storageRef;
 var user;
 
-var w = 0;
-var h = 0;
-
-
 var weatherObj; 
 var instances ="";
 var elems = "";
@@ -54,13 +50,7 @@ function preload() {
 
      //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
      stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
-     
-     /*  // Get the users permission to enable geolocation in browser
-    if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
-        getLocation(); // If user havent allow permission to 
-    } */
-      
-   
+       
 }
 
 function setup() {
@@ -108,13 +98,17 @@ function setup() {
         console.log("Run the file getweather function ");
         // This function will run until it achieved the data
         getWeatherData();
+        btnUpload.parent.attribute('onclick', 'dataNotloaded()');
         btnUpload.attribute('disabled', '');
+        console.log("Setting the attrinutes for the attributes btn");
+        
+        alert("setting the here");
 
     }else{
         // The object is created 
         // Check the date
         weatherObj =  getMesonentDataFromLocalStorage();
-        // format of dat  : 2020-02-2400000000000
+        // format of datq  : 2020-02-2400000000000
         //               ex :2020-02-24 00000000000
         dateCheck = getDate();
         loggedDate = weatherObj.storedDate;
@@ -122,12 +116,19 @@ function setup() {
             console.log("The mesonent data is loaded to the system");
         }else{
             // Retriving data from the Mesonent Api
+            // update has a old date. 
             getWeatherData();
             alert("Date did not match, gethering Data from the mesonent Api");
         }
     }
 
 }  // End setup()
+
+
+/* Data not ready yet */
+function dataNotloaded(){
+    alert("Data is not loaded yet");
+}
 
 /** 
  * Navigation Bar Functions
@@ -333,6 +334,8 @@ function gotFile(file) {
                /*  originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
                 classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true}); */
           });
+        }else{
+            alert("The file entered is not valid. Please enter a image");
         }
     }
 }
@@ -441,10 +444,11 @@ function getWeatherData(){
             return response.text();
         })
         .then(data => {
-                        // The returned data set has columns names and values devidede  by /n 
+                // The returned data set has columns names and values devidede  by /n 
                 // Seperated by /n 
                 loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
-                btnUpload.removeAttribute('disabled');          
+                btnUpload.removeAttribute('disabled');    
+                btnUpload.removeAttribute('onclick');      
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
