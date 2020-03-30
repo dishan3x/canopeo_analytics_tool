@@ -178,12 +178,12 @@ main {
 }
 
 /* setting the img size equal to the div size */
-#orignalImage img{
+#orignal-image img{
   height: 100% !important;
    width: 100% !important;
 } 
 
-#classifiedImage img{
+#classified-image img{
   height: 100% !important;
   width: 100% !important;
 } 

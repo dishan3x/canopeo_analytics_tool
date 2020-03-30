@@ -62,8 +62,8 @@ function setup() {
     // All the mesonent station need to be loadeed and set
 
     var nearestLocation = findClosestStation(); // User geolocation need to be set
-    var containerDiv = document.getElementById('containerDiv') ;
     var body = document.body;
+    var btnUploadLabel = document.getElementById('btn-upload-label');
     //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
 
     // Users altutude and latitude
@@ -84,7 +84,7 @@ function setup() {
     // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
-    btnUpload.parent('btnUploadLabel');
+    btnUpload.parent("btn-upload-label");
 
     // Check for the mesonent data retrive
     // null, undefined , Nan, Empty string ,  0 ,false   
@@ -98,11 +98,8 @@ function setup() {
         console.log("Run the file getweather function ");
         // This function will run until it achieved the data
         getWeatherData();
-        btnUpload.parent.attribute('onclick', 'dataNotloaded()');
         btnUpload.attribute('disabled', '');
-        console.log("Setting the attrinutes for the attributes btn");
-        
-        alert("setting the here");
+        console.log("Setting the attributed for the button upload");
 
     }else{
         // The object is created 
@@ -124,11 +121,6 @@ function setup() {
 
 }  // End setup()
 
-
-/* Data not ready yet */
-function dataNotloaded(){
-    alert("Data is not loaded yet");
-}
 
 /** 
  * Navigation Bar Functions
@@ -164,8 +156,8 @@ function gotFile(file) {
 
                 var isMobileVersion = document.getElementsByClassName('analysedImagesTag');
                     if (isMobileVersion !== null){
-                        document.getElementById("orignalImage").innerHTML ="";
-                        document.getElementById("classifiedImage").innerHTML ="";
+                        document.getElementById("orignal-image").innerHTML ="";
+                        document.getElementById("classified-image").innerHTML ="";
                     }
 
                 leafImageContainer.style.display = "none";
@@ -244,7 +236,7 @@ function gotFile(file) {
                 thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
                 thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
-                thumbnailOriginal.parent(orignalImage);
+                thumbnailOriginal.parent('orignal-image');
                 thumbnailOriginal.addClass('analysedImagesTag');
                 //originalID
                 
@@ -253,7 +245,7 @@ function gotFile(file) {
                 thumbnailClassified.size(128*aspectRatio,128*aspectRatio);
                 thumbnailClassified.size(imgOriginal.width,imgOriginal.height);
                 thumbnailClassified.id(imgClassifiedId);
-                thumbnailClassified.parent(classifiedImage);
+                thumbnailClassified.parent('classified-image');
                 thumbnailClassified.addClass('analysedImagesTag');
                 //thumbnailClassified.style.border = "5px solid black;"
                 
@@ -448,7 +440,8 @@ function getWeatherData(){
                 // Seperated by /n 
                 loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
                 btnUpload.removeAttribute('disabled');    
-                btnUpload.removeAttribute('onclick');      
+                btnUploadLabel.onclick = null;;
+                console.log("onclick removed");
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));

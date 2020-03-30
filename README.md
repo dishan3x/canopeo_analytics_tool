@@ -24,5 +24,6 @@ This is stand alone web application which calculates following fucntionalities
  - Google chrome version - 
  - Mozilla firefox version - 
 
+
 # Visit app
  https://dishan3x.github.io/canopeo_analytics_tool/
