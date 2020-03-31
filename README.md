@@ -32,7 +32,7 @@ Kola is a image analystics tool developed to identify the certain crop propertie
   used. This application preload the weather data from the kansas mesnonent station.
   [Kansas mesonent api](http://mesonet.k-state.edu/rest/)
 
- # Reference
+ # References
  
 1. [Crop Water Use and Crop Coefficients of Maize in the Great ... www.researchgate.net/publication/324690942_Crop_Water_Use_and_Crop_Coefficients_of_Maize_in_the_Great_Plains.](https://www.researchgate.net/publication/324690942_Crop_Water_Use_and_Crop_Coefficients_of_Maize_in_the_Great_Plains)
 1. [“Haversine Formula.” Wikipedia, Wikimedia Foundation, 7 Aug. 2019, en.wikipedia.org/wiki/Haversine_formula.](https://en.wikipedia.org/wiki/Haversine_formula)
