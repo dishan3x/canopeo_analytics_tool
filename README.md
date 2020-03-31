@@ -24,6 +24,15 @@ This is stand alone web application which calculates following fucntionalities
  - Google chrome version - 
  - Mozilla firefox version - 
 
-
 # Visit app
  https://dishan3x.github.io/canopeo_analytics_tool/
+
+# RestFul Api
+  Calculation requires the weather obtained day before the app being
+  used. This application preload the weather data from the kansas mesnonent station.
+  [Kansas mesonent api](http://mesonet.k-state.edu/rest/)
+
+ # Reference
+ 
+1. [“Haversine Formula.” Wikipedia, Wikimedia Foundation, 7 Aug. 2019, en.wikipedia.org/wiki/Haversine_formula.](https://en.wikipedia.org/wiki/Haversine_formula)
+
