@@ -49,8 +49,8 @@ function preload() {
          window.location = "index.html";
      }
 
-     stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
        
 }
 
@@ -60,19 +60,21 @@ function setup() {
 
     // Converting the data in to JSON
     convertStationsTOJSON();
+
     // All the mesonent station need to be loadeed and set
     var userLocationLat = localStorage.getItem('userLatitude');
     var userLocationLon = localStorage.getItem('userLongitude');
     var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
-    localStorage.setItem('nearestStation',matchedStation);
     var distanceLabelText = document.getElementById("distanceLabelText");
-    distanceLabelText.innerHTML = minimumDistance.toFixed(2)+" miles ";
     var nearestStationLabelText = document.getElementById("nearestStationLabelText");
+
+    localStorage.setItem('nearestStation',matchedStation);
+    
+    distanceLabelText.innerHTML = minimumDistance.toFixed(2)+" miles ";
+    
     nearestStationLabelText.innerHTML = matchedStation;
     
-    var body = document.body;
     btnUploadLabel = document.getElementById('btn-upload-label');
-    //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
 
     // Users altutude and latitude
     userLattitudeText = document.getElementById('userLattitudeText');
@@ -97,22 +99,19 @@ function setup() {
     // Check for the mesonent data retrive
     // null, undefined , Nan, Empty string ,  0 ,false  
     // ************************** only for testing remove afterwards 
-    if (localStorage.getItem("mesonetWeatherData")) {
+
+    if (localStorage.getItem("mesonetWeatherData") == null) {
         localStorage.setItem("mesonetWeatherData","");
     }
 
     if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
-                            
-        // Run the file getweather function 
-        console.log("Run the file getweather function ");
         // This function will run until it achieved the data
         getWeatherData();
         btnUpload.attribute('disabled', '');
-        console.log("Setting the attributed for the button upload");
 
     }else{
-        // The object is created 
-        // Check the date
+        // if the object is in the local storage check the date stored
+        // Getting the data object from local storage
         weatherObj =  getMesonentDataFromLocalStorage();
         // format of datq  : 2020-02-2400000000000
         //               ex :2020-02-24 00000000000
@@ -163,8 +162,8 @@ function gotFile(file) {
                 document.getElementById("evapotranspiration_val").innerHTML = "";
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
 
-                var isMobileVersion = document.getElementsByClassName('analysedImagesTag');
-                    if (isMobileVersion !== null){
+                var anlysedImgTag = document.getElementsByClassName('analysed-images-tag');
+                    if (anlysedImgTag !== null){
                         document.getElementById("orignal-image").innerHTML ="";
                         document.getElementById("classified-image").innerHTML ="";
                     }
@@ -246,7 +245,7 @@ function gotFile(file) {
                 thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent('orignal-image');
-                thumbnailOriginal.addClass('analysedImagesTag');
+                thumbnailOriginal.addClass('analysed-images-tag');
                 //originalID
                 
                 // Thumbnail classified image
@@ -255,7 +254,7 @@ function gotFile(file) {
                 thumbnailClassified.size(imgOriginal.width,imgOriginal.height);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent('classified-image');
-                thumbnailClassified.addClass('analysedImagesTag');
+                thumbnailClassified.addClass('analysed-images-tag');
                 //thumbnailClassified.style.border = "5px solid black;"
                 
                 // Check EXIF dateTime

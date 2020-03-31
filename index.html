@@ -22,10 +22,14 @@
 
 
 var retryButton = document.getElementById("retry");
-    getLocation();
+getLocation();
     
-
-    function getLocation() {
+/**
+ * Getting the user location
+ * This page use as a contraint for app 
+ *  - User need to give permission inorder to process to application
+*/
+function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
         } else { 
