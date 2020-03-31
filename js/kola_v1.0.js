@@ -39,6 +39,7 @@ var apiInformationDiv = "";
 let mesonentStations;
 var stationDataCSV;
 var loadingWeatherDataLabel;
+var btnUploadLabel;
 
 function preload() {
 
@@ -63,7 +64,7 @@ function setup() {
 
     var nearestLocation = findClosestStation(); // User geolocation need to be set
     var body = document.body;
-    var btnUploadLabel = document.getElementById('btn-upload-label');
+    btnUploadLabel = document.getElementById('btn-upload-label');
     //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
 
     // Users altutude and latitude
@@ -440,7 +441,7 @@ function getWeatherData(){
                 // Seperated by /n 
                 loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
                 btnUpload.removeAttribute('disabled');    
-                btnUploadLabel.onclick = null;;
+                btnUploadLabel.onclick = null;
                 console.log("onclick removed");
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
