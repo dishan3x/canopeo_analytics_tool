@@ -117,6 +117,7 @@ function setup() {
         //               ex :2020-02-24 00000000000
         dateCheck = getDate();
         loggedDate = weatherObj.storedDate;
+        btnUploadLabel.onclick = null;
         if(dateCheck == loggedDate){ // check the weather updated time stamo
             console.log("The mesonent data is loaded to the system");
         }else{
