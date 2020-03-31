@@ -1,6 +1,6 @@
 # Kola canopy analystics tool
 
-Kola is an image analystics tool developed to identify the certain crop properties.This is stand alone web application which calculates following fucntionalities.
+Kola is an image analystics tool developed to identify the certain crop properties. This is stand alone web application which calculates following fucntionalities.
 
  - Canopy cover
  - Crop Coeffecient 
@@ -11,8 +11,8 @@ Kola is an image analystics tool developed to identify the certain crop properti
 # How to use the app
 
   - Use the app link provided [click](https://dishan3x.github.io/canopeo_analytics_tool/).
-  - Open the camera and point over the canopy area over the ground 1m away from  ground
-  - Take the picture and see the results
+  - Open the camera and point over the canopy area over the ground 1m away from  ground.
+  - Take the picture and see the results.
 
 # Browser recommendation 
   - This application uses users locations for specfic calculations. Some browsers
