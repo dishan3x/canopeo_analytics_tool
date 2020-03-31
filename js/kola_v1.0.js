@@ -49,8 +49,8 @@ function preload() {
          window.location = "index.html";
      }
 
-     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
        
 }
 
@@ -61,8 +61,15 @@ function setup() {
     // Converting the data in to JSON
     convertStationsTOJSON();
     // All the mesonent station need to be loadeed and set
-
-    var nearestLocation = findClosestStation(); // User geolocation need to be set
+    var userLocationLat = localStorage.getItem('userLatitude');
+    var userLocationLon = localStorage.getItem('userLongitude');
+    var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
+    localStorage.setItem('nearestStation',matchedStation);
+    var distanceLabelText = document.getElementById("distanceLabelText");
+    distanceLabelText.innerHTML = minimumDistance.toFixed(2)+" miles ";
+    var nearestStationLabelText = document.getElementById("nearestStationLabelText");
+    nearestStationLabelText.innerHTML = matchedStation;
+    
     var body = document.body;
     btnUploadLabel = document.getElementById('btn-upload-label');
     //localStorage.setItem('nearestStation', JSON.stringify(nearestLocation));
@@ -88,7 +95,8 @@ function setup() {
     btnUpload.parent("btn-upload-label");
 
     // Check for the mesonent data retrive
-    // null, undefined , Nan, Empty string ,  0 ,false   
+    // null, undefined , Nan, Empty string ,  0 ,false  
+    // ************************** only for testing remove afterwards 
     if (localStorage.getItem("mesonetWeatherData")) {
         localStorage.setItem("mesonetWeatherData","");
     }
@@ -296,7 +304,7 @@ function gotFile(file) {
 
                 // Get weather data
                  weatherObj = getMesonentDataFromLocalStorage()
-                 lt = new locationCustom(37.77071,-457.23999,-9999);
+                 lt = new customLocation(37.77071,-457.23999,-9999);
                  etoVal = getETOValue(lt,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
 
@@ -368,6 +376,9 @@ function getLocation() {
     }
 }
 
+/**
+ * Call back function for get location
+ * */ 
 function realtimePosition(position) {
  
    realtimeLatitude =  position.coords.latitude;
@@ -399,22 +410,14 @@ function realtimePosition(position) {
 
 }
 
-
 /**
  *  Retrive data from the Mesonet Api and store the infromaton from in the local storage of the browser
  */
 function getWeatherData(){
-    // module for weather
-    
     nearestStation = localStorage.getItem("nearestStation");
-
     dateStr = getDate();
     weatherT = ""; 
     url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
-    console.log(url);
-    //https://mesonet.k-state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20200302000000&t_end=20200302000000&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG
-
-   
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
     const FETCH_TIMEOUT = 5000;
     let didTimeOut = false;
@@ -430,8 +433,7 @@ function getWeatherData(){
             // Clear the timeout as cleanup
             clearTimeout(timeout);
             if(!didTimeOut) {
-                //console.log('fetch good! ', response);
-                //var objthing = response.text();
+                console.log('fetch good! ', response);
                 resolve(response);
             }
             return response.text();
@@ -442,7 +444,6 @@ function getWeatherData(){
                 loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
                 btnUpload.removeAttribute('disabled');    
                 btnUploadLabel.onclick = null;
-                console.log("onclick removed");
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
@@ -493,15 +494,13 @@ function getMesonentDataFromLocalStorage(){
     weatherT.windSpeed     = apiData[9];
     weatherT.doy           = dayOftheYear();
     weatherT.storedDate    = dateStr;
-    
     return weatherT;
-
 }
 
 /**
  * Return short(grass) evapotranspiration value
- * @param {*} location  An object carries langgitude and latitude
- * @param {*} weather  Kansas mesonent api data
+ * @param {object} location  An object carries langgitude and latitude
+ * @param {object} weather  Kansas mesonent api data
  * @returns  evapotranspiration ETo
  */
 function getETOValue(location,weather) {
@@ -628,14 +627,16 @@ function getETOValue(location,weather) {
     return (yyyy + MM +dd +"000000" );
  }
 
-
- 
-// Using haversine function 
-// adaptation  http://www.movable-type.co.uk/scripts/latlong.html
-// function distance(lat1, lon1, lat2, lon2, unit) {
-// from wikipedia
-
-function distance(lat1, lon1, lat2, lon2, unit) {
+/**
+ * calculate great-circle distance between two points on a sphere using 
+ * haversine function
+ * @param {float} lat1  location 1 latitude
+ * @param {float} lon1  location 1 longitude
+ * @param {float} lat2  location 2 latitude
+ * @param {float} lon2  location 2 longitude
+ * @returns {float} distant in miles
+ */
+function distance(lat1, lon1, lat2, lon2) {
 
      // Prototype function to ease the calucation of the radians
    
@@ -646,11 +647,9 @@ function distance(lat1, lon1, lat2, lon2, unit) {
         // converting to radians in to radians
         var dLat =((lat2 - lat1) * Math.PI ) / 180;  
         var dLon = ((lon2 - lon1)* Math.PI ) / 180;  
-
         // convert to radians 
         lat1 = (lat1 * Math.PI ) / 180; 
         lat2 = (lat2 * Math.PI ) / 180; 
-
         // apply formulae 
         var a = Math.pow(Math.sin(dLat / 2), 2) +  
                 Math.pow(Math.sin(dLon / 2), 2) *  
@@ -663,17 +662,18 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 	}
 }
 
-
+/**
+ *  Read the data/stationData.csv and save the file in the 
+ */
 function convertStationsTOJSON(){
 
   //cycle through the table
   var strMesonentStation ="{"
- 
+
   for ( let r = 0; r < stationDataCSV.getRowCount(); r++){
     strMesonentStation += '"'+ stationDataCSV.getString(r, 0)+'":{';
     for (let c = 0; c < stationDataCSV.getColumnCount(); c++) {
-        strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';
-          
+        strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';  
     }
     strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
     strMesonentStation += "}," ;   
@@ -681,33 +681,41 @@ function convertStationsTOJSON(){
   
   strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
   strMesonentStation += "}"
-
   // Place the strigyfy JSON string in the local storage
   localStorage.setItem('mesonentStations', strMesonentStation);   
+
 }
 
-// Convert a string to an array sdsds /n sdsdsd,asdsd,sdsd,sd /n
+// Generate array from an input of string from file
+/**
+ * 
+ * @param {string} data input string with '/n' 
+ */
 function dataToArray (data) {
     rows = data.split("\n");
-
     return rows.map(function (row) {
     	return row.split(",");
     });
 };
 
 
-function findClosestStation(){
+/**
+ * Finds the nearest station to the user location
+ * @param {float} userLocationLat : users current location latitude  
+ * @param {float} userLocationLon : users current location longitute
+ * @returns {list} [ nearest station , minimim distance]
+ */
+
+function findClosestStation(userLocationLat,userLocationLon){
 
     var retrievedStations = localStorage.getItem('mesonentStations');
-    var stationData = JSON.parse(retrievedStations);
-    var mylocationLat = localStorage.getItem('userLatitude');
-    var mylocationLon = localStorage.getItem('userLongitude');
+    var stationData = JSON.parse(retrievedStations); // Getting the data from the local storage
     var d ; // distance
     var distanceArray = new Array();
 
     // Calculate distance between two locations
     for ( stationName in stationData){  
-        d = distance(mylocationLat,mylocationLon,stationData[stationName].LATITUDE,stationData[stationName].LONGITUDE);
+        d = distance(userLocationLat,userLocationLon,stationData[stationName].LATITUDE,stationData[stationName].LONGITUDE);
         distanceArray[stationName] = d;
     }
 
@@ -715,10 +723,5 @@ function findClosestStation(){
     var minimumDistance = Math.min.apply(null, keys.map(function(x) { return distanceArray[x]} ));
     var matchedStation  = keys.filter(function(y) { return distanceArray[y] === minimumDistance });
 
-    localStorage.setItem('nearestStation',matchedStation);
-    var distanceLabelText = document.getElementById("distanceLabelText");
-    distanceLabelText.innerHTML =minimumDistance.toFixed(2)+" miles ";
-    var nearestStationLabelText = document.getElementById("nearestStationLabelText");
-    nearestStationLabelText.innerHTML = matchedStation;
-    return matchedStation;
+    return [matchedStation,minimumDistance];
 }

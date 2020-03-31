@@ -16,7 +16,7 @@ class weather {
   }
 
 
-  class locationCustom {
+  class customLocation {
     constructor(latitude,longitude,elevation) {
       this.latitude = latitude;
       this.longitude = longitude;
