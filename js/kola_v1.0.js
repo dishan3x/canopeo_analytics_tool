@@ -87,7 +87,7 @@ function setup() {
     // Arranging HTML content 
     resultsGrid = document.getElementById('resultGrid');
     resultsGrid.style.display = "none";
-    apiInformationDiv = document.getElementById('apiInformationDiv');
+    apiInformationDiv = document.getElementById('api-information-div');
     leafImageContainer = document.getElementById("leafcontainer");
     loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
 

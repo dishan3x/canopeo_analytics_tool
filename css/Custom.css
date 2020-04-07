@@ -27,14 +27,9 @@ main {
   display:none;
 }
 
-.titleView{ 
+.title-view{ 
   font-size:8vw;
   text-align: center;
-}
-
-
-.indexPageHeadings{
-  color: Gray;
 }
 
 .card { 
@@ -56,27 +51,6 @@ main {
   padding-top: 60px;
 }
 
-.customSidenav a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-.customSidenav a:hover {
-  color: #f1f1f1;
-}
-
-.customSidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
 .navbar {
   background-color: #512888 !important;
   color:white;
@@ -95,7 +69,7 @@ main {
 }
 
 
-#apiInformationDiv{
+#api-information-div{
   margin-top: 5%;
 }
 
@@ -123,7 +97,7 @@ main {
   color:green;
 }
 
-#apiInformationDiv{
+#api-information-div{
   position:center;
   display:inline-grid ! important;
 
@@ -170,7 +144,7 @@ main {
     height: 150% !important;
     width: 100% !important;
   }
-  .titleView{ 
+  .title-view{ 
     font-size:15vw;
     text-align: center;
   }
