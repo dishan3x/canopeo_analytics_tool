@@ -574,9 +574,9 @@ function getETOValue(location,weather) {
   function dayOftheYear(){
     var today = new Date();
     var start = new Date(today.getFullYear(), 0, 0); // Constructing the Jan 1 for the given year
-    var diff = today - start; // returns days by second
+    var diff = today - start; // time differnece by second
     var oneDay = 1000 * 60 * 60 * 24;
-    var days = Math.floor(diff / oneDay);
+    var days = Math.floor(diff / oneDay); // calculate days 
     return days;
   }
 
@@ -602,12 +602,12 @@ function getETOValue(location,weather) {
      return  (1.1 * (cc/100) + 0.17);
   }
 
-
   /**
-   * Return the day of the year
+   * Generate the string which contain the date string guidline for Kansas mesonet api 
    * January 1 is the first day of the year
-   * @return  If we are planning to return Jan 1st 2020
-   * ex : 20200101000000 - > 2020 01 01 000000
+   * @return  
+   * ex : If we are planning to return Jan 1st 2020
+   *      20200101000000 - > 2020 + 01 + 01 + 000000
    */
   function getDate(){
     
