@@ -68,7 +68,7 @@ function setup() {
     var distanceLabelText = document.getElementById("distanceLabelText");
     var nearestStationLabelText = document.getElementById("nearestStationLabelText");
 
-    localStorage.setItem('nearestStation',matchedStation);
+    localStorage.setItem('nearestStation',matchedStation); 
     
     distanceLabelText.innerHTML = minimumDistance.toFixed(2)+" miles ";
     
@@ -100,9 +100,9 @@ function setup() {
     // null, undefined , Nan, Empty string ,  0 ,false  
     // ************************** only for testing remove afterwards 
 
-    if (localStorage.getItem("mesonetWeatherData") == null) {
+    /* if (localStorage.getItem("mesonetWeatherData") == null) {
         localStorage.setItem("mesonetWeatherData","");
-    }
+    } */
 
     if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
         // This function will run until it achieved the data
@@ -158,6 +158,7 @@ function gotFile(file) {
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
 
+                // Clean the result grid value
                 document.getElementById("canopeoCover_val").innerHTML ="";
                 document.getElementById("cropCoefficient_val").innerHTML = "";
                 document.getElementById("evapotranspiration_val").innerHTML = "";
@@ -236,10 +237,6 @@ function gotFile(file) {
                 // Calculate aspect ratio for thumbnails and resize images
                 var aspectRatio = imgClassified.width/imgClassified.height;
 
-              /*   var cardData = document.getElementById('cardData') ;
-                var cardHeight = cardData.offsetHeight;
-                var cardWidth = cardData.offsetWidth; */
-
                 // Thumbnail original image
                 thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
                 thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
@@ -247,7 +244,6 @@ function gotFile(file) {
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent('orignal-image');
                 thumbnailOriginal.addClass('analysed-images-tag');
-                //originalID
                 
                 // Thumbnail classified image
                 thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
@@ -284,7 +280,6 @@ function gotFile(file) {
                     altitude = altitudeToMeters(altitude, altitudeRef) ;
                 }
            
-
                 // Replace any null values with realtime GPS data. Only replace if null to avoid overwriting
                 // EXIF data.
                 // Check real time latitude
@@ -304,8 +299,8 @@ function gotFile(file) {
 
                 // Get weather data
                  weatherObj = getMesonentDataFromLocalStorage()
-                 lt = new customLocation(37.77071,-457.23999,-9999);
-                 etoVal = getETOValue(lt,weatherObj);
+                 locationObj = new customLocation(37.77071,-457.23999,-9999);
+                 etoVal = getETOValue(locationObj,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
 
                

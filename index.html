@@ -39,9 +39,9 @@ function getLocation() {
 
 function showPosition(position) {
 
-  realtimeLatitude =  position.coords.latitude;
-   realtimeLongitude = position.coords.longitude; 
-   realtimeAltitude = position.coords.altitude;
+  realtimeLatitude   =   position.coords.latitude;
+  realtimeLongitude  =   position.coords.longitude; 
+  realtimeAltitude   =   position.coords.altitude;
 
    // Reduce the sensitivit of the cordinates
 
@@ -57,6 +57,7 @@ function showPosition(position) {
 
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
+   localStorage.setItem('userAltitude', realtimeAltitude);
 
    window.location = "canopeo.html";
 
