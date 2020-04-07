@@ -650,7 +650,7 @@ function distance(lat1, lon1, lat2, lon2) {
                 Math.pow(Math.sin(dLon / 2), 2) *  
                 Math.cos(lat1) *  
                 Math.cos(lat2); 
-        var rad = 3958.8;  // radias of the world in miles
+        var rad = 3958.8;  // radias of the earth in miles
         var c = 2 * Math.asin(Math.sqrt(a)); 
         return rad * c ; // distance in miles 
 		
