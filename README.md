@@ -34,6 +34,7 @@ Kola is an image analystics tool developed to identify the certain crop properti
 
  # References
  
-1. [Crop Water Use and Crop Coefficients of Maize in the Great ... www.researchgate.net/publication/324690942_Crop_Water_Use_and_Crop_Coefficients_of_Maize_in_the_Great_Plains.](https://www.researchgate.net/publication/324690942_Crop_Water_Use_and_Crop_Coefficients_of_Maize_in_the_Great_Plains)
-1. [“Haversine Formula.” Wikipedia, Wikimedia Foundation, 7 Aug. 2019, en.wikipedia.org/wiki/Haversine_formula.](https://en.wikipedia.org/wiki/Haversine_formula)
+1.  [Trout, T.J. and DeJonge, K.C., 2018. Crop water use and crop coefficients of maize in the great plains. Journal of Irrigation and Drainage Engineering, 144(6), p.04018009.](https://ascelibrary.org/doi/full/10.1061/%28ASCE%29IR.1943-4774.0001309)
+1. [Wikipedia Contributors (2019). Haversine formula. [online] Wikipedia. Available at: https://en.wikipedia.org/wiki/Haversine_formula.](https://en.wikipedia.org/wiki/Haversine_formula)
+
 
