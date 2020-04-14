@@ -49,8 +49,8 @@ function preload() {
          window.location = "index.html";
      }
 
-     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+     //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
        
 }
 
