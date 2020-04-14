@@ -107,7 +107,7 @@ function setup() {
     if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
         // This function will run until it achieved the data
         getWeatherData();
-        btnUpload.attribute('disabled', '');
+        btnUpload.attribute('disabled', ''); // disable the upload button
 
     }else{
         // if the object is in the local storage check the date stored
@@ -136,12 +136,12 @@ function setup() {
  * */  
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-    alert("open");
+    //alert("open");
   }
   
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    alert("close");
+    //alert("close");
   }
 
 function retakeSnap(){
@@ -302,6 +302,14 @@ function gotFile(file) {
                  locationObj = new customLocation(37.77071,-457.23999,-9999);
                  etoVal = getETOValue(locationObj,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
+
+                 // validate the eto value  
+                 if(isNaN(etoVal)){
+                    alert("Data could not retrieve");
+                    location.reload();
+                 }
+
+
 
                
                 // Assiging the data to cards
