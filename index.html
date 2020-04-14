@@ -58,6 +58,9 @@ function showPosition(position) {
    localStorage.setItem('userLatitude', realtimeLatitude);
    localStorage.setItem('userLongitude', realtimeLongitude);
    localStorage.setItem('userAltitude', realtimeAltitude);
+   localStorage.setItem('imageLatitude', localStorage.getItem('userLatitude'));
+   localStorage.setItem('imageLongitude', localStorage.getItem('userLongitude'));
+ 
 
    window.location = "canopeo.html";
 
