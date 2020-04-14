@@ -158,7 +158,10 @@ function gotFile(file) {
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
                 var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
-                if(locationChangedDistance >10){ // location chaged more than 10 miles
+                //0.00189394 - 10 feet in miles ************************ testing purposes
+                
+                //if(locationChangedDistance >10){ // location chaged more than 10 miles
+                if(locationChangedDistance >0.00189394 ){ // location chaged more than 10 miles
                     // get the nearest mesonent station! 
                     // if the change is not the same then regather the 
                     var nearestStation      = localStorage.getItem("nearestStation");
