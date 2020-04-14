@@ -118,6 +118,7 @@ function setup() {
         loggedDate = weatherObj.storedDate;
         btnUploadLabel.onclick = null;
         if(dateCheck == loggedDate){ // check the weather updated time stamo
+            getWeatherData();
             console.log("The mesonent data is loaded to the system");
         }else{
             // Retriving data from the Mesonent Api
