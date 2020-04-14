@@ -157,19 +157,29 @@ function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
+                var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
+                if(locationChangedDistance >10){ // location chaged more than 10 miles
+                    // get the nearest mesonent station! 
+                    // if the change is not the same then regather the 
+                    var nearestStation      = localStorage.getItem("nearestStation");
+                    var [newNearestStation,newMinimumDistance]  = findClosestStation(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'));  
+                    if(nearestStation != newNearestStation){
+                        getWeatherData();
+                        alert("The nearest station changed. Gathering data from a nearest staton");
+                        location.reload(); // re-loading the image
+                    }
+                }
 
                 // Clean the result grid value
                 document.getElementById("canopeoCover_val").innerHTML ="";
                 document.getElementById("cropCoefficient_val").innerHTML = "";
                 document.getElementById("evapotranspiration_val").innerHTML = "";
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
-
                 var anlysedImgTag = document.getElementsByClassName('analysed-images-tag');
                     if (anlysedImgTag !== null){
                         document.getElementById("orignal-image").innerHTML ="";
                         document.getElementById("classified-image").innerHTML ="";
                     }
-
                 leafImageContainer.style.display = "none";
   
                 // Start counting images
@@ -305,13 +315,10 @@ function gotFile(file) {
 
                  // validate the eto value  
                  if(isNaN(etoVal)){
-                    alert("Data could not retrieve");
+                    alert("Weather data could not be retrieved");
                     location.reload();
                  }
 
-
-
-               
                 // Assiging the data to cards
                 document.getElementById("canopeoCover_val").innerHTML =percentCanopyCover;
                 cropCoffection = float(getCropCoeffcient(percentCanopyCover));
