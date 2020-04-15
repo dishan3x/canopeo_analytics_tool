@@ -43,6 +43,8 @@ var btnUploadLabel;
 
 function preload() {
 
+
+    console.log("Type of the mesonent weather",typeof(localStorage.getItem('mesonetWeatherData')));
      // Check whether the user variable get set from the index.html page
      // If not redirect the user to the inorder to preserve the flow of the code.
      if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
@@ -103,12 +105,14 @@ function setup() {
         localStorage.setItem("mesonetWeatherData","");
     } */
 
-    if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
+    //if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
+    if (typeof(localStorage.getItem("mesonetWeatherData"))== "object") {
         // This function will run until it achieved the data
         getWeatherData();
         btnUpload.attribute('disabled', ''); // disable the upload button
 
     }else{
+        // Mesonent weather data and the type is string. 
         // if the object is in the local storage check the date stored
         // Getting the data object from local storage
         weatherObj =  getMesonentDataFromLocalStorage();
@@ -118,7 +122,6 @@ function setup() {
         loggedDate = weatherObj.storedDate;
         btnUploadLabel.onclick = null;
         if(dateCheck == loggedDate){ // check the weather updated time stamo
-            getWeatherData();
             console.log("The mesonent data is loaded to the system");
         }else{
             // Retriving data from the Mesonent Api
@@ -131,21 +134,16 @@ function setup() {
     //testing ************************************
     var output = document.createElement('pre');
   document.body.appendChild(output);
-
   // Reference to native method(s)
   var oldLog = console.log;
-
   console.log = function( ...items ) {
-
-      // Call native method first
-      oldLog.apply(this,items);
-
-      // Use JSON to transform objects, all others display normally
-      items.forEach( (item,i)=>{
-          items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
+  // Call native method first
+  oldLog.apply(this,items);
+  // Use JSON to transform objects, all others display normally
+    items.forEach( (item,i)=>{
+      items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
       });
-      output.innerHTML += items.join(' ') + '<br />';
-
+    output.innerHTML += items.join(' ') + '<br />';
   };
 
 }  // End setup()
@@ -271,7 +269,7 @@ function gotFile(file) {
                 var aspectRatio = imgClassified.width/imgClassified.height;
 
                 // Thumbnail original image
-                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL());
+                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL(),'altText');
                 thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
                 thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
@@ -279,7 +277,7 @@ function gotFile(file) {
                 thumbnailOriginal.addClass('analysed-images-tag');
                 
                 // Thumbnail classified image
-                thumbnailClassified = createImg(imgClassified.canvas.toDataURL());
+                thumbnailClassified = createImg(imgClassified.canvas.toDataURL(),'altText');
                 thumbnailClassified.size(128*aspectRatio,128*aspectRatio);
                 thumbnailClassified.size(imgOriginal.width,imgOriginal.height);
                 thumbnailClassified.id(imgClassifiedId);
