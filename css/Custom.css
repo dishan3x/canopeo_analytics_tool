@@ -10,7 +10,7 @@ main {
 }
 
 .analysed-images-tag{
-  border-style: groove;
+  padding: 1px;
 }
 
 .container {
@@ -64,7 +64,7 @@ main {
 #index-header {
   float:right;
   margin-right: 50%;
-  font-size: 3em !important;
+  font-size: 3em !important;  
   color:white;
 }
 
@@ -140,7 +140,7 @@ main {
     margin: 0.2rem 0.2rem 1.5rem 0rem !important;
   }
   .analysed-images-tag {
-    border-style: groove;
+    padding:5px;
     height: 150% !important;
     width: 100% !important;
   }
@@ -167,7 +167,7 @@ main {
   }
 
   .pictureDiv{
-    margin-top : 20px;
+    /* margin-top : 20px; */
   }
  
 } /* end small container  */

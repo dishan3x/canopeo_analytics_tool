@@ -269,17 +269,17 @@ function gotFile(file) {
                 var aspectRatio = imgClassified.width/imgClassified.height;
 
                 // Thumbnail original image
-                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL(),'altText');
-                thumbnailOriginal.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
+                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL(),'original image');
+                thumbnailOriginal.size(imgOriginal.width*aspectRatio,imgOriginal.height*aspectRatio);
                 thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
                 thumbnailOriginal.parent('orignal-image');
                 thumbnailOriginal.addClass('analysed-images-tag');
                 
                 // Thumbnail classified image
-                thumbnailClassified = createImg(imgClassified.canvas.toDataURL(),'altText');
-                thumbnailClassified.size(128*aspectRatio,128*aspectRatio);
-                thumbnailClassified.size(imgOriginal.width,imgOriginal.height);
+                thumbnailClassified = createImg(imgClassified.canvas.toDataURL(),'classified image');
+                thumbnailClassified.size(imgClassified.width*aspectRatio,imgClassified.height*aspectRatio);
+                thumbnailClassified.size(imgClassified.width,imgClassified.height);
                 thumbnailClassified.id(imgClassifiedId);
                 thumbnailClassified.parent('classified-image');
                 thumbnailClassified.addClass('analysed-images-tag');
@@ -455,8 +455,8 @@ function getWeatherData(){
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
-            getWeatherData();
-            reject(new Error('Request timed out'));
+            //getWeatherData();
+            reject((getWeatherData()));
         }, FETCH_TIMEOUT);
         
         fetch(url)
