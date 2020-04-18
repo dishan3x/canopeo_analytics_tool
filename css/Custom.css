@@ -140,7 +140,7 @@ main {
     margin: 0.2rem 0.2rem 1.5rem 0rem !important;
   }
   .analysed-images-tag {
-    padding:5px;
+   /*  padding:5px; */
     height: 150% !important;
     width: 100% !important;
   }
