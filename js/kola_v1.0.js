@@ -51,8 +51,12 @@ function preload() {
          window.location = "index.html";
      }
 
-     //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-     stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     // check whether mesonent station loaded to the system
+     if (typeof(localStorage.getItem("mesonentStations"))== "object") {
+        //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+        console.log("got here");
+        stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+     }
 }
 
 function setup() {
@@ -60,7 +64,9 @@ function setup() {
     console.log("Running Kola app. version 1.0.");
 
     // Converting the data in to JSON
-    convertStationsTOJSON();
+    if (typeof(localStorage.getItem("mesonentStations"))== "object") {
+        convertStationsTOJSON();
+    }
 
     // All the mesonent station need to be loadeed and set
     var userLocationLat = localStorage.getItem('userLatitude');
@@ -131,7 +137,7 @@ function setup() {
         }
     }
 
-    //testing ************************************
+    //testing ********** Remove Dishan**************************
     var output = document.createElement('pre');
   document.body.appendChild(output);
   // Reference to native method(s)
@@ -177,7 +183,7 @@ function gotFile(file) {
             loadImage(file.data,function(imgOriginal){
                 var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
                 //0.00189394 - 10 feet in miles ************************ testing purposes
-                
+                document.getElementById('locationChangeCalc').innerHTML = locationChangedDistance;
                 //if(locationChangedDistance >10){ // location chaged more than 10 miles
                 if(locationChangedDistance >0.00189394 ){ // location chaged more than 10 miles
                     // get the nearest mesonent station! 
