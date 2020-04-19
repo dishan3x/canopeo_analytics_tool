@@ -112,7 +112,10 @@ function setup() {
     } */
 
     //if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
+    console.log("Type of the mesonent weather data",localStorage.getItem("mesonetWeatherData"));
+        
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object") {
+        console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
         getWeatherData();
         btnUpload.attribute('disabled', ''); // disable the upload button
