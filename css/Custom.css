@@ -149,6 +149,11 @@ main {
     text-align: center;
   }
 
+  #cropCoefficient_val{
+    position: absolute;
+    bottom:0.5em ;
+  }
+
   #apiInformationDiv{
     display:inline-grid ! important;
   
@@ -168,6 +173,10 @@ main {
 
   .pictureDiv{
     /* margin-top : 20px; */
+  }
+
+  #cameraBtn{
+    margin-top : 1% !important;
   }
  
 } /* end small container  */
