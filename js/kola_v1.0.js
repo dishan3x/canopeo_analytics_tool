@@ -40,9 +40,10 @@ let mesonentStations;
 var stationDataCSV;
 var loadingWeatherDataLabel;
 var btnUploadLabel;
+var userLocationLat;
+var userLocationLon;
 
 function preload() {
-
 
     console.log("Type of the mesonent weather",typeof(localStorage.getItem('mesonetWeatherData')));
      // Check whether the user variable get set from the index.html page
@@ -54,7 +55,6 @@ function preload() {
      // check whether mesonent station loaded to the system
      if (typeof(localStorage.getItem("mesonentStations"))== "object") {
         //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-        console.log("got here");
         stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      }
 }
@@ -64,13 +64,13 @@ function setup() {
     console.log("Running Kola app. version 1.0.");
 
     // Converting the data in to JSON
-    if (typeof(localStorage.getItem("mesonentStations"))== "object") {
+    if (typeof(localStorage.getItem("mesonentStations"))== "object") { // already read the file and stored in system
         convertStationsTOJSON();
     }
 
     // All the mesonent station need to be loadeed and set
-    var userLocationLat = localStorage.getItem('userLatitude');
-    var userLocationLon = localStorage.getItem('userLongitude');
+    userLocationLat = localStorage.getItem('userLatitude');
+    userLocationLon = localStorage.getItem('userLongitude');
     var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
     var distanceLabelText = document.getElementById("distanceLabelText");
     var nearestStationLabelText = document.getElementById("nearestStationLabelText");
@@ -188,7 +188,21 @@ function gotFile(file) {
                 //0.00189394 - 10 feet in miles ************************ testing purposes
                 document.getElementById('locationChangeCalc').innerHTML = locationChangedDistance;
                 //if(locationChangedDistance >10){ // location chaged more than 10 miles
-                if(locationChangedDistance >0.00189394 ){ // location chaged more than 10 miles
+
+                var userLocationLat = localStorage.getItem('userLatitude');
+                var userLocationLon = localStorage.getItem('userLongitude');
+                var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
+                alert(matchedStation);
+                console.log("matchedStation",typeof(matchedStation));
+                console.log("localStorage.getItem('nearestStation')",typeof(localStorage.getItem('nearestStation')));
+                if(matchedStation != localStorage.getItem('nearestStation')){
+                    
+                    localStorage.setItem('nearestStation',matchedStation);
+                    alert("Station Changed. Gathering data");
+                    getWeatherData(); 
+                }
+
+          /*       if(locationChangedDistance >0.00189394 ){ // location chaged more than 10 miles
                     // get the nearest mesonent station! 
                     // if the change is not the same then regather the 
                     var nearestStation      = localStorage.getItem("nearestStation");
@@ -198,7 +212,7 @@ function gotFile(file) {
                         alert("The nearest station changed. Gathering data from a nearest staton");
                         location.reload(); // re-loading the image
                     }
-                }
+                } */
 
                 // Clean the result grid value
                 document.getElementById("canopeoCover_val").innerHTML ="";
