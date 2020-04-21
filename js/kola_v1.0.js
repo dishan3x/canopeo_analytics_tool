@@ -132,7 +132,7 @@ function setup() {
     }
 
     //testing ********** Remove Dishan**************************
-                var output = document.createElement('pre');
+             /*    var output = document.createElement('pre');
                 document.body.appendChild(output);
                 // Reference to native method(s)
                 var oldLog = console.log;
@@ -144,7 +144,7 @@ function setup() {
                     items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
                     });
                     output.innerHTML += items.join(' ') + '<br />';
-                };
+                }; */
 
 }  // End setup()
 
