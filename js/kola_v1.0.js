@@ -396,7 +396,7 @@ function altitudeToMeters(value, ref) {
 */
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition,showError);
+        navigator.geolocation.getCurrentPosition(showPosition,showError);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
