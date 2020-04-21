@@ -493,8 +493,8 @@ function getWeatherData(){
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
                 console.log("gathered data. Cleared timeout");
-                resolve(response);
                 clearTimeout(timeout); // clear timeout when data recieved to avoid further fetches
+                resolve(response);
             })
         .catch(function(err) { // catch for fetch
             console.log('fetch failed! ', err);
