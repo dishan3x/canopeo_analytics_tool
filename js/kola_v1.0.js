@@ -469,7 +469,7 @@ function getWeatherData(){
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
-            //getWeatherData();
+            getWeatherData();
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
@@ -493,6 +493,7 @@ function getWeatherData(){
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
                 console.log("gathered data. Cleared timeout");
+                resolve(response);
                 clearTimeout(timeout); // clear timeout when data recieved to avoid further fetches
             })
         .catch(function(err) { // catch for fetch
@@ -509,8 +510,8 @@ function getWeatherData(){
         console.log('good promise, no timeout! ');
     })
     .catch(function(err) { // catch for timeout
-        // Error: response error, request timeout or runtime error
-        getWeatherData();
+    // Error: response error, request timeout or runtime error
+      
         console.log('promise error! ', err);
     });
 
