@@ -172,11 +172,15 @@ main {
   }
 
   .pictureDiv{
-    /* margin-top : 20px; */
+    margin-top: 2px; 
   }
 
   #camera-icon{
     margin-top : 1% !important;
+  }
+
+  #orignal-image{
+    margin-right: 2.5px;
   }
  
 } /* end small container  */
