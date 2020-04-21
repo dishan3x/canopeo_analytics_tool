@@ -43,9 +43,11 @@ var btnUploadLabel;
 var userLocationLat;
 var userLocationLon;
 
+var errorDiv;
+var errorContent;
+
 function preload() {
 
-    console.log("Type of the mesonent weather",typeof(localStorage.getItem('mesonetWeatherData')));
      // Check whether the user variable get set from the index.html page
      // If not redirect the user to the inorder to preserve the flow of the code.
      if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
@@ -57,6 +59,8 @@ function preload() {
         //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
         stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      }
+     // Get the user location
+     getLocation();
 }
 
 function setup() {
@@ -92,28 +96,20 @@ function setup() {
     userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 
     // Arranging HTML content 
-    resultsGrid = document.getElementById('resultGrid');
-    resultsGrid.style.display = "none";
-    apiInformationDiv = document.getElementById('api-information-div');
-    leafImageContainer = document.getElementById("leafcontainer");
-    loadingWeatherDataLabel = document.getElementById('weatherDataStatusLabel');
+    resultsGrid                 = document.getElementById('resultGrid');
+    resultsGrid.style.display   = "none";
+    apiInformationDiv           = document.getElementById('api-information-div');
+    leafImageContainer          = document.getElementById("leafcontainer");
+    loadingWeatherDataLabel     = document.getElementById('weatherDataStatusLabel');
+    errorDiv                    = document.getElementById('errorDiv');
+    errorContent                = document.getElementById('errorContent');
+   
 
     // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
-
-    // Check for the mesonent data retrive
-    // null, undefined , Nan, Empty string ,  0 ,false  
-    // ************************** only for testing remove afterwards 
-
-    /* if (localStorage.getItem("mesonetWeatherData") == null) {
-        localStorage.setItem("mesonetWeatherData","");
-    } */
-
-    //if (Object.keys(localStorage.getItem("mesonetWeatherData")).length < 1) {
-    console.log("Type of the mesonent weather data",localStorage.getItem("mesonetWeatherData"));
-        
+   
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object") {
         console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
@@ -141,22 +137,21 @@ function setup() {
     }
 
     //testing ********** Remove Dishan**************************
-    var output = document.createElement('pre');
-  document.body.appendChild(output);
-  // Reference to native method(s)
-  var oldLog = console.log;
-  console.log = function( ...items ) {
-  // Call native method first
-  oldLog.apply(this,items);
-  // Use JSON to transform objects, all others display normally
-    items.forEach( (item,i)=>{
-      items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
-      });
-    output.innerHTML += items.join(' ') + '<br />';
-  };
+                var output = document.createElement('pre');
+                document.body.appendChild(output);
+                // Reference to native method(s)
+                var oldLog = console.log;
+                console.log = function( ...items ) {
+                // Call native method first
+                oldLog.apply(this,items);
+                // Use JSON to transform objects, all others display normally
+                    items.forEach( (item,i)=>{
+                    items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
+                    });
+                    output.innerHTML += items.join(' ') + '<br />';
+                };
 
 }  // End setup()
-
 
 /** 
  * Navigation Bar Functions
@@ -182,19 +177,17 @@ function gotFile(file) {
     if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
+                getLocation(); //update recent location to the local storage. 
                 var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
-                //0.00189394 - 10 feet in miles ************************ testing purposes
-                document.getElementById('locationChangeCalc').innerHTML = locationChangedDistance;
-                //if(locationChangedDistance >10){ // location chaged more than 10 miles
-
                 var userLocationLat = localStorage.getItem('userLatitude');
                 var userLocationLon = localStorage.getItem('userLongitude');
                 var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
-                console.log("matchedStation",typeof(matchedStation));
-                console.log("localStorage.getItem('nearestStation')",typeof(localStorage.getItem('nearestStation')));
+
+                // Check for a change of nearest station. I
+                // if changed , gather the weather data from the nearest station. 
                 if(matchedStation != localStorage.getItem('nearestStation')){
                     
-                    localStorage.setItem('nearestStation',matchedStation);
+                    localStorage.setItem('nearestStation',matchedStation); // setting the new found nearest station. 
                     alert("Station Changed. Gathering data");
                     getWeatherData(); 
                 }
@@ -403,7 +396,7 @@ function altitudeToMeters(value, ref) {
 */
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(realtimePosition);
+        navigator.geolocation.watchPosition(showPosition,showError);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -415,39 +408,53 @@ function getLocation() {
     }
 }
 
-/**
- * Call back function for get location
- * */ 
-function realtimePosition(position) {
- 
-   realtimeLatitude =  position.coords.latitude;
-   realtimeLongitude = position.coords.longitude; 
-   realtimeAltitude = position.coords.altitude;
+function showPosition(position) {
 
-   // Reduce the sensitivit of the cordinates
-
-   realtimeLatitude = realtimeLatitude * 1000
-   realtimeLatitude = realtimeLatitude.toFixed(2);
-   realtimeLatitude = realtimeLatitude/1000;
-   realtimeLatitude = realtimeLatitude.toFixed(2);
+    realtimeLatitude   =   position.coords.latitude;
+    realtimeLongitude  =   position.coords.longitude; 
+    realtimeAltitude   =   position.coords.altitude;
+  
+     // Reduce the sensitivit of the cordinates
+  
+     realtimeLatitude = realtimeLatitude * 1000;
+     realtimeLatitude =  realtimeLatitude.toFixed(2);
+     realtimeLatitude = realtimeLatitude/1000;
+     realtimeLatitude = realtimeLatitude.toFixed(2);
+     
+     realtimeLongitude = realtimeLongitude * 1000;
+     realtimeLongitude = realtimeLongitude.toFixed(2);
+     realtimeLongitude = realtimeLongitude/1000;
+     realtimeLongitude = realtimeLongitude.toFixed(2);
+  
+     localStorage.setItem('userLatitude', realtimeLatitude);
+     localStorage.setItem('userLongitude', realtimeLongitude);
+     localStorage.setItem('userAltitude', realtimeAltitude);
+     localStorage.setItem('imageLatitude', localStorage.getItem('userLatitude'));
+     localStorage.setItem('imageLongitude', localStorage.getItem('userLongitude'));
    
-   realtimeLongitude = realtimeLongitude * 1000
-   realtimeLongitude = realtimeLongitude.toFixed(2);
-   realtimeLongitude = realtimeLongitude/1000;
-   realtimeLongitude = realtimeLongitude.toFixed(2);
+    // window.location = "canopeo.html";
+  }
 
-   localStorage.setItem('userLatitude', realtimeLatitude);
-   localStorage.setItem('userLongitude', realtimeLongitude);
-
-   // Users altutude and latitude
-    var userLattitudeText = document.getElementById('userLattitudeText');
-    userLattitudeText.innerHTML = realtimeLatitude;
-
-    // Users altutude and latitude
-    var userLongitudeText = document.getElementById('userLongitudeText');
-    userLongitudeText.innerHTML = realtimeLongitude;
-
-}
+  function showError(error) {
+    errorDiv.style.display="flex";
+    leafImageContainer.style.display = "none";
+    resultsGrid.style.display = "none";
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+        errorContent.innerHTML = "<b>Location Service Required.</b><br><text>Sorry, the app requires the location of the user. you must allow the location to be active during the usage of app .<text></br></br>";
+        //alert("You need to allow geo-location for the app to wor  k. Please click on retry");
+        break;
+      case error.POSITION_UNAVAILABLE:
+        errorContent.innerHTML = "Location information is unavailable."
+        break;
+      case error.TIMEOUT:
+        errorContent.innerHTML = "The request to get user location timed out."
+        break;
+      case error.UNKNOWN_ERROR:
+        errorContent.innerHTML = "An unknown error occurred."
+        break;
+    }
+  }
 
 /**
  *  Retrive data from the Mesonet Api and store the infromaton from in the local storage of the browser
@@ -458,7 +465,7 @@ function getWeatherData(){
     weatherT = ""; 
     url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
-    const FETCH_TIMEOUT = 5000;
+    const FETCH_TIMEOUT = 7000;
     let didTimeOut = false;
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
@@ -486,9 +493,10 @@ function getWeatherData(){
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-                clearTimeout(timeout);
+                console.log("gathered data. Cleared timeout");
+                clearTimeout(timeout); // clear timeout when data recieved to avoid further fetches
             })
-        .catch(function(err) {
+        .catch(function(err) { // catch for fetch
             console.log('fetch failed! ', err);
             
             // Rejection already happened with setTimeout
@@ -501,7 +509,7 @@ function getWeatherData(){
         // Request success and no timeout
         console.log('good promise, no timeout! ');
     })
-    .catch(function(err) {
+    .catch(function(err) { // catch for timeout
         // Error: response error, request timeout or runtime error
         console.log('promise error! ', err);
     });

@@ -54,9 +54,6 @@
                   <div class="col s12 m12" >
                     <label id="weatherDataStatusLabel"></label>
                   </div>
-                  <div class="col s12 m12" >
-                    <label id="testingDistantChangein0.00189394">testingDistantChangein0.00189394miles10 feet : <text id="locationChangeCalc"></text></label>
-                  </div>
               </div>
 
               <!-- The logo -->
@@ -112,8 +109,18 @@
                                     <div  id="classified-image"></div>
               </div>
                 
-            </div> <!-- end result tab -->          
+            </div> <!-- end result tab -->
 
+            <!-- error block  -->
+
+            <div id="errorDiv" style="display: none;">
+              <div class="card-panel">
+                  <span id="errorContent" class="blue-text text-darken-2"></span>
+                  <button class=" waves-effect waves-light btn button" id="retry" onclick="javascript:window.location.href='';">Retry</button>
+              </div>
+            </div>
+
+            
         </div> <!-- container div -->
 </main>
 
