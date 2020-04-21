@@ -56,14 +56,16 @@ function preload() {
 
      // check whether mesonent station loaded to the system
      if (typeof(localStorage.getItem("mesonentStations"))== "object") {
-        //stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-        stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
+        stationDataCSV = loadTable("data/stationData.csv","csv", "header");
+        //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      }
-     // Get the user location
-     getLocation();
+    
 }
 
 function setup() {
+
+     // Get the user location
+     getLocation();
 
     console.log("Running Kola app. version 1.0.");
 
@@ -87,13 +89,7 @@ function setup() {
     
     btnUploadLabel = document.getElementById('btn-upload-label');
 
-    // Users altutude and latitude
-    userLattitudeText = document.getElementById('userLattitudeText');
-    userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
 
-    // Users altutude and latitude
-    userLongitudeText = document.getElementById('userLongitudeText');
-    userLongitudeText.innerHTML = localStorage.getItem("userLongitude");
 
     // Arranging HTML content 
     resultsGrid                 = document.getElementById('resultGrid');
@@ -395,7 +391,7 @@ function altitudeToMeters(value, ref) {
 */
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition,showError);
+        navigator.geolocation.watchPosition(showPosition,showError);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -416,22 +412,34 @@ function showPosition(position) {
      // Reduce the sensitivit of the cordinates
   
      realtimeLatitude = realtimeLatitude * 1000;
-     realtimeLatitude =  realtimeLatitude.toFixed(2);
+     realtimeLatitude =  realtimeLatitude.toFixed(6);
      realtimeLatitude = realtimeLatitude/1000;
-     realtimeLatitude = realtimeLatitude.toFixed(2);
+     realtimeLatitude = realtimeLatitude.toFixed(6);
      
      realtimeLongitude = realtimeLongitude * 1000;
-     realtimeLongitude = realtimeLongitude.toFixed(2);
+     realtimeLongitude = realtimeLongitude.toFixed(6);
      realtimeLongitude = realtimeLongitude/1000;
-     realtimeLongitude = realtimeLongitude.toFixed(2);
-  
+     realtimeLongitude = realtimeLongitude.toFixed(6);
+    
      localStorage.setItem('userLatitude', realtimeLatitude);
      localStorage.setItem('userLongitude', realtimeLongitude);
      localStorage.setItem('userAltitude', realtimeAltitude);
      localStorage.setItem('imageLatitude', localStorage.getItem('userLatitude'));
      localStorage.setItem('imageLongitude', localStorage.getItem('userLongitude'));
+ /*         // Users altutude and latitude
+    userLattitudeText = document.getElementById('userLattitudeText');
+    userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
+
+    // Users altutude and latitude
+    userLongitudeText = document.getElementById('userLongitudeText');
+    userLongitudeText.innerHTML = localStorage.getItem("userLongitude"); */
    
-    // window.location = "canopeo.html";
+    userLattitudeText = document.getElementById('userLattitudeText');
+    userLattitudeText.innerHTML = realtimeLatitude;
+
+    userLongitudeText = document.getElementById('userLongitudeText');
+    userLongitudeText.innerHTML = realtimeLongitude;
+    
   }
 
   function showError(error) {
@@ -464,12 +472,12 @@ function getWeatherData(){
     weatherT = ""; 
     url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
-    const FETCH_TIMEOUT = 7000;
+    const FETCH_TIMEOUT = 10000;
     let didTimeOut = false;
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
-            getWeatherData();
+            //getWeatherData();
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
@@ -513,6 +521,7 @@ function getWeatherData(){
     // Error: response error, request timeout or runtime error
       
         console.log('promise error! ', err);
+        loadingWeatherDataLabel.innerHTML = 'Mesonet weather data could not be retrieved.</i><button id="btn-reload-weather" onclick="getWeatherData()">Retry</button>';
     });
 
 }
