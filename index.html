@@ -6,22 +6,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+    <link rel="stylesheet" href="css/materialize.min.css" />
+    <link rel="stylesheet" href="css/fontawesome/all.css" />
    
 </head>
 
+<style>
+#wrapper {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+</style>
+  
 
 <body>
-    <div id="retryDic">
-        <i class="fas fa-frown"></i>
-        <button class="button" id="retry" style="display: none;" onclick="javascript:window.location.href='';">Retry</button>
+  <div id="wrapper" style="display: none;">
+    <div class="card-panel">
+        <span id="errorContent" class="blue-text text-darken-2"></span>
+        <button type="button" class=" waves-effect waves-light btn button" id="retry" onclick="javascript:window.location.href='';">Retry</button>
     </div>
+  </div>
 </body>
 
 <script>
-
-
-var retryButton = document.getElementById("retry");
+var  errorConent;
+var reloadDiv   =   document.getElementById('wrapper');
+errorConent     =   document.getElementById('errorContent');
 getLocation();
     
 /**
@@ -31,11 +45,12 @@ getLocation();
 */
 function getLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
+            navigator.geolocation.watchPosition(showPosition, showError);
         } else { 
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
 }
+
 
 function showPosition(position) {
 
@@ -45,12 +60,12 @@ function showPosition(position) {
 
    // Reduce the sensitivit of the cordinates
 
-   realtimeLatitude = realtimeLatitude * 1000
-   realtimeLatitude = realtimeLatitude.toFixed(2);
+   realtimeLatitude = realtimeLatitude * 1000;
+   realtimeLatitude =  realtimeLatitude.toFixed(2);
    realtimeLatitude = realtimeLatitude/1000;
    realtimeLatitude = realtimeLatitude.toFixed(2);
    
-   realtimeLongitude = realtimeLongitude * 1000
+   realtimeLongitude = realtimeLongitude * 1000;
    realtimeLongitude = realtimeLongitude.toFixed(2);
    realtimeLongitude = realtimeLongitude/1000;
    realtimeLongitude = realtimeLongitude.toFixed(2);
@@ -61,26 +76,24 @@ function showPosition(position) {
    localStorage.setItem('imageLatitude', localStorage.getItem('userLatitude'));
    localStorage.setItem('imageLongitude', localStorage.getItem('userLongitude'));
  
-
    window.location = "canopeo.html";
-
 }
 
 function showError(error) {
+  reloadDiv.style.display="flex";
   switch(error.code) {
     case error.PERMISSION_DENIED:
-      //x.innerHTML = "User denied the request for Geolocation.
-      retryButton.style.display="block";
-      alert("User denied permission for geolocation. Please click on retry");
+      errorConent.innerHTML = "<b>Location Service Required.</b><br><text>Sorry, the app requires the location of the user. you must allow the location to be active during the usage of app .<text></br></br>";
+      //alert("You need to allow geo-location for the app to wor  k. Please click on retry");
       break;
     case error.POSITION_UNAVAILABLE:
-      x.innerHTML = "Location information is unavailable."
+      errorConent.innerHTML = "Location information is unavailable."
       break;
     case error.TIMEOUT:
-      x.innerHTML = "The request to get user location timed out."
+      errorConent.innerHTML = "The request to get user location timed out."
       break;
     case error.UNKNOWN_ERROR:
-      x.innerHTML = "An unknown error occurred."
+      errorConent.innerHTML = "An unknown error occurred."
       break;
   }
 }
