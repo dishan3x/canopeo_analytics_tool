@@ -199,18 +199,6 @@ function gotFile(file) {
                     getWeatherData(); 
                 }
 
-          /*       if(locationChangedDistance >0.00189394 ){ // location chaged more than 10 miles
-                    // get the nearest mesonent station! 
-                    // if the change is not the same then regather the 
-                    var nearestStation      = localStorage.getItem("nearestStation");
-                    var [newNearestStation,newMinimumDistance]  = findClosestStation(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'));  
-                    if(nearestStation != newNearestStation){
-                        getWeatherData();
-                        alert("The nearest station changed. Gathering data from a nearest staton");
-                        location.reload(); // re-loading the image
-                    }
-                } */
-
                 // Clean the result grid value
                 document.getElementById("canopeoCover_val").innerHTML ="";
                 document.getElementById("cropCoefficient_val").innerHTML = "";
@@ -498,7 +486,8 @@ function getWeatherData(){
                 var lineSeperation = data.split(/\r?\n/);
                 // Setting the value in the local storage
                 localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-        })
+                clearTimeout(timeout);
+            })
         .catch(function(err) {
             console.log('fetch failed! ', err);
             
