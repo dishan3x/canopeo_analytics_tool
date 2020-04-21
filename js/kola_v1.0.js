@@ -163,12 +163,10 @@ function setup() {
  * */  
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-    //alert("open");
   }
   
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    //alert("close");
   }
 
 function retakeSnap(){
@@ -192,7 +190,6 @@ function gotFile(file) {
                 var userLocationLat = localStorage.getItem('userLatitude');
                 var userLocationLon = localStorage.getItem('userLongitude');
                 var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
-                alert(matchedStation);
                 console.log("matchedStation",typeof(matchedStation));
                 console.log("localStorage.getItem('nearestStation')",typeof(localStorage.getItem('nearestStation')));
                 if(matchedStation != localStorage.getItem('nearestStation')){
