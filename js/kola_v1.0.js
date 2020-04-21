@@ -109,13 +109,12 @@ function setup() {
     btnUpload = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
-   
-    if (typeof(localStorage.getItem("mesonetWeatherData"))== "object") {
+    console.log(typeof(localStorage.getItem("mesonetWeatherData")));
+    if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
         getWeatherData();
-        btnUpload.attribute('disabled', ''); // disable the upload button
-
+        btnUpload.attribute('disabled', ''); // disable the upload button    
     }else{
         // Mesonent weather data and the type is string. 
         // if the object is in the local storage check the date stored
