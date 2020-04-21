@@ -3,7 +3,7 @@
 Kola is an image analystics tool developed to identify the certain crop properties. This is stand alone web application which calculates following fucntionalities.
 
  - Canopy cover
- - Crop Coeffecient 
+ - Crop coeffecient 
  - ETo (short (grass) reference evapotranspiration(mm, mm d−1))
  - ETc (crop evapotranspiration (mm, mm d−1))
 
