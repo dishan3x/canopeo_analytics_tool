@@ -470,7 +470,7 @@ function getWeatherData(){
         const timeout = setTimeout(function() {
             didTimeOut = true;
             //getWeatherData();
-            reject((getWeatherData()));
+            reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
         fetch(url)
@@ -510,9 +510,9 @@ function getWeatherData(){
     })
     .catch(function(err) { // catch for timeout
         // Error: response error, request timeout or runtime error
+        getWeatherData();
         console.log('promise error! ', err);
     });
-
 
 }
 
