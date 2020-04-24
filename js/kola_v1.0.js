@@ -68,9 +68,8 @@ function setup() {
     }
 
     // All the mesonent station need to be loadeed and set
-    userLocationLat = localStorage.getItem('userLatitude');
-    userLocationLon = localStorage.getItem('userLongitude');
-    var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
+    let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
+    var [matchedStation,minimumDistance] = findClosestStation(coordinateObj.lat,coordinateObj.lon); // User geolocation need to be set
     var distanceLabelText = document.getElementById("distanceLabelText");
     var nearestStationLabelText = document.getElementById("nearestStationLabelText");
 
@@ -378,34 +377,29 @@ function getLocation() {
 
 function showPosition(position) {
 
-    realtimeLatitude   =   position.coords.latitude;
-    realtimeLongitude  =   position.coords.longitude; 
-    realtimeAltitude   =   position.coords.altitude;
-  
-    // Reduce the sensitivit of the cordinates
-  
-    realtimeLatitude = Math.round(realtimeLatitude*10**6)/10**6;
-    realtimeLongitude = Math.round(realtimeLongitude*10**6)/10**6;
+    // Reduce the sensitivit of the cordinates  
+    realtimeLatitude    = Math.round(position.coords.latitude*10**6)/10**6;
+    realtimeLongitude   = Math.round(position.coords.longitude*10**6)/10**6;
+    realtimeAltitude    =   position.coords.accuracy; // A;titude
 
-    localStorage.setItem('userLatitude', realtimeLatitude);
-    localStorage.setItem('userLongitude', realtimeLongitude);
-    localStorage.setItem('userAltitude', realtimeAltitude);
+    // Altitude retrived check
+    if(realtimeAltitude == null ){
+        realtimeAltitude = 0;
+    }
+
+    let coordinatesObject  = {
+        lat : realtimeLatitude,
+        lon : realtimeLongitude,
+        alt : realtimeAltitude
+    }
+
+    // store the coordinates data to local storage to future use
+    localStorage.setItem('coordinates',JSON.stringify(coordinatesObject));
 
     userLattitudeText = document.getElementById('userLattitudeText');
     userLattitudeText.innerHTML = realtimeLatitude;
-
     userLongitudeText = document.getElementById('userLongitudeText');
     userLongitudeText.innerHTML = realtimeLongitude;
-
-    let coordinatesObject  = {
-        lat : position.coords.latitude,
-        lon : position.coords.longitude
-    }
-
-    localStorage.setItem('coordinates',JSON.stringify(coordinatesObject));
-    let kk = JSON.parse(localStorage.getItem('coordinates'));
-    console.log("lon",kk.lon);
-    
   }
 
   function showError(error) {
