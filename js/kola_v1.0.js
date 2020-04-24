@@ -65,10 +65,10 @@ function setup() {
     }
 
     // All the mesonent station need to be loadeed and set
-    let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
+    let coordinateObj                    = JSON.parse(localStorage.getItem('coordinates'));
     let [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
-    let distanceLabelText = document.getElementById("distanceLabelText");
-    let nearestStationLabelText = document.getElementById("nearestStationLabelText");
+    let distanceLabelText                = document.getElementById("distanceLabelText");
+    let nearestStationLabelText          = document.getElementById("nearestStationLabelText");
 
     localStorage.setItem('nearestStation',matchedStation); 
     
@@ -80,20 +80,21 @@ function setup() {
 
     // Arranging HTML content 
     resultsGrid                 = document.getElementById('resultGrid');
-    resultsGrid.style.display   = "none";
     apiInformationDiv           = document.getElementById('api-information-div');
     logoContainer               = document.getElementById("leafcontainer");
     loadingWeatherDataLabel     = document.getElementById('weatherDataStatusLabel');
     errorDiv                    = document.getElementById('errorDiv');
     errorContent                = document.getElementById('errorContent');
    
+    //preload assignment
+    resultsGrid.style.display   = "none";
 
     // Upload button
     btnUpload = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
-    console.log(typeof(localStorage.getItem("mesonetWeatherData")));
+
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
@@ -104,7 +105,7 @@ function setup() {
         // if the object is in the local storage check the date stored
         // Getting the data object from local storage
         weatherObj =  getMesonentDataFromLocalStorage();
-        // format of datq  : 2020-02-2400000000000
+        // Date format  : 2020-02-2400000000000
         //               ex :2020-02-24 00000000000
         dateCheck   =   getDate();
         loggedDate  =   weatherObj.storedDate;
