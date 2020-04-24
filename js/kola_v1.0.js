@@ -51,7 +51,6 @@ function preload() {
      // check whether mesonent station loaded to the system
      if (typeof(localStorage.getItem("mesonentStations"))== "object") {
         stationDataCSV = loadTable("data/stationData.csv","csv", "header");
-        //stationDataCSV = loadTable("https://raw.githubusercontent.com/dishan3x/canopeo_analytics_tool/master/data/stationData.csv","csv", "header");
      }
     
 }
@@ -101,7 +100,7 @@ function setup() {
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
-        getWeatherData();
+        //getWeatherData(); ------------------------------------------------------------------------> uncomment after testing
         btnUpload.attribute('disabled', ''); // disable the upload button    
     }else{
         // Mesonent weather data and the type is string. 
@@ -118,7 +117,7 @@ function setup() {
         }else{
             // Retriving data from the Mesonent Api
             // update has a old date. 
-            getWeatherData();
+            //getWeatherData();  ------------------------------------------------------------------------> uncomment testing
             alert("Date did not match, gethering Data from the mesonent Api");
         }
     }
@@ -397,6 +396,15 @@ function showPosition(position) {
 
     userLongitudeText = document.getElementById('userLongitudeText');
     userLongitudeText.innerHTML = realtimeLongitude;
+
+    let coordinatesObject  = {
+        lat : position.coords.latitude,
+        lon : position.coords.longitude
+    }
+
+    localStorage.setItem('coordinates',JSON.stringify(coordinatesObject));
+    let kk = JSON.parse(localStorage.getItem('coordinates'));
+    console.log("lon",kk.lon);
     
   }
 
