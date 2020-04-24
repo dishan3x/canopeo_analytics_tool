@@ -69,9 +69,9 @@ function setup() {
 
     // All the mesonent station need to be loadeed and set
     let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
-    var [matchedStation,minimumDistance] = findClosestStation(coordinateObj.lat,coordinateObj.lon); // User geolocation need to be set
-    var distanceLabelText = document.getElementById("distanceLabelText");
-    var nearestStationLabelText = document.getElementById("nearestStationLabelText");
+    let [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
+    let distanceLabelText = document.getElementById("distanceLabelText");
+    let nearestStationLabelText = document.getElementById("nearestStationLabelText");
 
     localStorage.setItem('nearestStation',matchedStation); 
     
@@ -85,7 +85,7 @@ function setup() {
     resultsGrid                 = document.getElementById('resultGrid');
     resultsGrid.style.display   = "none";
     apiInformationDiv           = document.getElementById('api-information-div');
-    leafImageContainer          = document.getElementById("leafcontainer");
+    logoContainer               = document.getElementById("leafcontainer");
     loadingWeatherDataLabel     = document.getElementById('weatherDataStatusLabel');
     errorDiv                    = document.getElementById('errorDiv');
     errorContent                = document.getElementById('errorContent');
@@ -99,7 +99,7 @@ function setup() {
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         console.log("Identified weather data as a Object");
         // This function will run until it achieved the data
-        //getWeatherData(); ------------------------------------------------------------------------> uncomment after testing
+        getWeatherData(); 
         btnUpload.attribute('disabled', ''); // disable the upload button    
     }else{
         // Mesonent weather data and the type is string. 
@@ -116,7 +116,7 @@ function setup() {
         }else{
             // Retriving data from the Mesonent Api
             // update has a old date. 
-            //getWeatherData();  ------------------------------------------------------------------------> uncomment testing
+            getWeatherData(); 
             alert("Date did not match, gethering Data from the mesonent Api");
         }
     }
@@ -137,7 +137,7 @@ function openNav() {
 function retakeSnap(){
     resultsGrid.style.display = "none";
     apiInformationDiv.style.display = "block";
-    leafImageContainer.style.display  ="block";
+    logoContainer.style.display  ="block";
 }
 
 /**
@@ -148,9 +148,8 @@ function gotFile(file) {
             loadImage(file.data,function(imgOriginal){
                 getLocation(); //update recent location to the local storage. 
                 var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
-                var userLocationLat = localStorage.getItem('userLatitude');
-                var userLocationLon = localStorage.getItem('userLongitude');
-                var [matchedStation,minimumDistance] = findClosestStation(userLocationLat,userLocationLon); // User geolocation need to be set
+                let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
+                var [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
 
                 // Check for a change of nearest station. I
                 // if changed , gather the weather data from the nearest station. 
@@ -170,10 +169,9 @@ function gotFile(file) {
                         document.getElementById("orignal-image").innerHTML ="";
                         document.getElementById("classified-image").innerHTML ="";
                     }
-                leafImageContainer.style.display = "none";
+                logoContainer.style.display = "none";
   
-                // Start counting images
-                imgCounter += 1;
+            
 
                 // Displaying the result grid 
                 resultsGrid.style.visibility = 'visible';
@@ -181,9 +179,9 @@ function gotFile(file) {
                 // Hide the api status from the screen
                 apiInformationDiv.style.display = "none";
     
-                let imgOriginalId = 'img-original' + imgCounter; // Needed to call EXIF data
+                let imgOriginalId = 'img-original'; // Needed to call EXIF data
                 
-                let imgClassifiedId = 'img-classified' + imgCounter; // Not needed, but added for consistency with imgOriginal
+                let imgClassifiedId = 'img-classified'; // Not needed, but added for consistency with imgOriginal
     
                 // Get upload timestamp
                 uploadDate = new Date();
@@ -254,53 +252,9 @@ function gotFile(file) {
                 thumbnailClassified.addClass('analysed-images-tag');
                 //thumbnailClassified.style.border = "5px solid black;"
                 
-                // Check EXIF dateTime
-                if (typeof snapDate === 'undefined'){
-                    snapDate = null;
-                }
-
-                // Check EXIF latitude
-                if (typeof latArray === 'undefined'){
-                    latitude = null;
-                } else {
-                    latitude = degreeToDecimal(latArray[0],latArray[1],latArray[2],latRef);
-                }
-
-                // Check EXIF longitude
-                if (typeof lonArray === 'undefined'){
-                    longitude = null;
-                } else {
-                    longitude = degreeToDecimal(lonArray[0],lonArray[1],lonArray[2],lonRef);
-                }
-
-                // Check EXIF altitude
-                if (typeof altitude === 'undefined' || altitude === null){
-                    altitude = null;
-                } else {
-                    altitude = altitudeToMeters(altitude, altitudeRef) ;
-                }
-           
-                // Replace any null values with realtime GPS data. Only replace if null to avoid overwriting
-                // EXIF data.
-                // Check real time latitude
-                if (latitude === null){
-                    latitude = realtimeLatitude;
-                }
-
-                // Check real time latitude
-                if (longitude === null){
-                    longitude = realtimeLongitude;
-                }
-                
-                // Check real time latitude
-                if (altitude === null){
-                    altitude = realtimeAltitude;
-                }
-
                 // Get weather data
                  weatherObj = getMesonentDataFromLocalStorage();
-                 locationObj = new customLocation(37.77071,-457.23999,-9999);
-                 etoVal = getETOValue(locationObj,weatherObj);
+                 etoVal = getETOValue(coordinateObj,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
 
                  // validate the eto value  
@@ -388,9 +342,9 @@ function showPosition(position) {
     }
 
     let coordinatesObject  = {
-        lat : realtimeLatitude,
-        lon : realtimeLongitude,
-        alt : realtimeAltitude
+        latitude : realtimeLatitude,
+        longitude : realtimeLongitude,
+        altitude : realtimeAltitude
     }
 
     // store the coordinates data to local storage to future use
@@ -404,7 +358,7 @@ function showPosition(position) {
 
   function showError(error) {
     errorDiv.style.display="flex";
-    leafImageContainer.style.display = "none";
+    logoContainer.style.display = "none";
     resultsGrid.style.display = "none";
     switch(error.code) {
       case error.PERMISSION_DENIED:
@@ -523,7 +477,7 @@ function getMesonentDataFromLocalStorage(){
 function getETOValue(location,weather) {
 
     const missingData = -9999;
-    const atmPressure = 101.3 * ((293 - 0.0065 * location.elevation) / 293)**5.26;
+    const atmPressure = 101.3 * ((293 - 0.0065 * location.altitude) / 293)**5.26;
     const Cp = 0.001013; // Approx. 0.001013 for average atmospheric conditions
     const epsilon =  0.622;
     const lamda = 2.45;
@@ -561,7 +515,7 @@ function getETOValue(location,weather) {
     const Ra = 24 * 60 / Math.PI * Gsc * dr * (omega * Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.sin(omega));
 
     // Clear Sky Radiation: Rso (MJ/m2/day)
-    const Rso =  (0.75 + (2 * 10**-5) * location.elevation) * Ra ; // Eq. 37, FAO-56
+    const Rso =  (0.75 + (2 * 10**-5) * location.altitude) * Ra ; // Eq. 37, FAO-56
 
     // * Measured solar Radiation: Rs (MJ/m2/day)
     if (weather.solarRad === missingData || weather.windSpeed === null) {
