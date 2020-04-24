@@ -25,7 +25,7 @@ Kola is an image analystics tool developed to identify the certain crop properti
  - Mozilla firefox version - 
 
 # Visit app
- https://dishan3x.github.io/canopeo_analytics_tool/
+ https://dishan3x.github.io/crop_characteristic_finder/kola.html
 
 # RestFul Api
   Calculations requires the weather obtained day before the app being
