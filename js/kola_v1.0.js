@@ -48,12 +48,6 @@ var errorContent;
 
 function preload() {
 
-     // Check whether the user variable get set from the index.html page
-     // If not redirect the user to the inorder to preserve the flow of the code.
-     if (localStorage.getItem("userLatitude") === null  || localStorage.getItem("userLongitude") === null) {
-         window.location = "index.html";
-     }
-
      // check whether mesonent station loaded to the system
      if (typeof(localStorage.getItem("mesonentStations"))== "object") {
         stationDataCSV = loadTable("data/stationData.csv","csv", "header");
@@ -89,8 +83,6 @@ function setup() {
     
     btnUploadLabel = document.getElementById('btn-upload-label');
 
-
-
     // Arranging HTML content 
     resultsGrid                 = document.getElementById('resultGrid');
     resultsGrid.style.display   = "none";
@@ -118,8 +110,8 @@ function setup() {
         weatherObj =  getMesonentDataFromLocalStorage();
         // format of datq  : 2020-02-2400000000000
         //               ex :2020-02-24 00000000000
-        dateCheck = getDate();
-        loggedDate = weatherObj.storedDate;
+        dateCheck   =   getDate();
+        loggedDate  =   weatherObj.storedDate;
         btnUploadLabel.onclick = null;
         if(dateCheck == loggedDate){ // check the weather updated time stamo
             console.log("The mesonent data is loaded to the system");
@@ -130,21 +122,6 @@ function setup() {
             alert("Date did not match, gethering Data from the mesonent Api");
         }
     }
-
-    //testing ********** Remove Dishan**************************
-             /*    var output = document.createElement('pre');
-                document.body.appendChild(output);
-                // Reference to native method(s)
-                var oldLog = console.log;
-                console.log = function( ...items ) {
-                // Call native method first
-                oldLog.apply(this,items);
-                // Use JSON to transform objects, all others display normally
-                    items.forEach( (item,i)=>{
-                    items[i] = (typeof item === 'object' ? JSON.stringify(item,null,4) : item);
-                    });
-                    output.innerHTML += items.join(' ') + '<br />';
-                }; */
 
 }  // End setup()
 
@@ -169,7 +146,6 @@ function retakeSnap(){
  * got File function will trigger when the data is updated.
  */
 function gotFile(file) {
-    if(imgCounter <= 50){
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
                 getLocation(); //update recent location to the local storage. 
@@ -181,7 +157,6 @@ function gotFile(file) {
                 // Check for a change of nearest station. I
                 // if changed , gather the weather data from the nearest station. 
                 if(matchedStation != localStorage.getItem('nearestStation')){
-                    
                     localStorage.setItem('nearestStation',matchedStation); // setting the new found nearest station. 
                     alert("Station Changed. Gathering data");
                     getWeatherData(); 
@@ -325,7 +300,7 @@ function gotFile(file) {
                 }
 
                 // Get weather data
-                 weatherObj = getMesonentDataFromLocalStorage()
+                 weatherObj = getMesonentDataFromLocalStorage();
                  locationObj = new customLocation(37.77071,-457.23999,-9999);
                  etoVal = getETOValue(locationObj,weatherObj);
                  etCrop = getETCrop(percentCanopyCover,etoVal);
@@ -365,7 +340,6 @@ function gotFile(file) {
         }else{
             alert("The file entered is not valid. Please enter a image");
         }
-    }
 }
 
 
@@ -409,31 +383,15 @@ function showPosition(position) {
     realtimeLongitude  =   position.coords.longitude; 
     realtimeAltitude   =   position.coords.altitude;
   
-     // Reduce the sensitivit of the cordinates
+    // Reduce the sensitivit of the cordinates
   
-     realtimeLatitude = realtimeLatitude * 1000;
-     realtimeLatitude =  realtimeLatitude.toFixed(6);
-     realtimeLatitude = realtimeLatitude/1000;
-     realtimeLatitude = realtimeLatitude.toFixed(6);
-     
-     realtimeLongitude = realtimeLongitude * 1000;
-     realtimeLongitude = realtimeLongitude.toFixed(6);
-     realtimeLongitude = realtimeLongitude/1000;
-     realtimeLongitude = realtimeLongitude.toFixed(6);
-    
-     localStorage.setItem('userLatitude', realtimeLatitude);
-     localStorage.setItem('userLongitude', realtimeLongitude);
-     localStorage.setItem('userAltitude', realtimeAltitude);
-     localStorage.setItem('imageLatitude', localStorage.getItem('userLatitude'));
-     localStorage.setItem('imageLongitude', localStorage.getItem('userLongitude'));
- /*         // Users altutude and latitude
-    userLattitudeText = document.getElementById('userLattitudeText');
-    userLattitudeText.innerHTML = localStorage.getItem("userLatitude");
+    realtimeLatitude = Math.round(realtimeLatitude*10**6)/10**6;
+    realtimeLongitude = Math.round(realtimeLongitude*10**6)/10**6;
 
-    // Users altutude and latitude
-    userLongitudeText = document.getElementById('userLongitudeText');
-    userLongitudeText.innerHTML = localStorage.getItem("userLongitude"); */
-   
+    localStorage.setItem('userLatitude', realtimeLatitude);
+    localStorage.setItem('userLongitude', realtimeLongitude);
+    localStorage.setItem('userAltitude', realtimeAltitude);
+
     userLattitudeText = document.getElementById('userLattitudeText');
     userLattitudeText.innerHTML = realtimeLatitude;
 
