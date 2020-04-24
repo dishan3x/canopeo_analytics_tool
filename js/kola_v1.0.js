@@ -1,5 +1,4 @@
 let imgOriginal;
-let imgCounter = 0;
 var percentCanopyCover;
 
 var resultsTable;
@@ -11,8 +10,6 @@ var latRef;
 
 var realtimeLongitude;
 var longitude;
-var lonArray;
-var lonRef;
 
 var realtimeAltitude;
 var altitude;
@@ -95,6 +92,7 @@ function setup() {
     btnUpload = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
+
     console.log(typeof(localStorage.getItem("mesonetWeatherData")));
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         console.log("Identified weather data as a Object");
@@ -123,22 +121,6 @@ function setup() {
 
 }  // End setup()
 
-/** 
- * Navigation Bar Functions
- * */  
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-  }
-  
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-  }
-
-function retakeSnap(){
-    resultsGrid.style.display = "none";
-    apiInformationDiv.style.display = "block";
-    logoContainer.style.display  ="block";
-}
 
 /**
  * got File function will trigger when the data is updated.
@@ -171,8 +153,6 @@ function gotFile(file) {
                     }
                 logoContainer.style.display = "none";
   
-            
-
                 // Displaying the result grid 
                 resultsGrid.style.visibility = 'visible';
                 resultsGrid.style.display = "block";
@@ -218,8 +198,6 @@ function gotFile(file) {
                             imgClassified.pixels[index+2] = 255;
                             imgClassified.pixels[index+3] = 255;
                             canopyCover += 1;
-                            
-
                         } else {
                             imgClassified.pixels[index+0] = 0;
                             imgClassified.pixels[index+1] = 0;
@@ -271,23 +249,7 @@ function gotFile(file) {
                 document.getElementById("cropEvapotranspiration_val").innerHTML =etCrop;
 
                 var imgName = 'img_' + uploadDate.getTime();
-                var data = {
-                    name: imgName,
-                    snapDate: snapDate,
-                    uploadDate: uploadDate.getTime(),
-                    latitude: latitude,
-                    longitude: longitude,
-                    altitude: altitude,
-                    cover: percentCanopyCover,
-                    vegetationType: vegetationType,
-                    country: country,
-                    state: state,
-                    region: region
-                };
 
-                // Add original and classified images to ZIP file
-               /*  originals.file(imgName + '.jpg', dataURItoBlob(imgOriginal.canvas.toDataURL('image/jpeg')), {base64: true});
-                classified.file(imgName + '.jpg', dataURItoBlob(imgClassified.canvas.toDataURL('image/jpeg')), {base64: true}); */
           });
         }else{
             alert("The file entered is not valid. Please enter a image");
