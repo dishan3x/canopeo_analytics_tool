@@ -11,6 +11,92 @@
     
   <script>
       // Github index.html rendering 
-      window.location = "kola.html";
-  </script>
+      //window.location = "kola.html"; ----------------------------------> uncomment and remove
+/*       document.write("hello");
+      url = "state.edu/rest/stationdata/?stn=Ashland%20Bottoms&int=day&t_start=20160101000000&t_end=20160201000000&vars=TEMP2MAVG,PRECIP";
+      function resolveAfter2Seconds() {
+        return new Promise(resolve => {
+        setTimeout(() => {
+         resolve('resolved');
+        }, 5000);
+      });
+      }
+
+    async function asyncCall() {
+      console.log('calling');
+       const result = await resolveAfter2Seconds();
+      console.log(result);
+  // expected output: 'resolved'
+      }
+
+    asyncCall();
+
+    document.write("didnt work"); */
+
+
+
+   url =  "http://slowwly.robertomurray.co.uk/delay/10000/url/http://www.google.co.uk";
+   const FETCH_TIMEOUT = 5000;
+    let didTimeOut      = false;
+
+    new Promise(function(resolve, reject) {
+        const timeout = setTimeout(function() {
+            didTimeOut = true;
+            reject(new Error('Request timed out'));
+        }, FETCH_TIMEOUT);
+        
+        fetch(url)
+        .then(response =>  {
+            // Clear the timeout as cleanup
+            console.log(timeout);
+            clearTimeout(timeout);
+            if(!didTimeOut) {
+                console.log('fetch good! ', response);
+                resolve(response);
+            }
+            return response.text();
+        })
+        .then(data => {
+
+                // prepare data
+               // let lineSeperation = data.split(/\r?\n/);
+
+                // Setting the value in the local storage
+               // localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
+   
+                // clear the timeout and resolve promise
+                console.log("here we got data",timeout);
+                clearTimeout(timeout); 
+                resolve(response);
+
+                // data recieved ui modifications
+             //   loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
+            //    btnUpload.removeAttribute('disabled');    
+             //   btnUploadLabel.onclick = null;
+
+
+            })
+        .catch(function(err) { // catch for fetch
+            console.log('fetch failed! ', err);
+            // Rejection already happened with setTimeout
+            if(didTimeOut) return;
+            // Reject with error
+            reject(err);
+        });
+    })
+    .then(function() {
+        // Request success and no timeout
+        console.log('good promise, no timeout! ');
+    })
+    .catch(function(err) { // catch for timeout
+    // Error: response error, request timeout or runtime error
+      
+        console.log('promise error! ', err);
+       // loadingWeatherDataLabel.innerHTML = 'Mesonet weather data could not be retrieved.</i><button id="btn-reload-weather" onclick="getWeatherData()">Retry</button>';
+    });
+
+
+
+</script>
+
 </html>

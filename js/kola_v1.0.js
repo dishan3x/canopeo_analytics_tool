@@ -54,8 +54,8 @@ function preload() {
 
 function setup() {
 
-     // Get the user location
-     getLocation();
+    // Get the user location
+    getLocation();
 
     console.log("Running Kola app. version 1.0.");
 
@@ -90,26 +90,31 @@ function setup() {
     resultsGrid.style.display   = "none";
 
     // Upload button
-    btnUpload = createFileInput(gotFile,'multiple');
+    btnUpload   =   createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
 
+    // Mesonent Weather data check
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
-        console.log("Identified weather data as a Object");
-        // This function will run until it achieved the data
+        
+        // Mesonet weather data has never been loaded to local storage
         getWeatherData(); 
-        btnUpload.attribute('disabled', ''); // disable the upload button    
+        btnUpload.attribute('disabled', '');  // disable camera btn
+        console.log("Identified weather data as a Object");
+
     }else{
-        // Mesonent weather data and the type is string. 
-        // if the object is in the local storage check the date stored
-        // Getting the data object from local storage
-        weatherObj =  getMesonentDataFromLocalStorage();
-        // Date format  : 2020-02-2400000000000
-        //               ex :2020-02-24 00000000000
-        dateCheck   =   getDate();
-        loggedDate  =   weatherObj.storedDate;
-        btnUploadLabel.onclick = null;
+
+        // Mesonent weather data  ->  {string} 
+        // Mesonet weather data object preloaded local storage
+        // Checking for the upload data is no more than one day old.
+
+        weatherObj      =   getMesonentDataFromLocalStorage(); // Retrieve 
+        dateCheck       =   getDate();              // todays date .
+        loggedDate      =   weatherObj.storedDate;  // weather data last updated.
+
+        btnUploadLabel.onclick = null; // ----------------------------> check
+
         if(dateCheck == loggedDate){ // check the weather updated time stamo
             console.log("The mesonent data is loaded to the system");
         }else{
@@ -320,9 +325,11 @@ function showPosition(position) {
   }
 
   function showError(error) {
-    errorDiv.style.display="flex";
-    logoContainer.style.display = "none";
-    resultsGrid.style.display = "none";
+
+    errorDiv.style.display      =   "flex";
+    logoContainer.style.display =   "none";
+    resultsGrid.style.display   =   "none";
+
     switch(error.code) {
       case error.PERMISSION_DENIED:
         errorContent.innerHTML = "<b>Location Service Required.</b><br><text>Sorry, the app requires the location of the user. you must allow the location to be active during the usage of app .<text></br></br>";
@@ -341,64 +348,67 @@ function showPosition(position) {
   }
 
 /**
- *  Retrive data from the Mesonet Api and store the infromaton from in the local storage of the browser
+ *  Retrive data from the Mesonet Api and store the information from in the local storage of the browser
  */
 function getWeatherData(){
-    nearestStation = localStorage.getItem("nearestStation");
-    dateStr = getDate();
-    weatherT = ""; 
-    url = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+
+    // Getting the latest data
+    nearestStation  =  localStorage.getItem("nearestStation"); 
+    dateStr         =  getDate(); // today date customized to api requirements
+
+    // fetch data url
+    mesonetApiUrl   = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+    
+    // Loading data notification
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
-    const FETCH_TIMEOUT = 10000;
-    let didTimeOut = false;
+
+    const FETCH_TIMEOUT = 50000;
+    let didTimeOut      = false;
+
     new Promise(function(resolve, reject) {
         const timeout = setTimeout(function() {
             didTimeOut = true;
-            //getWeatherData();
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
-        fetch(url)
-        .then(response =>  {
-            // Clear the timeout as cleanup
-            clearTimeout(timeout);
-            if(!didTimeOut) {
-                console.log('fetch good! ', response);
-                resolve(response);
-            }
-            return response.text();
-        })
-        .then(data => {
-                // The returned data set has columns names and values devidede  by /n 
-                // Seperated by /n 
+        fetch(mesonetApiUrl)
+            .then(response =>  {
+                // Clear the timeout as cleanup
+                clearTimeout(timeout);
+                if(!didTimeOut) {
+                    console.log('fetch good! ', response);
+                    resolve(response);
+                }
                 loadingWeatherDataLabel.innerHTML = 'Weather data retrieved <i class="fas fa-check"></i>';
-                btnUpload.removeAttribute('disabled');    
-                btnUploadLabel.onclick = null;
-                var lineSeperation = data.split(/\r?\n/);
-                // Setting the value in the local storage
-                localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
-                console.log("gathered data. Cleared timeout");
-                clearTimeout(timeout); // clear timeout when data recieved to avoid further fetches
-                resolve(response);
+                return response.text();
             })
-        .catch(function(err) { // catch for fetch
-            console.log('fetch failed! ', err);
+            .then(data => {
+                    // prepare data
+                    console.log("Its comes to data second here second");
+                    let lineSeperation = data.split(/\r?\n/);
+
+                    // Setting the value in the local storage
+                    localStorage.setItem('mesonetWeatherData', JSON.stringify(lineSeperation[1]));
+                    // clear the timeout and resolve promise
+                    console.log("here we got data",timeout);
+                    clearTimeout(timeout); 
+
+                    // data recieved ui modifications
+                    btnUpload.removeAttribute('disabled');    
+                    btnUploadLabel.onclick = null;
+            })
+            .catch(function(err) { // catch for fetch
+                console.log('Failed. Still trying ! ', err);
+                // Rejection already happened with setTimeout
+                if(didTimeOut) return;
+                // Reject with error
+                reject(err);
+            });
             
-            // Rejection already happened with setTimeout
-            if(didTimeOut) return;
-            // Reject with error
-            reject(err);
-        });
     })
     .then(function() {
         // Request success and no timeout
         console.log('good promise, no timeout! ');
-    })
-    .catch(function(err) { // catch for timeout
-    // Error: response error, request timeout or runtime error
-      
-        console.log('promise error! ', err);
-        loadingWeatherDataLabel.innerHTML = 'Mesonet weather data could not be retrieved.</i><button id="btn-reload-weather" onclick="getWeatherData()">Retry</button>';
     });
 
 }
