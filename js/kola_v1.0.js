@@ -60,10 +60,10 @@ function preload() {
 
 function setup() {
 
+    console.log("Welcome to kola 1.0.");
+
     // Get the user location
     getLocation();
-
-    console.log("Welcome to kola 1.0.");
 
     // Converting the data in to JSON
     if (typeof(localStorage.getItem("mesonentStations"))== "object") { // already read the file and stored in system
@@ -78,9 +78,9 @@ function setup() {
 
     localStorage.setItem('nearestStation',matchedStation); 
     
-    distanceLabelText.innerHTML = minimumDistance.toFixed(2)+" miles ";
+    distanceLabelText.innerHTML         = minimumDistance.toFixed(2)+" miles ";
     
-    nearestStationLabelText.innerHTML = matchedStation;
+    nearestStationLabelText.innerHTML   = matchedStation;
     
     btnUploadLabel = document.getElementById('btn-upload-label');
 
@@ -96,7 +96,7 @@ function setup() {
     resultsGrid.style.display   = "none";
 
     // Upload button
-    btnUpload   =   createFileInput(gotFile,'multiple');
+    btnUpload                   = createFileInput(gotFile,'multiple');
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
@@ -104,7 +104,7 @@ function setup() {
     // Mesonent Weather data check
     if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
         
-        // Mesonet weather data has never been loaded to local storage
+        // Mesonet weather data havent loaded never been loaded to local storage
         getWeatherData(); 
         btnUpload.attribute('disabled', '');  // disable camera btn
 
@@ -157,22 +157,24 @@ function gotFile(file) {
                 document.getElementById("cropCoefficient_val").innerHTML = "";
                 document.getElementById("evapotranspiration_val").innerHTML = "";
                 document.getElementById("cropEvapotranspiration_val").innerHTML ="";
+
+                // empty picture div
                 var anlysedImgTag = document.getElementsByClassName('analysed-images-tag');
                     if (anlysedImgTag !== null){
                         document.getElementById("orignal-image").innerHTML ="";
                         document.getElementById("classified-image").innerHTML ="";
                     }
-                logoContainer.style.display = "none";
+                logoContainer.style.display    = "none";
   
                 // Displaying the result grid 
-                resultsGrid.style.visibility = 'visible';
-                resultsGrid.style.display = "block";
+                resultsGrid.style.visibility   = 'visible';
+                resultsGrid.style.display      = "block";
                 // Hide the api status from the screen
-                apiInformationDiv.style.display = "none";
+                apiInformationDiv.style.display= "none";
     
-                let imgOriginalId = 'img-original'; // Needed to call EXIF data
-                
-                let imgClassifiedId = 'img-classified'; // Not needed, but added for consistency with imgOriginal
+                // Create image tags
+                let imgOriginalId   = 'img-original'; 
+                let imgClassifiedId = 'img-classified';
     
                 // Get upload timestamp
                 uploadDate = new Date();
@@ -219,13 +221,13 @@ function gotFile(file) {
                 }
 
                 imgClassified.updatePixels();
-                percentCanopyCover = round(canopyCover/(imgClassified.width * imgClassified.height)*1000)/10;
+                percentCanopyCover  =  round(canopyCover/(imgClassified.width * imgClassified.height)*1000)/10;
 
                 // Calculate aspect ratio for thumbnails and resize images
-                var aspectRatio = imgClassified.width/imgClassified.height;
+                var aspectRatio     =  imgClassified.width/imgClassified.height;
 
                 // Thumbnail original image
-                thumbnailOriginal = createImg(imgOriginal.canvas.toDataURL(),'original image');
+                thumbnailOriginal  = createImg(imgOriginal.canvas.toDataURL(),'original image');
                 thumbnailOriginal.size(imgOriginal.width*aspectRatio,imgOriginal.height*aspectRatio);
                 thumbnailOriginal.size(imgOriginal.width,imgOriginal.height);
                 thumbnailOriginal.id(imgOriginalId);
@@ -242,19 +244,21 @@ function gotFile(file) {
                 //thumbnailClassified.style.border = "5px solid black;"
                 
                 // Get weather data
-                 weatherObj = getMesonentDataFromLocalStorage();
-                 etoVal = getETOValue(coordinateObj,weatherObj);
-                 etCrop = getETCrop(percentCanopyCover,etoVal);
+                 weatherObj    = getMesonentDataFromLocalStorage();
 
-                 // validate the eto value  
+                // Calculate values
+                etoVal         = getETOValue(coordinateObj,weatherObj);
+                etCrop         = getETCrop(percentCanopyCover,etoVal);
+                cropCoffection = float(getCropCoeffcient(percentCanopyCover));
+
+                // calculation error checker
                  if(isNaN(etoVal)){
                     alert("Weather data could not be retrieved");
-                    location.reload();
+                    location.reload(); 
                  }
 
                 // Assiging the data to cards
                 document.getElementById("canopeoCover_val").innerHTML =percentCanopyCover;
-                cropCoffection = float(getCropCoeffcient(percentCanopyCover));
                 document.getElementById("cropCoefficient_val").innerHTML = cropCoffection.toFixed(2);
                 document.getElementById("evapotranspiration_val").innerHTML = etoVal;
                 document.getElementById("cropEvapotranspiration_val").innerHTML =etCrop;
@@ -263,7 +267,7 @@ function gotFile(file) {
 
           });
         }else{
-            alert("The file entered is not valid. Please enter a image");
+            alert("The file entered is not valid. Please enter a image"); // wrong format
         }
 }
 
@@ -305,8 +309,8 @@ function getLocation() {
 function showPosition(position) {
 
     // Reduce the sensitivit of the cordinates  
-    realtimeLatitude    = Math.round(position.coords.latitude*10**6)/10**6;
-    realtimeLongitude   = Math.round(position.coords.longitude*10**6)/10**6;
+    realtimeLatitude    =   Math.round(position.coords.latitude*10**6)/10**6;
+    realtimeLongitude   =   Math.round(position.coords.longitude*10**6)/10**6;
     realtimeAltitude    =   position.coords.accuracy; // A;titude
 
     // Altitude retrived check
@@ -371,7 +375,7 @@ function getWeatherData(){
     let didTimeOut      = false;
 
     new Promise(function(resolve, reject) {
-        const timeout = setTimeout(function() {
+        const timeout  = setTimeout(function() {
             didTimeOut = true;
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
@@ -455,7 +459,7 @@ function getETOValue(location,weather) {
 
     const missingData = -9999;
     const atmPressure = 101.3 * ((293 - 0.0065 * location.altitude) / 293)**5.26;
-    const Cp = 0.001013; // Approx. 0.001013 for average atmospheric conditions
+    const Cp    = 0.001013; // Approx. 0.001013 for average atmospheric conditions
     const epsilon =  0.622;
     const lamda = 2.45;
     const gamma = (Cp * atmPressure) / (epsilon * lamda); // Approx. 0.000665
