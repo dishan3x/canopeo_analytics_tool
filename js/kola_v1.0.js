@@ -49,6 +49,12 @@ function preload() {
      if (typeof(localStorage.getItem("mesonentStations"))== "object") {
         stationDataCSV = loadTable("data/stationData.csv","csv", "header");
      }
+
+     // internet check 
+     let online = navigator.onLine;
+     if(online == false){
+         alert("You are not connect to internet");
+     }
     
 }
 
@@ -57,7 +63,7 @@ function setup() {
     // Get the user location
     getLocation();
 
-    console.log("Running Kola app. version 1.0.");
+    console.log("Welcome to kola 1.0.");
 
     // Converting the data in to JSON
     if (typeof(localStorage.getItem("mesonentStations"))== "object") { // already read the file and stored in system
@@ -101,7 +107,6 @@ function setup() {
         // Mesonet weather data has never been loaded to local storage
         getWeatherData(); 
         btnUpload.attribute('disabled', '');  // disable camera btn
-        console.log("Identified weather data as a Object");
 
     }else{
 
@@ -384,7 +389,6 @@ function getWeatherData(){
             })
             .then(data => {
                     // prepare data
-                    console.log("Its comes to data second here second");
                     let lineSeperation = data.split(/\r?\n/);
 
                     // Setting the value in the local storage
@@ -404,7 +408,7 @@ function getWeatherData(){
                 // Reject with error
                 reject(err);
             });
-            
+
     })
     .then(function() {
         // Request success and no timeout
