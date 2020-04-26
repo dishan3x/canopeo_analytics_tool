@@ -457,13 +457,13 @@ function getWeatherData(){
  * Storing the Api data in the local storage 
  */
 function getMesonentDataFromLocalStorage(){
+    
     // Retrieve the object from storage
-    var retrievedObject = localStorage.getItem('mesonetWeatherData');
-    var apiData = retrievedObject.split(",").map(function(item) {
+    var apiData  = localStorage.getItem('mesonetWeatherData').split(",").map(function(item) {
         return parseInt(item, 10);
     });      
     
-    dateStr = getDate();
+    let dateStr      = getDate();
 
     let weatherObject  = {
         timestamp     : apiData[0],
@@ -563,11 +563,11 @@ function getETOValue(location,weather) {
    * @return  n th number of the year
    */
   function dayOftheYear(){
-    var today = new Date();
-    var start = new Date(today.getFullYear(), 0, 0); // Constructing the Jan 1 for the given year
-    var diff = today - start; // time differnece by second
-    var oneDay = 1000 * 60 * 60 * 24;
-    var days = Math.floor(diff / oneDay); // calculate days 
+    var today   = new Date();
+    var start   = new Date(today.getFullYear(), 0, 0); // Constructing the Jan 1 for the given year
+    var diff    = today - start; // time differnece by second
+    var oneDay  = 1000 * 60 * 60 * 24;
+    var days    = Math.floor(diff / oneDay); // calculate days 
     return days;
   }
 
@@ -602,12 +602,12 @@ function getETOValue(location,weather) {
    */
   function getDate(){
     
-    date = new Date();
+    date        = new Date();
     // getting the yesterday date
     date.setDate(date.getDate() - 1);
-    var dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
-    var MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
-    var yyyy = date.getFullYear();
+    var dd      = (date.getDate() < 10 ? '0' : '') + date.getDate();
+    var MM      = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+    var yyyy    = date.getFullYear();
  
     // create the year
     return (yyyy + MM +dd +"000000" );
@@ -633,16 +633,18 @@ function distance(lat1, lon1, lat2, lon2) {
         // converting to radians in to radians
         var dLat =((lat2 - lat1) * Math.PI ) / 180;  
         var dLon = ((lon2 - lon1)* Math.PI ) / 180;  
+
         // convert to radians 
         lat1 = (lat1 * Math.PI ) / 180; 
         lat2 = (lat2 * Math.PI ) / 180; 
+
         // apply formulae 
-        var a = Math.pow(Math.sin(dLat / 2), 2) +  
-                Math.pow(Math.sin(dLon / 2), 2) *  
-                Math.cos(lat1) *  
-                Math.cos(lat2); 
+        var a   =   Math.pow(Math.sin(dLat / 2), 2) +  
+                    Math.pow(Math.sin(dLon / 2), 2) *  
+                    Math.cos(lat1) *  
+                    Math.cos(lat2); 
         var rad = 3958.8;  // radias of the earth in miles
-        var c = 2 * Math.asin(Math.sqrt(a)); 
+        var c   = 2 * Math.asin(Math.sqrt(a)); 
         return rad * c ; // distance in miles 
 		
 	}
@@ -657,17 +659,20 @@ function convertStationsTOJSON(){
   var strMesonentStation ="{"
 
   for ( let r = 0; r < stationDataCSV.getRowCount(); r++){
+
     strMesonentStation += '"'+ stationDataCSV.getString(r, 0)+'":{';
     for (let c = 0; c < stationDataCSV.getColumnCount(); c++) {
         strMesonentStation += '"'+stationDataCSV.columns[c] + '":"'+stationDataCSV.getString(r, c) +'",';  
     }
     strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
-    strMesonentStation += "}," ;   
+    strMesonentStation += "}," ;  
+
   } 
   
   strMesonentStation = strMesonentStation.substring(0, strMesonentStation.length - 1);
   strMesonentStation += "}"
-  // Place the strigyfy JSON string in the local storage
+
+  // store mesonet station in the local storage
   localStorage.setItem('mesonentStations', strMesonentStation);   
 
 }
@@ -694,10 +699,10 @@ function dataToArray (data) {
 
 function findClosestStation(userLocationLat,userLocationLon){
 
-    var retrievedStations = localStorage.getItem('mesonentStations');
-    var stationData = JSON.parse(retrievedStations); // Getting the data from the local storage
-    var d ; // distance
-    var distanceArray = new Array();
+    let d ; // distance
+    let retrievedStations   = localStorage.getItem('mesonentStations');
+    let stationData         = JSON.parse(retrievedStations); // Getting the data from the local storage
+    let distanceArray       = new Array();
 
     // Calculate distance between two locations
     for ( stationName in stationData){  
@@ -705,9 +710,9 @@ function findClosestStation(userLocationLat,userLocationLon){
         distanceArray[stationName] = d;
     }
 
-    var keys   = Object.keys(distanceArray);
-    var minimumDistance = Math.min.apply(null, keys.map(function(x) { return distanceArray[x]} ));
-    var matchedStation  = keys.filter(function(y) { return distanceArray[y] === minimumDistance });
+    let keys   = Object.keys(distanceArray);
+    let minimumDistance = Math.min.apply(null, keys.map(function(x) { return distanceArray[x]} ));
+    let matchedStation  = keys.filter(function(y) { return distanceArray[y] === minimumDistance });
 
     return [matchedStation,minimumDistance];
 }
