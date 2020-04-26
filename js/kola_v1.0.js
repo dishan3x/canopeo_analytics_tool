@@ -51,8 +51,9 @@ function preload() {
         stationDataCSV = loadTable("data/stationData.csv","csv", "header");
      }
 
-     // internet check 
+     // internet sourse check 
      let online = navigator.onLine;
+
      if(online == false){
          alert("You are not connect to internet");
      }
@@ -80,24 +81,23 @@ function setup() {
     localStorage.setItem('nearestStation',matchedStation); 
     
     distanceLabelText.innerHTML         = minimumDistance.toFixed(2) + " miles ";
-    
     nearestStationLabelText.innerHTML   = matchedStation;
-    
-    btnUploadLabel = document.getElementById('btn-upload-label');
 
-    // Arranging HTML content 
+
+    // gloabla varaiables
     resultsGrid                 = document.getElementById('resultGrid');
     apiInformationDiv           = document.getElementById('api-information-div');
     logoContainer               = document.getElementById("leafcontainer");
     loadingWeatherDataLabel     = document.getElementById('weatherDataStatusLabel');
     errorDiv                    = document.getElementById('errorDiv');
     errorContent                = document.getElementById('errorContent');
+    btnUploadLabel              = document.getElementById('btn-upload-label');
    
     //preload assignment
     resultsGrid.style.display   = "none";
 
     // Upload button
-    btnUpload                   = createFileInput(gotFile,'multiple');
+    btnUpload                   = createFileInput(gotFile,'multiple'); //p5
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
@@ -108,6 +108,7 @@ function setup() {
 
 
 function weatherDataRetrieveCheck(){
+
      // Mesonent Weather data check
     let storageWatherData = localStorage.getItem("mesonetWeatherData"); 
 
@@ -135,11 +136,9 @@ function weatherDataRetrieveCheck(){
             loggedDate      =   weatherObj.storedDate;  // weather data last updated.
 
             if(dateCheck == loggedDate){ // check the weather updated time stamo
-                console.log("The mesonent data is loaded to the system");
+               cameraControl('enable');
             }else{
-                // Retriving data from the Mesonent Api
-                // update has a old date.
-                boolWeatherUpdate = 1; 
+                boolWeatherUpdate = 1;
             }
        }
 
@@ -149,11 +148,22 @@ function weatherDataRetrieveCheck(){
     if(boolWeatherUpdate == 1 ){
         // Mesonet weather data havent loaded never been loaded to local storage
         getWeatherData(); 
-        btnUpload.attribute('disabled', '');  // disable camera btn
-        btnUploadLabel.onclick = null; // ----------------------------> check
         return;
     }
 
+}
+
+function cameraControl(status){
+    if(status = "enable"){
+        btnUpload.attribute('disabled', '' );  // disable camera btn
+        btnUploadLabel.onclick = null;  
+    }
+
+    if(status = "disable"){
+        btnUpload.removeAttribute('disabled');    
+        btnUploadLabel.onclick = null;
+      
+    }
 }
 /**
  * got File function will trigger when the data is updated.
@@ -383,12 +393,13 @@ function showPosition(position) {
  */
 function getWeatherData(){
 
+    console.log("get weather function initiated.");
     // Getting the latest data
     nearestStation  =  localStorage.getItem("nearestStation"); 
     dateStr         =  getDate(); // today date customized to api requirements
 
     // fetch data url
-    mesonetApiUrl   = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
+    mesonetRestApi   = "https://mesonet.k-state.edu/rest/stationdata/?stn="+nearestStation+"&int=day&t_start="+dateStr+"&t_end="+dateStr+"&vars=PRECIP,WSPD2MVEC,TEMP2MAVG,TEMP2MMIN,TEMP2MMAX,RELHUM2MMAX,RELHUM10MMIN,SR,WSPD2MAVG";
     
     // Loading data notification
     loadingWeatherDataLabel.innerHTML = 'Loading Weather Data <i class="fas fa-sync fa-spin">';
@@ -402,7 +413,7 @@ function getWeatherData(){
             reject(new Error('Request timed out'));
         }, FETCH_TIMEOUT);
         
-        fetch(mesonetApiUrl)
+        fetch(mesonetRestApi)
             .then(response =>  {
                 // Clear the timeout as cleanup
                 clearTimeout(timeout);
@@ -424,8 +435,7 @@ function getWeatherData(){
                     clearTimeout(timeout); 
 
                     // data recieved ui modifications
-                    btnUpload.removeAttribute('disabled');    
-                    btnUploadLabel.onclick = null;
+                    cameraControl('enable');
             })
             .catch(function(err) { // catch for fetch
                 console.log('Failed. Still trying ! ', err);
