@@ -39,6 +39,7 @@ var loadingWeatherDataLabel;
 var btnUploadLabel;
 var userLocationLat;
 var userLocationLon;
+var boolWeatherUpdate = 0;
 
 var errorDiv;
 var errorContent;
@@ -78,7 +79,7 @@ function setup() {
 
     localStorage.setItem('nearestStation',matchedStation); 
     
-    distanceLabelText.innerHTML         = minimumDistance.toFixed(2)+" miles ";
+    distanceLabelText.innerHTML         = minimumDistance.toFixed(2) + " miles ";
     
     nearestStationLabelText.innerHTML   = matchedStation;
     
@@ -100,39 +101,60 @@ function setup() {
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
-
-    // Mesonent Weather data check
-    if (typeof(localStorage.getItem("mesonetWeatherData"))== "object" || typeof(localStorage.getItem("mesonetWeatherData")) == "string" ) {
-        
-        // Mesonet weather data havent loaded never been loaded to local storage
-        getWeatherData(); 
-        btnUpload.attribute('disabled', '');  // disable camera btn
-
-    }else{
-
-        // Mesonent weather data  ->  {string} 
-        // Mesonet weather data object preloaded local storage
-        // Checking for the upload data is no more than one day old.
-
-        weatherObj      =   getMesonentDataFromLocalStorage(); // Retrieve 
-        dateCheck       =   getDate();              // todays date .
-        loggedDate      =   weatherObj.storedDate;  // weather data last updated.
-
-        btnUploadLabel.onclick = null; // ----------------------------> check
-
-        if(dateCheck == loggedDate){ // check the weather updated time stamo
-            console.log("The mesonent data is loaded to the system");
-        }else{
-            // Retriving data from the Mesonent Api
-            // update has a old date. 
-            getWeatherData(); 
-            alert("Date did not match, gethering Data from the mesonent Api");
-        }
-    }
+    weatherDataRetrieveCheck();
+   
 
 }  // End setup()
 
 
+function weatherDataRetrieveCheck(){
+     // Mesonent Weather data check
+    let storageWatherData = localStorage.getItem("mesonetWeatherData"); 
+
+    if (typeof(storageWatherData)== "object") {  // The object doesnt exist in the storage
+        boolWeatherUpdate = 1;
+    }
+
+
+    if(typeof(storageWatherData) == "string"){ // stringyfied data object in the localstorage
+       
+
+        if(storageWatherData.length == 0 ){ // empty
+            boolWeatherUpdate = 1;
+        }  
+
+
+       if(storageWatherData.length > 0){
+
+            // Mesonent weather data  ->  {string} 
+            // Mesonet weather data already stored in the local storage.
+            // Checking for the upload data is no more than one day old.
+
+            weatherObj      =   getMesonentDataFromLocalStorage(); // Retrieve 
+            dateCheck       =   getDate();              // todays date .
+            loggedDate      =   weatherObj.storedDate;  // weather data last updated.
+
+            if(dateCheck == loggedDate){ // check the weather updated time stamo
+                console.log("The mesonent data is loaded to the system");
+            }else{
+                // Retriving data from the Mesonent Api
+                // update has a old date.
+                boolWeatherUpdate = 1; 
+            }
+       }
+
+    }
+
+    // weather data needs to be updated
+    if(boolWeatherUpdate == 1 ){
+        // Mesonet weather data havent loaded never been loaded to local storage
+        getWeatherData(); 
+        btnUpload.attribute('disabled', '');  // disable camera btn
+        btnUploadLabel.onclick = null; // ----------------------------> check
+        return;
+    }
+
+}
 /**
  * got File function will trigger when the data is updated.
  */
