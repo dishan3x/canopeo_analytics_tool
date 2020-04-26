@@ -464,21 +464,23 @@ function getMesonentDataFromLocalStorage(){
     });      
     
     dateStr = getDate();
-    weatherT = new weather();
 
-    weatherT.timestamp     = apiData[0];
-    weatherT.station       = apiData[1];
-    weatherT.tempAvg       = apiData[2];
-    weatherT.tempMin       = apiData[3];
-    weatherT.tempMax       = apiData[4];
-    weatherT.humidityMax   = apiData[5];
-    weatherT.humidityMin   = apiData[6];
-    weatherT.precp         = apiData[7]; // raim fall
-    weatherT.solarRad      = apiData[8];
-    weatherT.windSpeed     = apiData[9];
-    weatherT.doy           = dayOftheYear();
-    weatherT.storedDate    = dateStr;
-    return weatherT;
+    let weatherObject  = {
+        timestamp     : apiData[0],
+        station       : apiData[1],
+        tempAvg       : apiData[2],
+        tempMin       : apiData[3],
+        tempMax       : apiData[4],
+        humidityMax   : apiData[5],
+        humidityMin   : apiData[6],
+        precp         : apiData[7], 
+        solarRad      : apiData[8],
+        windSpeed     : apiData[9],
+        doy           : dayOftheYear(),
+        storedDate    : dateStr
+    }
+
+    return weatherObject;
 }
 
 /**
