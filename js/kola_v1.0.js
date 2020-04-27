@@ -326,7 +326,7 @@ function altitudeToMeters(value, ref) {
 */
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition,showError);
+        navigator.geolocation.watchPosition(showPosition,showError);
     } else {
         realtimeLatitude = null;
         realtimeLongitude = null;
@@ -710,7 +710,7 @@ function findClosestStation(userLocationLat,userLocationLon){
         distanceArray[stationName] = d;
     }
 
-    let keys   = Object.keys(distanceArray);
+    let keys            = Object.keys(distanceArray);
     let minimumDistance = Math.min.apply(null, keys.map(function(x) { return distanceArray[x]} ));
     let matchedStation  = keys.filter(function(y) { return distanceArray[y] === minimumDistance });
 
