@@ -102,10 +102,12 @@ function setup() {
     btnUpload.parent("btn-upload-label");
 
     weatherDataRetrieveCheck();
-   
 
 }  // End setup()
 
+function alertFriend(){
+    alert("Button was clicked");
+}
 
 function weatherDataRetrieveCheck(){
 
@@ -171,8 +173,9 @@ function cameraControl(status){
 function gotFile(file) {
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
+                // getLocation
                 getLocation(); //update recent location to the local storage. 
-                var locationChangedDistance = distance(localStorage.getItem('userLatitude'),localStorage.getItem('userLongitude'), localStorage.getItem('imageLatitude'),localStorage.getItem('imageLongitude'));
+                
                 let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
                 var [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
 
@@ -207,10 +210,7 @@ function gotFile(file) {
                 // Create image tags
                 let imgOriginalId   = 'img-original'; 
                 let imgClassifiedId = 'img-classified';
-    
-                // Get upload timestamp
-                uploadDate = new Date();
-                
+               
                 // Resize image so that the largest side has 1440 pixels
                 if(imgOriginal.width>=imgOriginal.height){
                     imgOriginal.resize(1440,0); 
@@ -295,8 +295,6 @@ function gotFile(file) {
                 document.getElementById("evapotranspiration_val").innerHTML = etoVal;
                 document.getElementById("cropEvapotranspiration_val").innerHTML =etCrop;
 
-                var imgName = 'img_' + uploadDate.getTime();
-
           });
         }else{
             alert("The file entered is not valid. Please enter a image"); // wrong format
@@ -328,12 +326,12 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(showPosition,showError);
     } else {
-        realtimeLatitude = null;
-        realtimeLongitude = null;
-        realtimeAltitude = null;
-        country = null;
-        state = null;
-        region = null;
+        realtimeLatitude    = null;
+        realtimeLongitude   = null;
+        realtimeAltitude    = null;
+        country             = null;
+        state               = null;
+        region              = null;
         console.log('Navigator not available')
     }
 }
