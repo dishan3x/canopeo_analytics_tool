@@ -43,6 +43,7 @@ var boolWeatherUpdate = 0;
 
 var errorDiv;
 var errorContent;
+var id; // This id will be used in success and error in geolocation 
 
 function preload() {
 
@@ -58,31 +59,20 @@ function preload() {
          alert("You are not connect to internet");
      }
     
+       // Get the user location
+    getLocation(ShowLocationRelatedInformation);
 }
 
 function setup() {
 
     console.log("Welcome to kola 1.0.");
 
-    // Get the user location
-    getLocation();
+  
 
     // Converting the data in to JSON
     if (typeof(localStorage.getItem("mesonentStations"))== "object") { // already read the file and stored in system
         convertStationsTOJSON();
     }
-
-    // All the mesonent station need to be loadeed and set
-    let coordinateObj                    = JSON.parse(localStorage.getItem('coordinates'));
-    let [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
-    let distanceLabelText                = document.getElementById("distanceLabelText");
-    let nearestStationLabelText          = document.getElementById("nearestStationLabelText");
-
-    localStorage.setItem('nearestStation',matchedStation); 
-    
-    distanceLabelText.innerHTML         = minimumDistance.toFixed(2) + " miles ";
-    nearestStationLabelText.innerHTML   = matchedStation;
-
 
     // gloabla varaiables
     resultsGrid                 = document.getElementById('resultGrid');
@@ -101,13 +91,11 @@ function setup() {
     btnUpload.style('display','none');
     btnUpload.parent("btn-upload-label");
 
-    weatherDataRetrieveCheck();
+    
 
 }  // End setup()
 
-function alertFriend(){
-    alert("Button was clicked");
-}
+
 
 function weatherDataRetrieveCheck(){
 
@@ -325,9 +313,11 @@ function altitudeToMeters(value, ref) {
     Get users location
     The location will be updated to the local storage
 */
-function getLocation() {
+function getLocation(ShowLocationRelatedInformation) {
+    
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition,showError);
+        id = navigator.geolocation.watchPosition(showPosition,showError);
+        console.log(id);
     } else {
         realtimeLatitude    = null;
         realtimeLongitude   = null;
@@ -352,18 +342,20 @@ function showPosition(position) {
     }
 
     let coordinatesObject  = {
-        latitude : realtimeLatitude,
-        longitude : realtimeLongitude,
-        altitude : realtimeAltitude
+        latitude    : realtimeLatitude,
+        longitude   : realtimeLongitude,
+        altitude    : realtimeAltitude
     }
 
     // store the coordinates data to local storage to future use
     localStorage.setItem('coordinates',JSON.stringify(coordinatesObject));
 
-    userLattitudeText = document.getElementById('userLattitudeText');
+    userLattitudeText           = document.getElementById('userLattitudeText');
     userLattitudeText.innerHTML = realtimeLatitude;
-    userLongitudeText = document.getElementById('userLongitudeText');
+    userLongitudeText           = document.getElementById('userLongitudeText');
     userLongitudeText.innerHTML = realtimeLongitude;
+
+    return ShowLocationRelatedInformation();
   }
 
   function showError(error) {
@@ -372,9 +364,11 @@ function showPosition(position) {
     logoContainer.style.display =   "none";
     resultsGrid.style.display   =   "none";
 
+    navigator.geolocation.clearWatch(id);
     switch(error.code) {
+
       case error.PERMISSION_DENIED:
-        errorContent.innerHTML = "<b>Location Service Required.</b><br><text>Sorry, the app requires the location of the user. you must allow the location to be active during the usage of app .<text></br></br>";
+        errorContent.innerHTML = "<b>Location Service Required.</b><br><text>Sorry, the app requires the location of the user. You must allow the location to be active during the usage of this app .<text></br></br>";
         //alert("You need to allow geo-location for the app to wor  k. Please click on retry");
         break;
       case error.POSITION_UNAVAILABLE:
@@ -388,6 +382,30 @@ function showPosition(position) {
         break;
     }
   }
+
+  /**
+   * Call back function for the geolocation 
+   * Accepted - Display data
+   * No - Error
+   */
+  function ShowLocationRelatedInformation(){
+      // All the mesonent station need to be loadeed and set
+    let coordinateObj                    = JSON.parse(localStorage.getItem('coordinates'));
+    let [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
+    let distanceLabelText                = document.getElementById("distanceLabelText");
+    let nearestStationLabelText          = document.getElementById("nearestStationLabelText");
+    
+    localStorage.setItem('nearestStation',matchedStation); 
+    
+    distanceLabelText.innerHTML         = minimumDistance.toFixed(2) + " miles ";
+    nearestStationLabelText.innerHTML   = matchedStation;
+
+    // Recieved geolocation from the user and found the nearest station
+    // Gather weather data from the nearest station   
+    weatherDataRetrieveCheck();
+
+}
+
 
 /**
  *  Retrive data from the Mesonet Api and store the information from in the local storage of the browser
