@@ -53,13 +53,12 @@ function preload() {
      }
 
      // internet sourse check 
-     let online = navigator.onLine;
-
-     if(online == false){
+    let online = navigator.onLine;
+    if(online == false){
          alert("You are not connect to internet");
      }
     
-       // Get the user location
+    // Get the user location
     getLocation(ShowLocationRelatedInformation);
 }
 
