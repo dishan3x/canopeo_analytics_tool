@@ -173,8 +173,11 @@ function cameraControl(status){
 function gotFile(file) {
         if (file.type === 'image'){
             loadImage(file.data,function(imgOriginal){
+                console.log("before the picture is taken to see if the coordinates changed after words");
+                console.log(JSON.parse(localStorage.getItem('coordinates')));
                 // getLocation
                 getLocation(); //update recent location to the local storage. 
+                
                 
                 let coordinateObj = JSON.parse(localStorage.getItem('coordinates'));
                 var [matchedStation,minimumDistance] = findClosestStation(coordinateObj.latitude,coordinateObj.longitude); // User geolocation need to be set
